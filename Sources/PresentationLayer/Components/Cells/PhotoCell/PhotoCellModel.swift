@@ -1,0 +1,24 @@
+//
+//  PhotoCellModel.swift
+//  ACMedia-iOS
+//
+//  Copyright © 2023 AppCraft. All rights reserved.
+//
+
+import Foundation
+import UIKit
+
+public class PhotoCellModel: AppCellIdentifiable {
+    
+    var image: UIImage?
+    var isSelected: Bool
+    var viewTapped: (() -> Void)?
+    var viewSelectedToggle: (() -> Void)?
+
+    init(image: UIImage?, isSelected: Bool, viewTapped: (() -> Void)?, viewSelectedToggle: (() -> Void)?) {
+        self.image = image
+        self.isSelected = isSelected
+        self.viewTapped = viewTapped
+        self.viewSelectedToggle = viewSelectedToggle
+    }
+}
