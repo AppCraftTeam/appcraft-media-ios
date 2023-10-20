@@ -13,11 +13,22 @@ let package = Package(
             targets: ["ACMedia"]
         ),
     ],
-    dependencies: [],
+    dependencies: [
+        .package(
+            name: "SnapKit",
+            url: "https://github.com/SnapKit/SnapKit.git",
+            from: "5.0.1"
+        )
+    ],
     targets: [
         .target(
             name: "ACMedia",
-            dependencies: [],
+            dependencies: [
+                .product(
+                    name: "SnapKit",
+                    package: "SnapKit"
+                )
+            ],
             path: "Sources"
         ),
         .testTarget(
