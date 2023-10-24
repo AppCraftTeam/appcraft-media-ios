@@ -12,6 +12,13 @@ public class CameraCell: AppCollectionCell<CameraCellModel> {
     
     var previewLayer: AVCaptureVideoPreviewLayer?
     
+    private(set) lazy var containerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        
+        return view
+    }()
+    
     private(set) lazy var cameraIconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.masksToBounds = true
@@ -27,53 +34,41 @@ public class CameraCell: AppCollectionCell<CameraCellModel> {
         previewLayer = nil
     }
     
+    public func addCameraLayer(_ previewLayer: AVCaptureVideoPreviewLayer) {
+        previewLayer.frame = self.bounds
+        self.previewLayer = previewLayer
+        self.previewLayer?.removeFromSuperlayer()
+        self.containerView.layer.insertSublayer(previewLayer, at: 0)
+    }
+    
     override func updateViews() {
-        guard let model = self.cellModel else {
-            return
-        }
-        
-        self.backgroundColor = .red
+        self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
         self.contentView.layer.cornerRadius = 10.0
         
+        contentView.addSubview(containerView)
+        containerView.snp.makeConstraints {
+            $0.top.bottom.left.right.equalToSuperview()
+        }
+        
         self.cameraIconImageView.image = AppAssets.Icon.camera.image?.withRenderingMode(.alwaysTemplate)
         self.cameraIconImageView.tintColor = .white
-        contentView.addSubview(cameraIconImageView)
+        containerView.addSubview(cameraIconImageView)
         
         cameraIconImageView.snp.makeConstraints {
             $0.size.equalTo(44)
             $0.top.equalToSuperview().inset(4.0)
             $0.right.equalToSuperview().inset(4.0)
         }
-        
-        DispatchQueue(label: "camera", attributes: .concurrent).async {
-            //self.setupComponents()
-        }
     }
     
-    #warning("todo camera")
-    private func setupComponents() {
-        let captureSession = AVCaptureSession()
-        
-        if let captureDevice = AVCaptureDevice.default(for: .video) {
-            do {
-                let input = try AVCaptureDeviceInput(device: captureDevice)
-                captureSession.addInput(input)
-            } catch {
-                print(error.localizedDescription)
-            }
+    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        guard let event, event.type == .touches,
+              let model = self.cellModel else {
+            return
         }
-        
-        DispatchQueue.main.async {
-            let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-            previewLayer.videoGravity = .resizeAspectFill
-            previewLayer.frame = self.bounds
-            self.layer.addSublayer(previewLayer)
-            
-            self.previewLayer = previewLayer
-        }
-        
-        captureSession.startRunning()
+        self.cellModel?.viewTapped?()
     }
 }
 

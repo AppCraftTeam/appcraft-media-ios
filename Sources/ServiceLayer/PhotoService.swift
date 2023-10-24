@@ -88,7 +88,7 @@ internal final class PhotoService: NSObject {
     private func pullAssets(fromCollection collection: PHAssetCollection) -> PHFetchResult<PHAsset> {
         let optionsOfPhotos = PHFetchOptions()
         optionsOfPhotos.sortDescriptors = [
-            NSSortDescriptor(key: "creationDate", ascending: true)
+            NSSortDescriptor(key: "creationDate", ascending: false)
         ]
         
         var predicates: NSPredicate {

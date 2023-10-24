@@ -14,7 +14,7 @@ public class PhotoCell: AppCollectionCell<PhotoCellModel> {
     private(set) lazy var previewImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.masksToBounds = true
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFill //.scaleToFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
         return imageView
@@ -33,20 +33,16 @@ public class PhotoCell: AppCollectionCell<PhotoCellModel> {
         button.setTitle(nil, for: [])
         button.backgroundColor = .clear
         button.tintColor = .white
+        button.imageEdgeInsets = .zero
+        if #available(iOSApplicationExtension 13.0, *) {
+            button.setPreferredSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 48), forImageIn: .normal)
+        }
         
         button.addTarget(self, action: #selector(checkButtonTapped), for: .touchUpInside)
         return button
     }()
     
     override func updateViews() {
-        guard let model = self.cellModel else {
-            return
-        }
-        
-        //self.backgroundColor = .clear
-        //self.contentView.backgroundColor = .clear
-        self.contentView.layer.cornerRadius = 10.0
-        print("age selected updateViews \(model.isSelected) index \(model.index)")
         self.setupComponents()
     }
     
@@ -57,21 +53,19 @@ public class PhotoCell: AppCollectionCell<PhotoCellModel> {
     
     public override func layoutSubviews() {
         super.layoutSubviews()
+        self.contentView.backgroundColor = .clear
     }
     
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
-        guard let event, event.type == .touches,
-              let model = self.cellModel else {
+        guard let event, event.type == .touches else {
             return
         }
-        self.backgroundColor = .red
         self.cellModel?.viewTapped?()
     }
     
     @objc
     private func checkButtonTapped() {
-        self.backgroundColor = .yellow
         self.cellModel?.isSelected.toggle()
         self.cellModel?.viewSelectedToggle?()
         self.updateViews()
@@ -99,9 +93,9 @@ private extension PhotoCell {
         
         cellOverlay.addSubview(checkButton)
         print("age selected setupComponents \(self.cellModel?.isSelected) index \(self.cellModel?.index)")
-
+        
         checkButton.snp.makeConstraints {
-            $0.size.equalTo(24)
+            $0.size.equalTo(44)
             $0.top.equalToSuperview().inset(4.0)
             $0.right.equalToSuperview().inset(4.0)
         }
@@ -118,6 +112,6 @@ public extension PhotoCell {
     }
     
     func getPreviewImageView() -> UIImageView? {
-        return previewImageView
+        previewImageView
     }
 }

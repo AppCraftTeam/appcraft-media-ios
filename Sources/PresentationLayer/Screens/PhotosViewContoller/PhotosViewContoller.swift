@@ -10,8 +10,9 @@ import UIKit
 
 internal final class PhotoGridViewController: UIViewController {
     
-    public var viewModel = PhotosViewModel()
-    
+    private var viewModel = PhotosViewModel()
+    private let captureSession = AVCaptureSession()
+
     // MARK: - Components
     private lazy var doneButton: UIBarButtonItem = {
         let done = UIBarButtonItem(
@@ -164,6 +165,12 @@ internal final class PhotoGridViewController: UIViewController {
                 return
             }
             strongSelf.collectionView.reloadData()
+            
+            AVCaptureDevice.requestAccess(for: .video) { granted in
+                if granted {
+                    strongSelf.setupCamera()
+                }
+            }
         }
         viewModel.onShowPermissionAlert = { [weak self] in
             self?.showPermissionAlert()
@@ -397,30 +404,34 @@ internal final class PhotoGridViewController: UIViewController {
     }
     
     private func setupCamera() {
-        let captureSession = AVCaptureSession()
-        
-        if let captureDevice = AVCaptureDevice.default(for: .video) {
-            do {
-                let input = try AVCaptureDeviceInput(device: captureDevice)
-                captureSession.addInput(input)
-            } catch {
-                print(error.localizedDescription)
+        captureSession.stopRunning()
+        if let inputs = captureSession.inputs as? [AVCaptureDeviceInput] {
+            for input in inputs {
+                captureSession.removeInput(input)
             }
         }
         
+        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        previewLayer.videoGravity = .resizeAspectFill
         DispatchQueue.main.async {
             guard let cell = self.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) as? CameraCell else {
                 return
             }
-            let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-            previewLayer.videoGravity = .resizeAspectFill
-            previewLayer.frame = cell.bounds
-            cell.layer.addSublayer(previewLayer)
-            
-            cell.previewLayer = previewLayer
+            cell.addCameraLayer(previewLayer)
         }
         
-        captureSession.startRunning()
+        if let captureDevice = AVCaptureDevice.default(for: .video) {
+            do {
+                let input = try AVCaptureDeviceInput(device: captureDevice)
+                self.captureSession.addInput(input)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+                        
+        DispatchQueue(label: "ACMedia.CameraThread", attributes: .concurrent).async {
+            self.captureSession.startRunning()
+        }
     }
 }
 
