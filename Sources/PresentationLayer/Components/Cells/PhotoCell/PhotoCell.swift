@@ -14,7 +14,7 @@ public class PhotoCell: AppCollectionCell<PhotoCellModel> {
     private(set) lazy var previewImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.masksToBounds = true
-        imageView.contentMode = .scaleAspectFill //scaleAspectFit
+        imageView.contentMode = .scaleToFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
         return imageView
@@ -32,16 +32,6 @@ public class PhotoCell: AppCollectionCell<PhotoCellModel> {
         let button = UIButton()
         button.setTitle(nil, for: [])
         button.backgroundColor = .clear
-        
-        var image: UIImage? {
-            guard let model = self.cellModel else {
-                return nil
-            }
-            var icon = model.isSelected ? AppAssets.Icon.checkmarkFilled.image : AppAssets.Icon.checkmarkEmpty.image
-            return icon?.withRenderingMode(.alwaysTemplate)
-        }
-        
-        button.setImage(image, for: [])
         button.tintColor = .white
         
         button.addTarget(self, action: #selector(checkButtonTapped), for: .touchUpInside)
@@ -53,10 +43,10 @@ public class PhotoCell: AppCollectionCell<PhotoCellModel> {
             return
         }
         
-        self.backgroundColor = .clear
-        self.contentView.backgroundColor = .clear
+        //self.backgroundColor = .clear
+        //self.contentView.backgroundColor = .clear
         self.contentView.layer.cornerRadius = 10.0
-        print("updateViews \(model.isSelected)")
+        print("age selected updateViews \(model.isSelected) index \(model.index)")
         self.setupComponents()
     }
     
@@ -82,7 +72,7 @@ public class PhotoCell: AppCollectionCell<PhotoCellModel> {
     @objc
     private func checkButtonTapped() {
         self.backgroundColor = .yellow
-        //self.cellModel?.isSelected.toggle()
+        self.cellModel?.isSelected.toggle()
         self.cellModel?.viewSelectedToggle?()
         self.updateViews()
     }
@@ -97,8 +87,19 @@ private extension PhotoCell {
         contentView.addSubview(cellOverlay)
         cellOverlay.snp.makeConstraints { $0.edges.equalToSuperview() }
         
-        cellOverlay.addSubview(checkButton)
+        var image: UIImage? {
+            guard let model = self.cellModel else {
+                return nil
+            }
+            let icon = model.isSelected ? AppAssets.Icon.checkmarkFilled.image : AppAssets.Icon.checkmarkEmpty.image
+            return icon?.withRenderingMode(.alwaysTemplate)
+        }
         
+        checkButton.setImage(image, for: [])
+        
+        cellOverlay.addSubview(checkButton)
+        print("age selected setupComponents \(self.cellModel?.isSelected) index \(self.cellModel?.index)")
+
         checkButton.snp.makeConstraints {
             $0.size.equalTo(24)
             $0.top.equalToSuperview().inset(4.0)
@@ -113,12 +114,7 @@ public extension PhotoCell {
     func updateThumbImage(_ image: UIImage?) {
         DispatchQueue.main.async {
             self.previewImageView.image = image
-            self.previewImageView.contentMode = image != nil ? .scaleAspectFit : .scaleToFill
         }
-    }
-    
-    func changeSelection(state isSelected: Bool) {
-        //cellOverlay.isHidden = !isSelected
     }
     
     func getPreviewImageView() -> UIImageView? {

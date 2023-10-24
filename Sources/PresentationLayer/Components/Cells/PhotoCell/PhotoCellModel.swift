@@ -11,12 +11,14 @@ import UIKit
 public class PhotoCellModel: AppCellIdentifiable {
     
     var image: UIImage?
+    var index: Int
     var isSelected: Bool
     var viewTapped: (() -> Void)?
     var viewSelectedToggle: (() -> Void)?
 
-    init(image: UIImage?, isSelected: Bool, viewTapped: (() -> Void)?, viewSelectedToggle: (() -> Void)?) {
+    init(image: UIImage?, index: Int, isSelected: Bool, viewTapped: (() -> Void)?, viewSelectedToggle: (() -> Void)?) {
         self.image = image
+        self.index = index
         self.isSelected = isSelected
         self.viewTapped = viewTapped
         self.viewSelectedToggle = viewSelectedToggle

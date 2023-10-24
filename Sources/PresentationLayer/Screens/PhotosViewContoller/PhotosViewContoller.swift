@@ -164,10 +164,6 @@ internal final class PhotoGridViewController: UIViewController {
                 return
             }
             strongSelf.collectionView.reloadData()
-            
-            let item = strongSelf.collectionView(strongSelf.collectionView, numberOfItemsInSection: 0) - 1
-            let lastItemIndex = IndexPath(item: item, section: 0)
-            strongSelf.collectionView.scrollToItem(at: lastItemIndex, at: .top, animated: false)
         }
         viewModel.onShowPermissionAlert = { [weak self] in
             self?.showPermissionAlert()
@@ -437,6 +433,8 @@ extension PhotoGridViewController: UIImagePickerControllerDelegate {
         guard let image = info[.editedImage] as? UIImage else {
             return
         }
+        (self.navigationController as? MainNavigationController)?.imageSelectorDelegate?.didSelect(images: [image])
+        dismiss(animated: true, completion: nil)
     }
 }
 
