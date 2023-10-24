@@ -17,9 +17,7 @@ class AppTabBarControllerAdapter: NSObject, UITabBarControllerDelegate {
     
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         if viewController.tabBarItem.tag == 1 {
-            #warning("todo refactoring")
             let pickerService = DocumentsPickerService()
-            pickerService.delegate = parent
             pickerService.parentVC = parentVC
             pickerService.showPicker(types: types)
             return false

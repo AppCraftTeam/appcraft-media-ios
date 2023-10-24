@@ -111,3 +111,17 @@ private extension AppTabBarController {
         ]
     }
 }
+
+// MARK: - AppTabBarController
+extension AppTabBarController: UIDocumentPickerDelegate {
+    
+    public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        print("onPickDocuments delllll \(self.adapter.parent)")
+        self.adapter.parent?.onPickDocuments(urls)
+        self.dismiss(animated: true)
+    }
+    
+    public func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        print("documentPickerWasCancelled...")
+    }
+}
