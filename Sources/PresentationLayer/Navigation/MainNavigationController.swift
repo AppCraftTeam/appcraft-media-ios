@@ -84,7 +84,7 @@ private extension MainNavigationController {
     
     func updateToolbarText() {
         let totalImages = SelectedImagesStack.shared.selectedCount
-        let localizedCaption = String.locale(for: "SelectedCount")
+        let localizedCaption = AppLocale.selectedCount.locale
         let displayedText = String(format: localizedCaption, totalImages)
         selectedCounterLabel.title = displayedText
     }

@@ -1,0 +1,18 @@
+/* 
+  Localizable.strings
+  ACMedia
+
+  Copyright © 2023 AppCraft. All rights reserved.
+*/
+
+"ACMedia.done" = "Done";
+"ACMedia.cancel" = "Cancel";
+"ACMedia.emptyAlbumLabel" = "Empty album";
+"ACMedia.permissionRequired" = "Need photo permession";
+"ACMedia.permissionRequiredDescription" = "Neededfor picker correct work";
+"ACMedia.settings" = "Allow permission in Settings";
+"ACMedia.selectedCount" = "Selected %i";
+"ACMedia.require" = "Require %i";
+"ACMedia.selected" = "Select";
+"ACMedia.gallery" = "Fallery";
+"ACMedia.file" = "File";

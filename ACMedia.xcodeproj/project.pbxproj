@@ -37,9 +37,10 @@
 		95C14E542ACD8EE100714A43 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C14E532ACD8EE100714A43 /* PhotoCell.swift */; };
 		95C14E572ACD912900714A43 /* PhotosViewContoller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C14E562ACD912900714A43 /* PhotosViewContoller.swift */; };
 		95C14E5A2ACD981D00714A43 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 95C14E592ACD981D00714A43 /* SnapKit */; };
+		95EDBCE12AE9409B002E7D53 /* AppLocale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95EDBCE02AE9409B002E7D53 /* AppLocale.swift */; };
+		95EDBCE42AE9461F002E7D53 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 95EDBCE62AE9461F002E7D53 /* Localizable.strings */; };
 		95F184492ACE9CB100E6FC75 /* MainNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F184482ACE9CB100E6FC75 /* MainNavigationController.swift */; };
 		95F1844C2ACE9CDB00E6FC75 /* String+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F1844B2ACE9CDB00E6FC75 /* String+Ext.swift */; };
-		95F1844E2ACE9D1300E6FC75 /* Bundle+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F1844D2ACE9D1300E6FC75 /* Bundle+Ext.swift */; };
 		95F184502ACEA43400E6FC75 /* UIScrollView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F1844F2ACEA43400E6FC75 /* UIScrollView+Ext.swift */; };
 		95F184522ACEA5FC00E6FC75 /* SelectedImagesStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F184512ACEA5FC00E6FC75 /* SelectedImagesStack.swift */; };
 		95F184542ACEA60D00E6FC75 /* AsyncImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F184532ACEA60D00E6FC75 /* AsyncImageLoader.swift */; };
@@ -116,9 +117,10 @@
 		95C14E4B2ACD885800714A43 /* AlbumModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumModel.swift; sourceTree = "<group>"; };
 		95C14E532ACD8EE100714A43 /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 		95C14E562ACD912900714A43 /* PhotosViewContoller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewContoller.swift; sourceTree = "<group>"; };
+		95EDBCE02AE9409B002E7D53 /* AppLocale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLocale.swift; sourceTree = "<group>"; };
+		95EDBCE52AE9461F002E7D53 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		95F184482ACE9CB100E6FC75 /* MainNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationController.swift; sourceTree = "<group>"; };
 		95F1844B2ACE9CDB00E6FC75 /* String+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ext.swift"; sourceTree = "<group>"; };
-		95F1844D2ACE9D1300E6FC75 /* Bundle+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Ext.swift"; sourceTree = "<group>"; };
 		95F1844F2ACEA43400E6FC75 /* UIScrollView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Ext.swift"; sourceTree = "<group>"; };
 		95F184512ACEA5FC00E6FC75 /* SelectedImagesStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedImagesStack.swift; sourceTree = "<group>"; };
 		95F184532ACEA60D00E6FC75 /* AsyncImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageLoader.swift; sourceTree = "<group>"; };
@@ -226,6 +228,7 @@
 				3D9C432A2274629C000A6585 /* Assets.xcassets */,
 				3D9C432C2274629C000A6585 /* LaunchScreen.storyboard */,
 				3D9C432F2274629C000A6585 /* Info.plist */,
+				95EDBCE62AE9461F002E7D53 /* Localizable.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -235,6 +238,7 @@
 			children = (
 				9514DF652AE2BE9D00A72A48 /* Configuration */,
 				9514DF5F2AE2B01400A72A48 /* AppAssets.swift */,
+				95EDBCE02AE9409B002E7D53 /* AppLocale.swift */,
 			);
 			path = ApplicationLayer;
 			sourceTree = "<group>";
@@ -376,7 +380,6 @@
 			isa = PBXGroup;
 			children = (
 				95F1844B2ACE9CDB00E6FC75 /* String+Ext.swift */,
-				95F1844D2ACE9D1300E6FC75 /* Bundle+Ext.swift */,
 				95F1844F2ACEA43400E6FC75 /* UIScrollView+Ext.swift */,
 			);
 			path = ExtensionLayer;
@@ -527,6 +530,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D9C432E2274629C000A6585 /* LaunchScreen.storyboard in Resources */,
+				95EDBCE42AE9461F002E7D53 /* Localizable.strings in Resources */,
 				3D9C432B2274629C000A6585 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -564,6 +568,7 @@
 				9514DF4C2AE2663D00A72A48 /* PickerFilesType.swift in Sources */,
 				9514DF622AE2B44A00A72A48 /* Notifications.swift in Sources */,
 				95C14E542ACD8EE100714A43 /* PhotoCell.swift in Sources */,
+				95EDBCE12AE9409B002E7D53 /* AppLocale.swift in Sources */,
 				9526042D2AD53F6D00BB1EBB /* AppCollectionCell.swift in Sources */,
 				9514DF522AE2844E00A72A48 /* AppTabNavigationController.swift in Sources */,
 				9514DF672AE2BEC900A72A48 /* ACMediaPhotoPickerConfig.swift in Sources */,
@@ -580,7 +585,6 @@
 				951B93E12AD3B68E005BC1AE /* PhotosViewModel.swift in Sources */,
 				95F184572ACEA62700E6FC75 /* ZoomTransitionDelegate.swift in Sources */,
 				9514DF4E2AE267A400A72A48 /* DocumentsPickerService.swift in Sources */,
-				95F1844E2ACE9D1300E6FC75 /* Bundle+Ext.swift in Sources */,
 				9514DF692AE2BF0A00A72A48 /* ACMediaAppearance.swift in Sources */,
 				9514DF4A2AE2661F00A72A48 /* PhotoPickerFilesType.swift in Sources */,
 				952604312AD5414D00BB1EBB /* PhotoCellModel.swift in Sources */,
@@ -631,6 +635,14 @@
 				3D9C432D2274629C000A6585 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		95EDBCE62AE9461F002E7D53 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				95EDBCE52AE9461F002E7D53 /* en */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

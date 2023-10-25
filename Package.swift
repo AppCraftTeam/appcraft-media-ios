@@ -7,6 +7,7 @@ let package = Package(
     platforms: [
         .iOS(.v12)
     ],
+    defaultLocalization: "en",
     products: [
         .library(
             name: "ACMedia",

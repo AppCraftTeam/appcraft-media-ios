@@ -16,7 +16,7 @@ internal final class PhotoGridViewController: UIViewController {
     // MARK: - Components
     private lazy var doneButton: UIBarButtonItem = {
         let done = UIBarButtonItem(
-            title: String.locale(for: "Done"),
+            title: AppLocale.done.locale,
             style: .done,
             target: self,
             action: #selector(doneAction))
@@ -26,7 +26,7 @@ internal final class PhotoGridViewController: UIViewController {
     
     private lazy var cancelButton: UIBarButtonItem = {
         let done = UIBarButtonItem(
-            title: String.locale(for: "Cancel"),
+            title: AppLocale.cancel.locale,
             style: .plain,
             target: self,
             action: #selector(cancelAction))
@@ -185,7 +185,10 @@ internal final class PhotoGridViewController: UIViewController {
             self?.presentImageDetailsViewController(with: asset)
         }
         viewModel.onShowCamera = { [weak self] in
+#if TARGET_IPHONE_SIMULATOR
+#else
             self?.showCamera()
+#endif
         }
         viewModel.onReloadCells = { [weak self] indexes in
             self?.collectionView.reloadItems(at: indexes )
@@ -256,7 +259,7 @@ internal final class PhotoGridViewController: UIViewController {
         collectionView.isHidden = true
         
         let label = UILabel()
-        label.text = String.locale(for: "EmptyAlbumLabel")
+        label.text = AppLocale.emptyAlbum.locale
         label.textColor = ACMediaConfig.appearance.foregroundColor
         label.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(label)
@@ -269,11 +272,11 @@ internal final class PhotoGridViewController: UIViewController {
     }
     
     private func showPermissionAlert() {
-        let title = String.locale(for: "PermissionRequired")
-        let message = String.locale(for: "PermissionRequiredDescription")
+        let title = AppLocale.assetsPermissionTitle.locale
+        let message = AppLocale.assetsPermissionMessage.locale
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
-        let settingsTitle = String.locale(for: "Settings")
+        let settingsTitle = AppLocale.assetsPermissionOpenSettings.locale
         let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { [weak self] _ in
             self?.dismiss(animated: true, completion: nil)
             guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else {
@@ -285,7 +288,7 @@ internal final class PhotoGridViewController: UIViewController {
             //            }
         }
         
-        let cancelTitle = String.locale(for: "Cancel")
+        let cancelTitle = AppLocale.cancel.locale
         let cancelAction = UIAlertAction(title: cancelTitle, style: .cancel) { [weak self] _ in
             self?.dismiss(animated: true, completion: nil)
         }
@@ -327,10 +330,10 @@ internal final class PhotoGridViewController: UIViewController {
         } else {
             let isSelectionRequired = ACMediaConfig.photoConfig.isSelectionRequired
             if isSelectionRequired {
-                let localizedString = String.locale(for: "Require")
+                let localizedString = AppLocale.requireSelect.locale
                 descriptionLabel.text = String(format: localizedString, selectionLimit)
             } else {
-                let localizedString = String.locale(for: "Selected")
+                let localizedString = AppLocale.selected.locale
                 descriptionLabel.text = String(format: localizedString, selectionLimit)
             }
         }
@@ -372,7 +375,7 @@ internal final class PhotoGridViewController: UIViewController {
     @objc
     private func showPhotoAlbumsAlert() {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let cancel = UIAlertAction(title: String.locale(for: "Cancel"), style: .cancel)
+        let cancel = UIAlertAction(title: AppLocale.cancel.locale, style: .cancel)
         
         self.viewModel.albumsData.forEach({ albumModel in
             alert.addAction(

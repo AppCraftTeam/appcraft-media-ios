@@ -14,14 +14,14 @@ enum AppTabBarItem {
         switch self {
         case .gallery:
             #warning("todo locale")
-            let tabBarItem = UITabBarItem(title: "Gallery",
+            let tabBarItem = UITabBarItem(title: AppLocale.gallery.locale,
                                           image: AppAssets.Navigation.gallery.image?.withRenderingMode(.alwaysTemplate),
                                           selectedImage: AppAssets.Navigation.gallery.image?.withRenderingMode(.alwaysTemplate)
             )
             tabBarItem.tag = 0
             return tabBarItem
         case .file:
-            let tabBarItem = UITabBarItem(title: "File",
+            let tabBarItem = UITabBarItem(title: AppLocale.file.locale,
                                           image: AppAssets.Navigation.file.image?.withRenderingMode(.alwaysTemplate),
                                           selectedImage: AppAssets.Navigation.file.image?.withRenderingMode(.alwaysTemplate)
             )
