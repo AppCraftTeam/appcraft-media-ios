@@ -69,12 +69,13 @@ open class AppTabBarController: UITabBarController {
         super.viewDidLayoutSubviews()
     }
     
-    open func showPicker(in parent: UIViewController, fileFormats: [ACMediaDocFileType] = []) {
-        self.adapter.parent = parent as? DocumentsPickerDelegate
-        self.adapter.types = fileFormats
+    open func showPicker(in parent: UIViewController, acMediaService: ACMedia) {
+        self.adapter.parent = acMediaService
+        self.adapter.types = ACMediaConfiguration.shared.documentsConfig.fileFormats
         self.adapter.parentVC = self
-        (self.photoController as? MainNavigationController)?.imageSelectorDelegate = parent as? PhotoPickerDelegate
-        
+        (self.photoController as? MainNavigationController)?.imageSelectorDelegate = acMediaService
+        print("onPickDocuments sssssetyp \(self.adapter.parent) and \(acMediaService)")
+        #warning("delegate")
         parent.present(self, animated: true)
     }
 }
@@ -117,7 +118,7 @@ extension AppTabBarController: UIDocumentPickerDelegate {
     
     public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         print("onPickDocuments delllll \(self.adapter.parent)")
-        self.adapter.parent?.onPickDocuments(urls)
+        self.adapter.parent?.didPickDocuments(urls)
         self.dismiss(animated: true)
     }
     

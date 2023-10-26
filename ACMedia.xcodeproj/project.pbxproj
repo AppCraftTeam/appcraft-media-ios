@@ -16,6 +16,8 @@
 		3D9C433422746323000A6585 /* ACMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D9C429022745894000A6585 /* ACMedia.framework */; };
 		3D9C433522746323000A6585 /* ACMedia.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3D9C429022745894000A6585 /* ACMedia.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9503F8DD2AEA1DE900F016C7 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9503F8DC2AEA1DE900F016C7 /* AppTheme.swift */; };
+		9503F8E02AEA499F00F016C7 /* ACMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9503F8DF2AEA499F00F016C7 /* ACMedia.swift */; };
+		9503F8E22AEA72D300F016C7 /* PhotoPickerCallbackModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9503F8E12AEA72D300F016C7 /* PhotoPickerCallbackModel.swift */; };
 		9514DF4A2AE2661F00A72A48 /* PhotoPickerFilesType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9514DF492AE2661F00A72A48 /* PhotoPickerFilesType.swift */; };
 		9514DF4C2AE2663D00A72A48 /* PickerFilesType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9514DF4B2AE2663D00A72A48 /* PickerFilesType.swift */; };
 		9514DF4E2AE267A400A72A48 /* DocumentsPickerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9514DF4D2AE267A400A72A48 /* DocumentsPickerService.swift */; };
@@ -98,6 +100,8 @@
 		3D9C432D2274629C000A6585 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3D9C432F2274629C000A6585 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9503F8DC2AEA1DE900F016C7 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
+		9503F8DF2AEA499F00F016C7 /* ACMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACMedia.swift; sourceTree = "<group>"; };
+		9503F8E12AEA72D300F016C7 /* PhotoPickerCallbackModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerCallbackModel.swift; sourceTree = "<group>"; };
 		9514DF492AE2661F00A72A48 /* PhotoPickerFilesType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerFilesType.swift; sourceTree = "<group>"; };
 		9514DF4B2AE2663D00A72A48 /* PickerFilesType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerFilesType.swift; sourceTree = "<group>"; };
 		9514DF4D2AE267A400A72A48 /* DocumentsPickerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentsPickerService.swift; sourceTree = "<group>"; };
@@ -246,6 +250,7 @@
 		9514DF532AE2A29700A72A48 /* ApplicationLayer */ = {
 			isa = PBXGroup;
 			children = (
+				9503F8DF2AEA499F00F016C7 /* ACMedia.swift */,
 				9514DF652AE2BE9D00A72A48 /* Configuration */,
 				9514DF5F2AE2B01400A72A48 /* AppAssets.swift */,
 				95EDBCE02AE9409B002E7D53 /* AppLocale.swift */,
@@ -259,6 +264,7 @@
 			children = (
 				95C14E4B2ACD885800714A43 /* AlbumModel.swift */,
 				9514DF5C2AE2A4F100A72A48 /* Enums */,
+				9503F8E12AEA72D300F016C7 /* PhotoPickerCallbackModel.swift */,
 			);
 			path = DataLayer;
 			sourceTree = "<group>";
@@ -580,12 +586,14 @@
 				9514DF622AE2B44A00A72A48 /* Notifications.swift in Sources */,
 				9503F8DD2AEA1DE900F016C7 /* AppTheme.swift in Sources */,
 				95C14E542ACD8EE100714A43 /* PhotoCell.swift in Sources */,
+				9503F8E22AEA72D300F016C7 /* PhotoPickerCallbackModel.swift in Sources */,
 				95EDBCE12AE9409B002E7D53 /* AppLocale.swift in Sources */,
 				9526042D2AD53F6D00BB1EBB /* AppCollectionCell.swift in Sources */,
 				9514DF522AE2844E00A72A48 /* AppTabNavigationController.swift in Sources */,
 				9514DF672AE2BEC900A72A48 /* ACMediaPhotoPickerConfig.swift in Sources */,
 				95F184522ACEA5FC00E6FC75 /* SelectedImagesStack.swift in Sources */,
 				9514DF5E2AE2A66000A72A48 /* AppTabBarControllerAdapter.swift in Sources */,
+				9503F8E02AEA499F00F016C7 /* ACMedia.swift in Sources */,
 				9526042F2AD5411B00BB1EBB /* CameraCellModel.swift in Sources */,
 				952604272AD5394B00BB1EBB /* CameraCell.swift in Sources */,
 				95C14E4C2ACD885800714A43 /* AlbumModel.swift in Sources */,

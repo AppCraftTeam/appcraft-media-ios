@@ -9,7 +9,6 @@
 import Foundation
 
 public struct ACMediaPhotoPickerConfig {
-    var fileTypes: [PickerFilesType] = PickerFilesType.allCases
     var types: [PhotoPickerFilesType] = PhotoPickerFilesType.allCases
     
     public var selectionLimit: Int = 1 {

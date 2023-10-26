@@ -8,7 +8,7 @@
 import PhotosUI
 import UIKit
 
-internal final class PhotoService: NSObject {
+public final class PhotoService: NSObject {
     
     public var fileTypes: [PhotoPickerFilesType] = PhotoPickerFilesType.allCases
     

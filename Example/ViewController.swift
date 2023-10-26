@@ -74,19 +74,21 @@ class ViewController: UIViewController {
     
     
     @objc
-    private func openPicker() {
-        #warning("todo initial with config, ACMedia()")
-        AppTabBarController().showPicker(
-            in: self,
-            fileFormats: [.zip]
+    private func openPicker() { 
+        let acMedia = ACMedia(
+            fileTypes: [.gallery],
+            assetsSelected: { [weak self] assets in
+                self?.didPickImages(assets.images)
+                self?.didPickDocuments(assets.videoUrls)
+            },
+            filesSelected: { [weak self] fileUrls in
+                self?.didPickDocuments(fileUrls)
+            }
         )
+        acMedia.show(in: self)
     }
-}
-
-// MARK: - DocumentsPickerDelegate
-extension ViewController: DocumentsPickerDelegate {
     
-    func onPickDocuments(_ urls: [URL]) {
+    func didPickDocuments(_ urls: [URL]) {
         print("onPickDocuments - \(urls)")
         filesStack.arrangedSubviews.forEach({ $0.removeFromSuperview() })
         urls.forEach({ url in
@@ -95,12 +97,8 @@ extension ViewController: DocumentsPickerDelegate {
             filesStack.addArrangedSubview(label)
         })
     }
-}
-
-// MARK: - PhotoPickerDelegate
-extension ViewController: PhotoPickerDelegate {
     
-    func didSelect(images: [UIImage]) {
+    func didPickImages(_ images: [UIImage]) {
         print("didSelect - \(images.count)")
         imagesStack.arrangedSubviews.forEach({ $0.removeFromSuperview() })
         images.forEach({ img in
@@ -111,4 +109,3 @@ extension ViewController: PhotoPickerDelegate {
         })
     }
 }
-

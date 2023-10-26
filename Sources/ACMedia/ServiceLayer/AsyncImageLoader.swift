@@ -8,7 +8,7 @@
 import PhotosUI
 import UIKit
 
-internal class AsyncImageLoader: Operation {
+public class AsyncImageLoader: Operation {
     
     var img: UIImage?
     var onFinishLoadingImage: ((_ image: UIImage?) -> Void)?
@@ -16,7 +16,7 @@ internal class AsyncImageLoader: Operation {
     private var photoAsset: PHAsset
     private var imageSize: CGSize
     
-    override var isAsynchronous: Bool {
+    public override var isAsynchronous: Bool {
         return true
     }
     
@@ -25,7 +25,7 @@ internal class AsyncImageLoader: Operation {
         self.imageSize = imageSize
     }
     
-    override func main() {
+    public override func main() {
         if isCancelled {
             return
         }

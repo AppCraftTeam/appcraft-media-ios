@@ -8,6 +8,6 @@
 import Foundation
 
 public enum PickerFilesType: CaseIterable {
-    case photoVideo
-    case documents
+    case gallery
+    case files
 }

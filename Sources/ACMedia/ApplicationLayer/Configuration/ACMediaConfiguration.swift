@@ -7,10 +7,10 @@
 
 import Foundation
 
-internal var ACMediaConfig: ACMediaConfiguration {
+public var ACMediaConfig: ACMediaConfiguration {
     ACMediaConfiguration.shared
 }
-#warning("todo public or internal everywhere")
+#warning("todo public or public everywhere")
 
 public struct ACMediaConfiguration {
     

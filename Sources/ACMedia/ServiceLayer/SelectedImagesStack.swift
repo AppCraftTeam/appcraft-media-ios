@@ -8,7 +8,7 @@
 import Foundation
 import PhotosUI
 
-internal class SelectedImagesStack {
+public class SelectedImagesStack {
     
     private var selectedImageAssets = Set<PHAsset>() {
         didSet {

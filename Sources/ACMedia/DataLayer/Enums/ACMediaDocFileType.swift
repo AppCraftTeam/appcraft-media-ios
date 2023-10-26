@@ -9,7 +9,7 @@ import UIKit
 import MobileCoreServices
 import UniformTypeIdentifiers
 
-public enum ACMediaDocFileType {
+public enum ACMediaDocFileType: CaseIterable {
     #warning("todo add formats")
     case png, jpeg, gif, bmp, text, pdf, zip
     

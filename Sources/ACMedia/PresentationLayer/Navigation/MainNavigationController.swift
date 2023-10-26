@@ -8,7 +8,7 @@
 import UIKit
 
 public protocol PhotoPickerDelegate: AnyObject {
-    func didSelect(images: [UIImage])
+    func didPickAssets(_ model: PhotoPickerCallbackModel)
 }
 
 open class MainNavigationController: UINavigationController {

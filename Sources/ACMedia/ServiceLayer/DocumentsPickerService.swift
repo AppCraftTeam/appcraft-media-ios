@@ -10,7 +10,7 @@ import MobileCoreServices
 import UniformTypeIdentifiers
 
 public protocol DocumentsPickerDelegate: AnyObject {
-    func onPickDocuments(_ urls: [URL])
+    func didPickDocuments(_ urls: [URL])
 }
 
 public class DocumentsPickerService: NSObject {

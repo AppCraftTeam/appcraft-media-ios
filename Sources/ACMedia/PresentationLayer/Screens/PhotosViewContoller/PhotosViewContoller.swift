@@ -8,7 +8,7 @@
 import PhotosUI
 import UIKit
 
-internal final class PhotoGridViewController: UIViewController {
+public final class PhotoGridViewController: UIViewController {
     
     private var viewModel = PhotosViewModel()
     private let captureSession = AVCaptureSession()
@@ -134,17 +134,19 @@ internal final class PhotoGridViewController: UIViewController {
             manager.fileTypes = ACMediaConfiguration.shared.photoConfig.types
             
             manager.fetchHighResImages(for: assets) { images in
-                (self.navigationController as? MainNavigationController)?.imageSelectorDelegate?.didSelect(images: images)
+                manager.fetchVideoURL(for: assets) { videoUrls in
+                    let model = PhotoPickerCallbackModel(images: images, videoUrls: videoUrls)
+                    print("didPickAssets imageSelectorDelegate \((self.navigationController as? MainNavigationController)?.imageSelectorDelegate), or \(self.tabBarController as? AppTabBarController)")
+                    (self.navigationController as? MainNavigationController)?.imageSelectorDelegate?.didPickAssets(model)
+                }
             }
-            manager.fetchVideoURL(for: assets) { images in
-                #warning("todo delegate")
-            }
+           
             dismiss(animated: true, completion: nil)
         }
     }
     
     // MARK: - Methods
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         PHPhotoLibrary.shared().register(self)
         
@@ -238,11 +240,11 @@ internal final class PhotoGridViewController: UIViewController {
     }
     
     
-    override func viewWillAppear(_ animated: Bool) {
+    public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
     
-    override func viewDidLayoutSubviews() {
+    public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionView.collectionViewLayout.invalidateLayout()
     }
@@ -400,13 +402,13 @@ internal final class PhotoGridViewController: UIViewController {
 // MARK: - UIImagePickerControllerDelegate
 extension PhotoGridViewController: UIImagePickerControllerDelegate {
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true)
         
         guard let image = info[.editedImage] as? UIImage else {
             return
         }
-        (self.navigationController as? MainNavigationController)?.imageSelectorDelegate?.didSelect(images: [image])
+        (self.navigationController as? MainNavigationController)?.imageSelectorDelegate?.didPickAssets(PhotoPickerCallbackModel(images: [image], videoUrls: []))
         dismiss(animated: true, completion: nil)
     }
 }
@@ -417,7 +419,7 @@ extension PhotoGridViewController: UINavigationControllerDelegate {}
 // MARK: - UICollectionViewDataSource
 extension PhotoGridViewController: UICollectionViewDataSource {
     
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let cell = cell as? PhotoCell else { return }
         
         let updateCellClosure: (UIImage?) -> Void = { [unowned self] image in
@@ -445,7 +447,7 @@ extension PhotoGridViewController: UICollectionViewDataSource {
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard indexPath.row != 0 else {
             return
         }
@@ -455,15 +457,15 @@ extension PhotoGridViewController: UICollectionViewDataSource {
         }
     }
     
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
         1
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         viewModel.models.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let model = self.viewModel.models[indexPath.row]
         
         if let model = model as? CameraCellModel {
@@ -492,7 +494,8 @@ extension PhotoGridViewController: UICollectionViewDataSource {
 
 // MARK: - UICollectionViewDataSourcePrefetching
 extension PhotoGridViewController: UICollectionViewDataSourcePrefetching {
-    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+    
+    public func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
             guard indexPath.row != 0 else {
                 return
@@ -508,7 +511,7 @@ extension PhotoGridViewController: UICollectionViewDataSourcePrefetching {
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+    public func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
             guard indexPath.row != 0 else {
                 return
@@ -525,14 +528,15 @@ extension PhotoGridViewController: UICollectionViewDataSourcePrefetching {
 // MARK: - UICollectionViewDelegateFlowLayout
 extension PhotoGridViewController: UICollectionViewDelegateFlowLayout {
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return .init(width: cellWidth, height: cellWidth)
     }
 }
 
 // MARK: - PHPhotoLibraryChangeObserver
 extension PhotoGridViewController: PHPhotoLibraryChangeObserver {
-    func photoLibraryDidChange(_ changeInstance: PHChange) {
+    
+    public func photoLibraryDidChange(_ changeInstance: PHChange) {
         DispatchQueue.main.async { [unowned self] in
             viewModel.authorize()
         }
@@ -542,7 +546,7 @@ extension PhotoGridViewController: PHPhotoLibraryChangeObserver {
 // MARK: - ZoomingViewController
 extension PhotoGridViewController: ZoomTransitionViewController {
     
-    func getZoomingImageView(for transition: ZoomTransitionDelegate) -> UIImageView? {
+    public func getZoomingImageView(for transition: ZoomTransitionDelegate) -> UIImageView? {
         if let indexPath =  viewModel.selectedIndexPath,
            indexPath.row != 0,
            let cell = collectionView.cellForItem(at: indexPath) as? PhotoCell {

@@ -8,7 +8,7 @@
 import PhotosUI
 import UIKit
 
-internal final class PhotoPreviewViewController: UIViewController {
+public final class PhotoPreviewViewController: UIViewController {
     var photoService = PhotoService()
     
     // MARK: - Components
@@ -51,7 +51,7 @@ internal final class PhotoPreviewViewController: UIViewController {
     private var sizeConstraints: [NSLayoutConstraint] = []
     private var initConstraints: [NSLayoutConstraint] = []
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         adjustToolbar()
         
@@ -60,7 +60,7 @@ internal final class PhotoPreviewViewController: UIViewController {
         loadPhoto()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         finalPhotoConfig()
         adjustZoomScale()
@@ -173,7 +173,7 @@ internal final class PhotoPreviewViewController: UIViewController {
 //MARK: - ZoomTransitionViewController
 extension PhotoPreviewViewController: ZoomTransitionViewController {
     
-    func getZoomingImageView(for transition: ZoomTransitionDelegate) -> UIImageView? {
+    public func getZoomingImageView(for transition: ZoomTransitionDelegate) -> UIImageView? {
         displayPhotoView
     }
 }
@@ -181,7 +181,7 @@ extension PhotoPreviewViewController: ZoomTransitionViewController {
 // MARK: - UIScrollViewDelegate
 extension PhotoPreviewViewController: UIScrollViewDelegate {
     
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+    public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         displayPhotoView
     }
     
@@ -195,7 +195,7 @@ extension PhotoPreviewViewController: UIScrollViewDelegate {
         scrollView.zoomScale = 1.0
     }
     
-    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+    public func scrollViewDidZoom(_ scrollView: UIScrollView) {
         let imageViewSize = displayPhotoView.frame.size
         let scrollViewSize = scrollView.bounds.size
         let verticalPadding = imageViewSize.height < scrollViewSize.height ?
