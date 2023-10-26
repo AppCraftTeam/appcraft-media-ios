@@ -16,8 +16,7 @@ open class MainNavigationController: UINavigationController {
     // MARK: - Components
     private lazy var selectedCounterLabel: UIBarButtonItem = {
         let item = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        item.tintColor = .black
-        item.isEnabled = false
+        item.tintColor = ACMediaConfiguration.shared.appearance.foregroundColor
         
         return item
     }()
@@ -74,6 +73,11 @@ private extension MainNavigationController {
         ]
         
         self.toolbarItems = barItems
+        self.toolbar.tintColor = ACMediaConfiguration.shared.appearance.tintColor
+        self.toolbar.barStyle = .default
+        self.toolbar.isTranslucent = true
+        self.toolbar.backgroundColor = ACMediaConfiguration.shared.appearance.backgroundColor
+        self.toolbar.isUserInteractionEnabled = false
         refreshToolbar()
     }
     

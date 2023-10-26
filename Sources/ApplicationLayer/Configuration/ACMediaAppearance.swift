@@ -11,10 +11,10 @@ import UIKit
 
 public struct ACMediaAppearance {
     
-    public var tintColor: UIColor = .red
-    public var foregroundColor: UIColor = .black
-    public var checkmarkForegroundColor: UIColor = .systemBlue
-    public var checkmarkBackgroundColor: UIColor = .white
+    public var tintColor: UIColor = AppTheme.tintColor
+    public var backgroundColor: UIColor = AppTheme.backgroundColor
+    public var foregroundColor: UIColor = AppTheme.foregroundColor
+    public var checkmarkForegroundColor: UIColor = AppTheme.checkmarkForegroundColor
     public var cellsInRow: Int = 3 {
         willSet {
             if newValue < 0 {

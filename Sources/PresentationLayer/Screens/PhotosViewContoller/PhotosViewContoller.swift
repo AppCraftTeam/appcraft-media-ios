@@ -74,17 +74,6 @@ internal final class PhotoGridViewController: UIViewController {
         return collectionView
     }()
     
-    // The description is used to tell the user how many images he needs or can choose.
-    private lazy var descriptionLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = ACMediaConfig.appearance.foregroundColor
-        label.font = UIFont.preferredFont(forTextStyle: .footnote)
-        label.textAlignment = .center
-        return label
-    }()
-    
-    
     @available(iOSApplicationExtension 13.0, *)
     var demoMenu: UIMenu {
         var menuItems: [UIAction] {
@@ -159,10 +148,9 @@ internal final class PhotoGridViewController: UIViewController {
         super.viewDidLoad()
         PHPhotoLibrary.shared().register(self)
         
-        view.backgroundColor = .white
+        view.backgroundColor = ACMediaConfiguration.shared.appearance.backgroundColor
         configureToolbar()
         configureCollectionView()
-        configureDescriptionLabel()
         
         viewModel.onReloadCollection = { [weak self] in
             guard let strongSelf = self else {
@@ -232,10 +220,10 @@ internal final class PhotoGridViewController: UIViewController {
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0)
         button.sizeToFit()
         
-        button.setTitleColor(.black, for: [])
-        button.titleLabel?.textColor = .black
+        button.setTitleColor(ACMediaConfiguration.shared.appearance.foregroundColor, for: [])
+        button.titleLabel?.textColor = ACMediaConfiguration.shared.appearance.foregroundColor
         button.titleLabel?.font = .boldSystemFont(ofSize: 17.0)
-        button.tintColor = .black
+        button.tintColor = ACMediaConfiguration.shared.appearance.foregroundColor
         
         if #available(iOSApplicationExtension 14.0, *) {
             button.menu = demoMenu
@@ -311,48 +299,15 @@ internal final class PhotoGridViewController: UIViewController {
         collectionView.register(PhotoCell.self, forCellWithReuseIdentifier: "PhotoCardCell")
         collectionView.register(CameraCell.self, forCellWithReuseIdentifier: "CameraCell")
         view.addSubview(collectionView)
-        
-        let guide = view.safeAreaLayoutGuide
-        let constraints: [NSLayoutConstraint] = [
-            collectionView.topAnchor.constraint(equalTo: guide.topAnchor),
-            collectionView.leftAnchor.constraint(equalTo: guide.leftAnchor),
-            guide.rightAnchor.constraint(equalTo: collectionView.rightAnchor)
-        ]
-        
-        NSLayoutConstraint.activate(constraints)
-    }
-    
-    public func configureDescriptionLabel() {
-        view.addSubview(descriptionLabel)
-        
-        var labelHeight: CGFloat = 28
-        let selectionLimit = ACMediaConfig.photoConfig.selectionLimit
-        
-        if selectionLimit == 1 {
-            descriptionLabel.isHidden = true
-            labelHeight = 0
-        } else {
-            let isSelectionRequired = ACMediaConfig.photoConfig.isSelectionRequired
-            if isSelectionRequired {
-                let localizedString = AppLocale.requireSelect.locale
-                descriptionLabel.text = String(format: localizedString, selectionLimit)
-            } else {
-                let localizedString = AppLocale.selected.locale
-                descriptionLabel.text = String(format: localizedString, selectionLimit)
-            }
+            
+        collectionView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            make.left.equalTo(view.safeAreaLayoutGuide.snp.left)
+            make.right.equalTo(view.safeAreaLayoutGuide.snp.right)
         }
-        
-        let guide = view.safeAreaLayoutGuide
-        let constraints: [NSLayoutConstraint] = [
-            descriptionLabel.topAnchor.constraint(equalTo: collectionView.bottomAnchor),
-            descriptionLabel.leftAnchor.constraint(equalTo: guide.leftAnchor),
-            guide.bottomAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 5),
-            guide.rightAnchor.constraint(equalTo: descriptionLabel.rightAnchor),
-            descriptionLabel.heightAnchor.constraint(equalToConstant: labelHeight)
-        ]
-        NSLayoutConstraint.activate(constraints)
     }
-    
+
     func presentImageDetailsViewController(with asset: PHAsset) {
         viewModel.photoService.fetchThumbnail(for: asset, size: CGSize()) { [unowned self] image in
             guard let image = image else {

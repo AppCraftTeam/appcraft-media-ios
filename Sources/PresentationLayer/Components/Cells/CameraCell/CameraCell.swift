@@ -14,7 +14,7 @@ public class CameraCell: AppCollectionCell<CameraCellModel> {
     
     private(set) lazy var containerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = ACMediaConfiguration.shared.appearance.backgroundColor
         
         return view
     }()
@@ -64,8 +64,7 @@ public class CameraCell: AppCollectionCell<CameraCellModel> {
     
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
-        guard let event, event.type == .touches,
-              let model = self.cellModel else {
+        guard let event, event.type == .touches else {
             return
         }
         self.cellModel?.viewTapped?()

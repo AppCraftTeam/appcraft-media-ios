@@ -115,7 +115,7 @@ extension ZoomTransitionDelegate: UIViewControllerAnimatedTransitioning {
         let originalControllerBackgroundColor = foregroundColorController.view.backgroundColor
         foregroundColorController.view.backgroundColor = UIColor.clear
         
-        container.backgroundColor = UIColor.white
+        container.backgroundColor = ACMediaConfiguration.shared.appearance.backgroundColor
         container.addSubview(backgroundColorController.view)
         container.addSubview(foregroundColorController.view)
         container.addSubview(snapshotView)

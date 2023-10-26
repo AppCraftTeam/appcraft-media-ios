@@ -51,7 +51,7 @@ open class AppTabBarController: UITabBarController {
     @available(iOSApplicationExtension 13.0, *)
     var tabBarAppearance: UITabBarAppearance {
         let appearance = UITabBarAppearance()
-        appearance.configureWithOpaqueBackground()
+        appearance.configureWithDefaultBackground()
         return appearance
     }
     
