@@ -195,12 +195,7 @@
 		3D9C42A0227458FA000A6585 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				9514DF532AE2A29700A72A48 /* ApplicationLayer */,
-				9514DF542AE2A29F00A72A48 /* DataLayer */,
-				95F1844A2ACE9CD100E6FC75 /* ExtensionLayer */,
-				9514DF572AE2A48600A72A48 /* PresentationLayer */,
-				9514DF552AE2A2BB00A72A48 /* ServiceLayer */,
-				9514DF562AE2A2C100A72A48 /* SupportLayer */,
+				9503F8DE2AEA495B00F016C7 /* ACMedia */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -233,6 +228,19 @@
 				95EDBCE62AE9461F002E7D53 /* Localizable.strings */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		9503F8DE2AEA495B00F016C7 /* ACMedia */ = {
+			isa = PBXGroup;
+			children = (
+				9514DF532AE2A29700A72A48 /* ApplicationLayer */,
+				9514DF542AE2A29F00A72A48 /* DataLayer */,
+				95F1844A2ACE9CD100E6FC75 /* ExtensionLayer */,
+				9514DF572AE2A48600A72A48 /* PresentationLayer */,
+				9514DF552AE2A2BB00A72A48 /* ServiceLayer */,
+				9514DF562AE2A2C100A72A48 /* SupportLayer */,
+			);
+			path = ACMedia;
 			sourceTree = "<group>";
 		};
 		9514DF532AE2A29700A72A48 /* ApplicationLayer */ = {
