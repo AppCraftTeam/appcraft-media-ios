@@ -143,9 +143,13 @@ internal final class PhotoGridViewController: UIViewController {
             
             let manager = PhotoService()
             manager.fileTypes = ACMediaConfiguration.shared.photoConfig.types
-            let images: [UIImage] = manager.fetchHighResImages(for: assets)
             
-            (self.navigationController as? MainNavigationController)?.imageSelectorDelegate?.didSelect(images: images)
+            manager.fetchHighResImages(for: assets) { images in
+                (self.navigationController as? MainNavigationController)?.imageSelectorDelegate?.didSelect(images: images)
+            }
+            manager.fetchVideoURL(for: assets) { images in
+                #warning("todo delegate")
+            }
             dismiss(animated: true, completion: nil)
         }
     }

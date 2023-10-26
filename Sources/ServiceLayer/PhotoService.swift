@@ -131,24 +131,57 @@ internal final class PhotoService: NSObject {
             }
     }
     
-    public func fetchHighResImages(for assets: [PHAsset]) -> [UIImage] {
+    public func fetchHighResImages(for assets: [PHAsset], completionHandler: @escaping ([UIImage]) -> Void) {
         var images: [UIImage] = []
+        let group = DispatchGroup()
         
         let imageOptions = PHImageRequestOptions()
         imageOptions.isSynchronous = true
         imageOptions.deliveryMode = .highQualityFormat
         
         for asset in assets {
+            group.enter()
             PHImageManager.default().requestImage(
                 for: asset,
                 targetSize: .init(),
                 contentMode: .aspectFill,
                 options: imageOptions) { (image, _) in
                     if let img = image {
-                        images.append(img)
+                        images += [img]
                     }
+                    group.leave()
                 }
         }
-        return images
+        
+        group.notify(queue: .main) {
+            completionHandler(images)
+        }
+    }
+    
+    public func fetchVideoURL(for assets: [PHAsset], completionHandler: @escaping ([URL]) -> Void) {
+        var urls: [URL] = []
+        let group = DispatchGroup()
+        let options = PHVideoRequestOptions()
+        options.version = .original
+        
+        for asset in assets {
+            group.enter()
+            PHImageManager.default().requestAVAsset(
+                forVideo: asset,
+                options: options) { avAsset, _, _ in
+                    guard let avURLAsset = avAsset as? AVURLAsset else {
+                        group.leave()
+                        return
+                    }
+                    
+                    let videoURL = avURLAsset.url
+                    urls += [videoURL]
+                    group.leave()
+                }
+        }
+        
+        group.notify(queue: .main) {
+            completionHandler(urls)
+        }
     }
 }
