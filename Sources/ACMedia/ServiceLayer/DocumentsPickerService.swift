@@ -9,10 +9,6 @@ import UIKit
 import MobileCoreServices
 import UniformTypeIdentifiers
 
-public protocol DocumentsPickerDelegate: AnyObject {
-    func didPickDocuments(_ urls: [URL])
-}
-
 public class DocumentsPickerService: NSObject {
     
     weak var parentVC: UIViewController?

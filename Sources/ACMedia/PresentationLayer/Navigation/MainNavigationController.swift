@@ -7,10 +7,6 @@
 
 import UIKit
 
-public protocol PhotoPickerDelegate: AnyObject {
-    func didPickAssets(_ model: PhotoPickerCallbackModel)
-}
-
 open class MainNavigationController: UINavigationController {
     
     // MARK: - Components
@@ -21,9 +17,7 @@ open class MainNavigationController: UINavigationController {
         return item
     }()
     
-    // MARK: - Params
-    public weak var imageSelectorDelegate: PhotoPickerDelegate?
-    
+    // MARK: - Params    
     private let navigationTransition = ZoomTransitionDelegate()
     
     override open func viewDidLoad() {
@@ -33,8 +27,7 @@ open class MainNavigationController: UINavigationController {
         setupToolbar()
         setupNavigationBar()
         
-        let notificationHub = NotificationCenter.default
-        notificationHub.addObserver(
+        NotificationCenter.default.addObserver(
             self,
             selector: #selector(refreshToolbar),
             name: .onSelectedImagesChanged,

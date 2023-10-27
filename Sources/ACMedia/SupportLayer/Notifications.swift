@@ -10,5 +10,5 @@ import Foundation
 
 public extension NSNotification.Name {
     
-    static var onSelectedImagesChanged = Notification.Name("SelectedImagesChanged")
+    static var onSelectedImagesChanged = Notification.Name("ACMedia.onSelectedImagesChanged")
 }

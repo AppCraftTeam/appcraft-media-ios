@@ -53,6 +53,14 @@ class ViewController: UIViewController {
         return button
     }()
     
+    lazy var urlsLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.font = .systemFont(ofSize: 13.0)
+        
+        return label
+    }()
+    
     // MARK: View-Lifecycle
     
     /// View did load
@@ -70,6 +78,8 @@ class ViewController: UIViewController {
         self.containerStack.addArrangedSubview(openPickerButton)
         self.containerStack.addArrangedSubview(imagesStack)
         self.containerStack.addArrangedSubview(filesStack)
+        filesStack.addArrangedSubview(urlsLabel)
+        self.containerStack.addArrangedSubview(UIView())
     }
     
     
@@ -90,12 +100,7 @@ class ViewController: UIViewController {
     
     func didPickDocuments(_ urls: [URL]) {
         print("onPickDocuments - \(urls)")
-        filesStack.arrangedSubviews.forEach({ $0.removeFromSuperview() })
-        urls.forEach({ url in
-            let label = UILabel()
-            label.text = url.absoluteString
-            filesStack.addArrangedSubview(label)
-        })
+        urlsLabel.text = urls.map({ $0.absoluteString }).joined(separator: ", ")
     }
     
     func didPickImages(_ images: [UIImage]) {

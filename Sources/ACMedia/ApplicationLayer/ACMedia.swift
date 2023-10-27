@@ -9,12 +9,13 @@ import Foundation
 import UIKit
 
 public class ACMedia: NSObject {
+    
     // Callbacks
     public var assetsSelected: ((PhotoPickerCallbackModel) -> Void)?
     public var filesSelected: (([URL]) -> Void)?
     
     public var fileTypes: [PickerFilesType] = []
-
+    
     public init(fileTypes: [PickerFilesType] = [], assetsSelected: ((PhotoPickerCallbackModel) -> Void)? = nil, filesSelected: (([URL]) -> Void)? = nil) {
         self.fileTypes = fileTypes
         self.assetsSelected = assetsSelected
@@ -27,17 +28,13 @@ public class ACMedia: NSObject {
     }
 }
 
-//MARK: - PhotoPickerDelegate
-extension ACMedia: PhotoPickerDelegate {
-    public func didPickAssets(_ model: PhotoPickerCallbackModel) {
-        print("didPickAssets \(didPickAssets)")
+public extension ACMedia {
+    
+    func didPickAssets(_ model: PhotoPickerCallbackModel) {
         self.assetsSelected?(model)
     }
-}
-
-//MARK: - PhotoPickerDelegate
-extension ACMedia: DocumentsPickerDelegate {
-    public func didPickDocuments(_ urls: [URL]) {
+    
+    func didPickDocuments(_ urls: [URL]) {
         self.filesSelected?(urls)
     }
 }

@@ -12,7 +12,6 @@ import UIKit
 class AppTabBarControllerAdapter: NSObject, UITabBarControllerDelegate {
     
     var types: [ACMediaDocFileType] = []
-    weak var parent: DocumentsPickerDelegate?
     weak var parentVC: UIViewController?
     
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {

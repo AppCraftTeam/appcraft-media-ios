@@ -34,7 +34,7 @@ enum AppTabBarItem {
 open class AppTabBarController: UITabBarController {
     
     private let adapter = AppTabBarControllerAdapter()
-    
+
     private(set) lazy var photoController: UINavigationController = {
         let vc = MainNavigationController(configuration: .shared)
         vc.tabBarItem = AppTabBarItem.gallery.item
@@ -69,13 +69,13 @@ open class AppTabBarController: UITabBarController {
         super.viewDidLayoutSubviews()
     }
     
+    public var acMediaService: ACMedia?
+    
     open func showPicker(in parent: UIViewController, acMediaService: ACMedia) {
-        self.adapter.parent = acMediaService
+        self.acMediaService = acMediaService
         self.adapter.types = ACMediaConfiguration.shared.documentsConfig.fileFormats
         self.adapter.parentVC = self
-        (self.photoController as? MainNavigationController)?.imageSelectorDelegate = acMediaService
-        print("onPickDocuments sssssetyp \(self.adapter.parent) and \(acMediaService)")
-        #warning("delegate")
+        
         parent.present(self, animated: true)
     }
 }
@@ -117,12 +117,9 @@ private extension AppTabBarController {
 extension AppTabBarController: UIDocumentPickerDelegate {
     
     public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        print("onPickDocuments delllll \(self.adapter.parent)")
-        self.adapter.parent?.didPickDocuments(urls)
+        self.acMediaService?.didPickDocuments(urls)
         self.dismiss(animated: true)
     }
     
-    public func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
-        print("documentPickerWasCancelled...")
-    }
+    public func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {}
 }

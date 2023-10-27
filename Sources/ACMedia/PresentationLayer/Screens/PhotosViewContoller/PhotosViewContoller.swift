@@ -136,8 +136,7 @@ public final class PhotoGridViewController: UIViewController {
             manager.fetchHighResImages(for: assets) { images in
                 manager.fetchVideoURL(for: assets) { videoUrls in
                     let model = PhotoPickerCallbackModel(images: images, videoUrls: videoUrls)
-                    print("didPickAssets imageSelectorDelegate \((self.navigationController as? MainNavigationController)?.imageSelectorDelegate), or \(self.tabBarController as? AppTabBarController)")
-                    (self.navigationController as? MainNavigationController)?.imageSelectorDelegate?.didPickAssets(model)
+                    ((self.tabBarController as? AppTabBarController)?.acMediaService)?.didPickAssets(model)
                 }
             }
            
@@ -408,7 +407,7 @@ extension PhotoGridViewController: UIImagePickerControllerDelegate {
         guard let image = info[.editedImage] as? UIImage else {
             return
         }
-        (self.navigationController as? MainNavigationController)?.imageSelectorDelegate?.didPickAssets(PhotoPickerCallbackModel(images: [image], videoUrls: []))
+        (self.tabBarController as? AppTabBarController)?.acMediaService?.didPickAssets(PhotoPickerCallbackModel(images: [image], videoUrls: []))
         dismiss(animated: true, completion: nil)
     }
 }
