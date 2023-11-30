@@ -314,20 +314,16 @@ public final class PhotoGridViewController: UIViewController {
             guard let image = image else {
                 return
             }
-            let details = PhotoPreviewViewController()
-            details.image = image
-            details.asset = asset
-            
-            let viewWidth = view.frame.size.width
-            let viewHeight = view.safeAreaLayoutGuide.layoutFrame.height
-            let ratio = image.size.width / image.size.height
-            
-            details.portraitConstraint = viewWidth / ratio
-            details.landscapeConstraint = viewHeight * ratio
+
+            let vc = PhotoPreviewViewController()
+            vc.viewModel = PhotoPreviewViewModel(asset: asset)
+
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .fullScreen
             
             DispatchQueue.main.async {
                 guard self.navigationController?.topViewController == self else { return }
-                self.navigationController?.pushViewController(details, animated: true)
+                self.navigationController?.present(nav, animated: true)
             }
         }
     }

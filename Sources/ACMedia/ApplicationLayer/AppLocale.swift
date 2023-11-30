@@ -12,6 +12,7 @@ enum AppLocale: String {
     static private let key = "ACMedia."
     
     case done = "done"
+    case back = "back"
     case cancel = "cancel"
     case gallery = "gallery"
     case file = "file"

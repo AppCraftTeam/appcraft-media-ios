@@ -6,6 +6,7 @@
 */
 
 "ACMedia.done" = "Done";
+"ACMedia.back" = "Back";
 "ACMedia.cancel" = "Cancel";
 "ACMedia.emptyAlbumLabel" = "Empty album";
 "ACMedia.permissionRequired" = "Need photo permession";
