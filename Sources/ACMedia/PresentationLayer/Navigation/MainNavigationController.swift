@@ -17,7 +17,8 @@ open class MainNavigationController: UINavigationController {
         return item
     }()
     
-    // MARK: - Params    
+    // MARK: - Params
+    public var acMediaService: ACMedia?
     private let navigationTransition = ZoomTransitionDelegate()
     
     override open func viewDidLoad() {
@@ -37,16 +38,13 @@ open class MainNavigationController: UINavigationController {
         viewControllers = [imageGridController]
     }
     
-    public required init(configuration: ACMediaConfiguration) {
+    public required init(configuration: ACMediaConfiguration, acMediaService: ACMedia?) {
+        self.acMediaService = acMediaService
         SelectedImagesStack.shared.deleteAll()
         ACMediaConfiguration.shared = configuration
         super.init(nibName: nil, bundle: nil)
     }
-    
-    public convenience init() {
-        self.init(configuration: ACMediaConfiguration.shared)
-    }
-    
+
     public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

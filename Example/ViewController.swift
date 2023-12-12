@@ -9,11 +9,9 @@
 import UIKit
 import ACMedia
 
-// MARK: - ViewController
-
-/// The ViewController
 class ViewController: UIViewController {
     
+    // MARK: - UI components
     lazy var containerStack: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -44,11 +42,29 @@ class ViewController: UIViewController {
         return stackView
     }()
     
-    lazy var openPickerButton: UIButton = {
+    lazy var openSingleImagePickerButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Open picker", for: [])
-        button.addTarget(self, action: #selector(self.openPicker), for: .touchUpInside)
+        button.setTitle("Open picker for selecting 1 image", for: [])
+        button.addTarget(self, action: #selector(self.openSingleImagePicker), for: .touchUpInside)
         button.setTitleColor(.red, for: [])
+        
+        return button
+    }()
+    
+    lazy var openMultipleImageAndFilesPickerButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Open picker for multiple images or files", for: [])
+        button.addTarget(self, action: #selector(self.openImageAndFilesPicker), for: .touchUpInside)
+        button.setTitleColor(.orange, for: [])
+        
+        return button
+    }()
+    
+    lazy var openFilesPickerButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Open files picker", for: [])
+        button.addTarget(self, action: #selector(self.openFilesPicker), for: .touchUpInside)
+        button.setTitleColor(.purple, for: [])
         
         return button
     }()
@@ -61,32 +77,48 @@ class ViewController: UIViewController {
         return label
     }()
     
-    // MARK: View-Lifecycle
-    
-    /// View did load
+    // MARK: - View-Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
     }
     
-    /// LoadView
     override func loadView() {
         self.view = self.containerStack
         let view = UIView()
         view.heightAnchor.constraint(equalToConstant: 64.0).isActive = true
-        self.containerStack.addArrangedSubview(view)
-        self.containerStack.addArrangedSubview(openPickerButton)
-        self.containerStack.addArrangedSubview(imagesStack)
-        self.containerStack.addArrangedSubview(filesStack)
+        [view, openSingleImagePickerButton, openMultipleImageAndFilesPickerButton, openFilesPickerButton, imagesStack, filesStack].forEach({
+            self.containerStack.addArrangedSubview($0)
+        })
         filesStack.addArrangedSubview(urlsLabel)
         self.containerStack.addArrangedSubview(UIView())
     }
-    
+}
+
+// MARK: - Module methods
+private extension ViewController {
     
     @objc
-    private func openPicker() { 
+    func openSingleImagePicker() {
         let acMedia = ACMedia(
             fileTypes: [.gallery],
+            assetsSelected: { [weak self] assets in
+                self?.didPickImages(assets.images)
+                self?.didPickDocuments(assets.videoUrls)
+            }
+        )
+        
+        ACMediaConfiguration.shared.appearance = ACMediaAppearance(tintColor: .red)
+        ACMediaConfiguration.shared.photoConfig = ACMediaPhotoPickerConfig(types: [.photo, .video], selectionLimit: 1)
+        
+        acMedia.show(in: self)
+    }
+    
+    @objc
+    func openImageAndFilesPicker() {
+        let acMedia = ACMedia(
+            fileTypes: [.gallery, .files],
             assetsSelected: { [weak self] assets in
                 self?.didPickImages(assets.images)
                 self?.didPickDocuments(assets.videoUrls)
@@ -95,8 +127,32 @@ class ViewController: UIViewController {
                 self?.didPickDocuments(fileUrls)
             }
         )
+        
+        ACMediaConfiguration.shared.appearance = ACMediaAppearance(tintColor: .orange)
+        ACMediaConfiguration.shared.photoConfig = ACMediaPhotoPickerConfig(types: [.photo], selectionLimit: 3)
+        ACMediaConfiguration.shared.documentsConfig = ACMediaPhotoDocConfig(fileFormats: [.zip])
+        
         acMedia.show(in: self)
     }
+    
+    @objc
+    func openFilesPicker() {
+        let acMedia = ACMedia(
+            fileTypes: [.files],
+            filesSelected: { [weak self] fileUrls in
+                self?.didPickDocuments(fileUrls)
+            }
+        )
+        
+        ACMediaConfiguration.shared.appearance = ACMediaAppearance(tintColor: .purple)
+        ACMediaConfiguration.shared.documentsConfig = ACMediaPhotoDocConfig(fileFormats: [.zip])
+        
+        acMedia.show(in: self)
+    }
+}
+
+// MARK: - Handle picker result
+private extension ViewController {
     
     func didPickDocuments(_ urls: [URL]) {
         print("onPickDocuments - \(urls)")

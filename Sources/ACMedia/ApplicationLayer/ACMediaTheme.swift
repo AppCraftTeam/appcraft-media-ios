@@ -1,5 +1,5 @@
 //
-//  AppTheme.swift
+//  ACMediaTheme.swift
 //  ACMedia-iOS
 //
 //  Created by Pavel Moslienko on 26.10.2023.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-public enum AppTheme {
+public enum ACMediaTheme {
     
     public static var backgroundColor: UIColor {
         if #available(iOSApplicationExtension 13.0, *) {

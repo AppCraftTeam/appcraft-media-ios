@@ -15,7 +15,7 @@
 		3D9C432E2274629C000A6585 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D9C432C2274629C000A6585 /* LaunchScreen.storyboard */; };
 		3D9C433422746323000A6585 /* ACMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D9C429022745894000A6585 /* ACMedia.framework */; };
 		3D9C433522746323000A6585 /* ACMedia.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3D9C429022745894000A6585 /* ACMedia.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		9503F8DD2AEA1DE900F016C7 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9503F8DC2AEA1DE900F016C7 /* AppTheme.swift */; };
+		9503F8DD2AEA1DE900F016C7 /* ACMediaTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9503F8DC2AEA1DE900F016C7 /* ACMediaTheme.swift */; };
 		9503F8E02AEA499F00F016C7 /* ACMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9503F8DF2AEA499F00F016C7 /* ACMedia.swift */; };
 		9503F8E22AEA72D300F016C7 /* PhotoPickerCallbackModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9503F8E12AEA72D300F016C7 /* PhotoPickerCallbackModel.swift */; };
 		9514DF4A2AE2661F00A72A48 /* PhotoPickerFilesType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9514DF492AE2661F00A72A48 /* PhotoPickerFilesType.swift */; };
@@ -35,6 +35,7 @@
 		9526042D2AD53F6D00BB1EBB /* AppCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9526042C2AD53F6D00BB1EBB /* AppCollectionCell.swift */; };
 		9526042F2AD5411B00BB1EBB /* CameraCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9526042E2AD5411B00BB1EBB /* CameraCellModel.swift */; };
 		952604312AD5414D00BB1EBB /* PhotoCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 952604302AD5414D00BB1EBB /* PhotoCellModel.swift */; };
+		9539F85C2B2873020042B05A /* DocumentsParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9539F85B2B2873020042B05A /* DocumentsParentViewController.swift */; };
 		95C14E472ACD7B9A00714A43 /* PhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C14E462ACD7B9A00714A43 /* PhotoService.swift */; };
 		95C14E4C2ACD885800714A43 /* AlbumModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C14E4B2ACD885800714A43 /* AlbumModel.swift */; };
 		95C14E542ACD8EE100714A43 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C14E532ACD8EE100714A43 /* PhotoCell.swift */; };
@@ -100,7 +101,7 @@
 		3D9C432A2274629C000A6585 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3D9C432D2274629C000A6585 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3D9C432F2274629C000A6585 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9503F8DC2AEA1DE900F016C7 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
+		9503F8DC2AEA1DE900F016C7 /* ACMediaTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACMediaTheme.swift; sourceTree = "<group>"; };
 		9503F8DF2AEA499F00F016C7 /* ACMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACMedia.swift; sourceTree = "<group>"; };
 		9503F8E12AEA72D300F016C7 /* PhotoPickerCallbackModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerCallbackModel.swift; sourceTree = "<group>"; };
 		9514DF492AE2661F00A72A48 /* PhotoPickerFilesType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerFilesType.swift; sourceTree = "<group>"; };
@@ -120,6 +121,7 @@
 		9526042C2AD53F6D00BB1EBB /* AppCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCollectionCell.swift; sourceTree = "<group>"; };
 		9526042E2AD5411B00BB1EBB /* CameraCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCellModel.swift; sourceTree = "<group>"; };
 		952604302AD5414D00BB1EBB /* PhotoCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCellModel.swift; sourceTree = "<group>"; };
+		9539F85B2B2873020042B05A /* DocumentsParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentsParentViewController.swift; sourceTree = "<group>"; };
 		95C14E462ACD7B9A00714A43 /* PhotoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoService.swift; sourceTree = "<group>"; };
 		95C14E4B2ACD885800714A43 /* AlbumModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumModel.swift; sourceTree = "<group>"; };
 		95C14E532ACD8EE100714A43 /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
@@ -256,7 +258,7 @@
 				9514DF652AE2BE9D00A72A48 /* Configuration */,
 				9514DF5F2AE2B01400A72A48 /* AppAssets.swift */,
 				95EDBCE02AE9409B002E7D53 /* AppLocale.swift */,
-				9503F8DC2AEA1DE900F016C7 /* AppTheme.swift */,
+				9503F8DC2AEA1DE900F016C7 /* ACMediaTheme.swift */,
 			);
 			path = ApplicationLayer;
 			sourceTree = "<group>";
@@ -334,6 +336,7 @@
 				95F184482ACE9CB100E6FC75 /* MainNavigationController.swift */,
 				9514DF512AE2844E00A72A48 /* AppTabNavigationController.swift */,
 				9514DF5D2AE2A66000A72A48 /* AppTabBarControllerAdapter.swift */,
+				9539F85B2B2873020042B05A /* DocumentsParentViewController.swift */,
 			);
 			path = Navigation;
 			sourceTree = "<group>";
@@ -587,7 +590,7 @@
 				9526042B2AD53F5D00BB1EBB /* AppCellIdentifiable.swift in Sources */,
 				9514DF4C2AE2663D00A72A48 /* PickerFilesType.swift in Sources */,
 				9514DF622AE2B44A00A72A48 /* Notifications.swift in Sources */,
-				9503F8DD2AEA1DE900F016C7 /* AppTheme.swift in Sources */,
+				9503F8DD2AEA1DE900F016C7 /* ACMediaTheme.swift in Sources */,
 				95C14E542ACD8EE100714A43 /* PhotoCell.swift in Sources */,
 				9503F8E22AEA72D300F016C7 /* PhotoPickerCallbackModel.swift in Sources */,
 				95EDBCE12AE9409B002E7D53 /* AppLocale.swift in Sources */,
@@ -613,6 +616,7 @@
 				952604312AD5414D00BB1EBB /* PhotoCellModel.swift in Sources */,
 				95F184592ACEA64B00E6FC75 /* ACMediaConfiguration.swift in Sources */,
 				95F1844C2ACE9CDB00E6FC75 /* String+Ext.swift in Sources */,
+				9539F85C2B2873020042B05A /* DocumentsParentViewController.swift in Sources */,
 				95E9538F2B18BDA000D6153A /* PhotoPreviewViewModel.swift in Sources */,
 				9514DF502AE27E1600A72A48 /* ACMediaDocFileType.swift in Sources */,
 				95F184542ACEA60D00E6FC75 /* AsyncImageLoader.swift in Sources */,

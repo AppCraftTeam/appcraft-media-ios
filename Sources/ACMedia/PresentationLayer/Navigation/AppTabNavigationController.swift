@@ -13,7 +13,6 @@ enum AppTabBarItem {
     var item: UITabBarItem {
         switch self {
         case .gallery:
-            #warning("todo locale")
             let tabBarItem = UITabBarItem(title: AppLocale.gallery.locale,
                                           image: AppAssets.Navigation.gallery.image?.withRenderingMode(.alwaysTemplate),
                                           selectedImage: AppAssets.Navigation.gallery.image?.withRenderingMode(.alwaysTemplate)
@@ -35,8 +34,8 @@ open class AppTabBarController: UITabBarController {
     
     private let adapter = AppTabBarControllerAdapter()
 
-    private(set) lazy var photoController: UINavigationController = {
-        let vc = MainNavigationController(configuration: .shared)
+    private(set) lazy var photoController: MainNavigationController = {
+        let vc = MainNavigationController(configuration: .shared, acMediaService: nil)
         vc.tabBarItem = AppTabBarItem.gallery.item
         return vc
     }()
@@ -72,6 +71,7 @@ open class AppTabBarController: UITabBarController {
     public var acMediaService: ACMedia?
     
     open func showPicker(in parent: UIViewController, acMediaService: ACMedia) {
+        self.photoController.acMediaService = acMediaService
         self.acMediaService = acMediaService
         self.adapter.types = ACMediaConfiguration.shared.documentsConfig.fileFormats
         self.adapter.parentVC = self

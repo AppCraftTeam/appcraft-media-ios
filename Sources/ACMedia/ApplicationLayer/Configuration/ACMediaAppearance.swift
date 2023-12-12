@@ -32,20 +32,20 @@ public struct ACMediaAppearance {
     public var allowsPhotoPreviewZoom: Bool = true
     
     public init(
-        tintColor: UIColor = AppTheme.tintColor,
-        backgroundColor: UIColor = AppTheme.backgroundColor,
-        foregroundColor: UIColor = AppTheme.foregroundColor,
-        checkmarkForegroundColor: UIColor = AppTheme.checkmarkForegroundColor,
+        tintColor: UIColor = ACMediaTheme.tintColor,
+        backgroundColor: UIColor = ACMediaTheme.backgroundColor,
+        foregroundColor: UIColor = ACMediaTheme.foregroundColor,
+        checkmarkForegroundColor: UIColor = ACMediaTheme.checkmarkForegroundColor,
         cellsInRow: Int = 3,
         gridSpacing: CGFloat = 5,
         allowsPhotoPreviewZoom: Bool = true
     ) {
-       self.tintColor = tintColor
-       self.backgroundColor = backgroundColor
-       self.foregroundColor = foregroundColor
-       self.checkmarkForegroundColor = checkmarkForegroundColor
-       self.cellsInRow = cellsInRow
-       self.gridSpacing = gridSpacing
-       self.allowsPhotoPreviewZoom = allowsPhotoPreviewZoom
-   }
+        self.tintColor = tintColor
+        self.backgroundColor = backgroundColor
+        self.foregroundColor = foregroundColor
+        self.checkmarkForegroundColor = checkmarkForegroundColor
+        self.cellsInRow = cellsInRow
+        self.gridSpacing = gridSpacing
+        self.allowsPhotoPreviewZoom = allowsPhotoPreviewZoom
+    }
 }
