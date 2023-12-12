@@ -9,7 +9,17 @@
 import Foundation
 
 public struct ACMediaPhotoDocConfig {
-    public var fileFormats: [ACMediaDocFileType] = ACMediaDocFileType.allCases
-    public var allowsMultipleSelection = false
-    public var shouldShowFileExtensions = true
+    public var fileFormats: [ACMediaDocFileType]
+    public var allowsMultipleSelection: Bool
+    public var shouldShowFileExtensions: Bool
+    
+    public init(
+        fileFormats: [ACMediaDocFileType] = ACMediaDocFileType.allCases,
+        allowsMultipleSelection: Bool = false,
+        shouldShowFileExtensions: Bool = true
+    ) {
+        self.fileFormats = fileFormats
+        self.allowsMultipleSelection = allowsMultipleSelection
+        self.shouldShowFileExtensions = shouldShowFileExtensions
+    }
 }

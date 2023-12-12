@@ -10,15 +10,20 @@ import Foundation
 public var ACMediaConfig: ACMediaConfiguration {
     ACMediaConfiguration.shared
 }
-#warning("todo public or public everywhere")
 
 public struct ACMediaConfiguration {
+    internal init(appearance: ACMediaAppearance = ACMediaAppearance(), photoConfig: ACMediaPhotoPickerConfig = ACMediaPhotoPickerConfig(), documentsConfig: ACMediaPhotoDocConfig = ACMediaPhotoDocConfig()) {
+        self.appearance = appearance
+        self.photoConfig = photoConfig
+        self.documentsConfig = documentsConfig
+    }
+    
     
     public static var shared: ACMediaConfiguration = ACMediaConfiguration()
     
     public init() {}
     
-    public let appearance = ACMediaAppearance()
-    public let photoConfig = ACMediaPhotoPickerConfig()
-    public let documentsConfig = ACMediaPhotoDocConfig()
+    public var appearance = ACMediaAppearance()
+    public var photoConfig = ACMediaPhotoPickerConfig()
+    public var documentsConfig = ACMediaPhotoDocConfig()
 }

@@ -8,9 +8,9 @@
 
 import UIKit
 
-enum AppTheme {
+public enum AppTheme {
     
-    static var backgroundColor: UIColor {
+    public static var backgroundColor: UIColor {
         if #available(iOSApplicationExtension 13.0, *) {
             return .systemBackground
         } else {
@@ -18,7 +18,7 @@ enum AppTheme {
         }
     }
     
-    static var tintColor: UIColor {
+    public static var tintColor: UIColor {
         if #available(iOSApplicationExtension 13.0, *) {
             return .systemBlue
         } else {
@@ -26,7 +26,7 @@ enum AppTheme {
         }
     }
     
-    static var foregroundColor: UIColor {
+    public static var foregroundColor: UIColor {
         if #available(iOSApplicationExtension 13.0, *) {
             return .label
         } else {
@@ -34,7 +34,7 @@ enum AppTheme {
         }
     }
     
-    static var checkmarkForegroundColor: UIColor {
+    public static var checkmarkForegroundColor: UIColor {
         if #available(iOSApplicationExtension 13.0, *) {
             return .systemBackground
         } else {

@@ -9,9 +9,9 @@
 import Foundation
 
 public struct ACMediaPhotoPickerConfig {
-    var types: [PhotoPickerFilesType] = PhotoPickerFilesType.allCases
+    var types: [PhotoPickerFilesType]
     
-    public var selectionLimit: Int = 1 {
+    public var selectionLimit: Int {
         willSet {
             if newValue <= 0 {
                 fatalError("Incorrect selection limit")
@@ -19,5 +19,15 @@ public struct ACMediaPhotoPickerConfig {
         }
     }
     
-    public var isSelectionRequired: Bool = false
+    public var isSelectionRequired: Bool
+    
+    public init(
+        types: [PhotoPickerFilesType] = PhotoPickerFilesType.allCases,
+        selectionLimit: Int = 1,
+        isSelectionRequired: Bool = false
+    ) {
+        self.types = types
+        self.selectionLimit = selectionLimit
+        self.isSelectionRequired = isSelectionRequired
+    }
 }

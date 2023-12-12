@@ -11,18 +11,18 @@ import UIKit
 
 public struct ACMediaAppearance {
     
-    public var tintColor: UIColor = AppTheme.tintColor
-    public var backgroundColor: UIColor = AppTheme.backgroundColor
-    public var foregroundColor: UIColor = AppTheme.foregroundColor
-    public var checkmarkForegroundColor: UIColor = AppTheme.checkmarkForegroundColor
-    public var cellsInRow: Int = 3 {
+    public var tintColor: UIColor
+    public var backgroundColor: UIColor
+    public var foregroundColor: UIColor
+    public var checkmarkForegroundColor: UIColor
+    public var cellsInRow: Int {
         willSet {
             if newValue < 0 {
                 fatalError("Incorrecr cells count")
             }
         }
     }
-    public var gridSpacing: CGFloat = 5 {
+    public var gridSpacing: CGFloat {
         willSet {
             if newValue < 0 {
                 fatalError("Incorrecr grid spacing")
@@ -30,4 +30,22 @@ public struct ACMediaAppearance {
         }
     }
     public var allowsPhotoPreviewZoom: Bool = true
+    
+    public init(
+        tintColor: UIColor = AppTheme.tintColor,
+        backgroundColor: UIColor = AppTheme.backgroundColor,
+        foregroundColor: UIColor = AppTheme.foregroundColor,
+        checkmarkForegroundColor: UIColor = AppTheme.checkmarkForegroundColor,
+        cellsInRow: Int = 3,
+        gridSpacing: CGFloat = 5,
+        allowsPhotoPreviewZoom: Bool = true
+    ) {
+       self.tintColor = tintColor
+       self.backgroundColor = backgroundColor
+       self.foregroundColor = foregroundColor
+       self.checkmarkForegroundColor = checkmarkForegroundColor
+       self.cellsInRow = cellsInRow
+       self.gridSpacing = gridSpacing
+       self.allowsPhotoPreviewZoom = allowsPhotoPreviewZoom
+   }
 }
