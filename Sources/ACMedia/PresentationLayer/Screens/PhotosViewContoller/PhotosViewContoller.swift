@@ -101,7 +101,7 @@ public final class PhotoGridViewController: UIViewController {
     
     
     private func checkDoneButtonCondition() {
-        let min = ACMediaConfiguration.shared.photoConfig.minimimSelection ?? 1
+        let min = ACMediaConfiguration.shared.photoConfig.minimimSelection
         let max = ACMediaConfiguration.shared.photoConfig.maximumSelection
         
         var isEnabled: Bool {
@@ -316,11 +316,7 @@ public final class PhotoGridViewController: UIViewController {
     }
     
     func presentImageDetailsViewController(with asset: PHAsset) {
-        viewModel.photoService.fetchThumbnail(for: asset, size: CGSize()) { [unowned self] image in
-            guard let image = image else {
-                return
-            }
-            
+        viewModel.photoService.fetchThumbnail(for: asset, size: CGSize()) { [unowned self] _ in
             let vc = PhotoPreviewViewController()
             vc.viewModel = PhotoPreviewViewModel(asset: asset)
             

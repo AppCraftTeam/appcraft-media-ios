@@ -10,12 +10,18 @@ import UIKit
 
 public class ACMedia: UIViewController {
     
+    public var fileTypes: [PickerFilesType] = [] {
+        willSet {
+            if newValue.isEmpty {
+                fatalError("Filetypes cannot be empty")
+            }
+        }
+    }
+    
     // Callbacks
     public var assetsSelected: ((PhotoPickerCallbackModel) -> Void)?
     public var filesSelected: (([URL]) -> Void)?
     public var didOpenSettings: (() -> Void)?
-    
-    public var fileTypes: [PickerFilesType] = []
     
     public init(fileTypes: [PickerFilesType] = [], assetsSelected: ((PhotoPickerCallbackModel) -> Void)? = nil, filesSelected: (([URL]) -> Void)? = nil) {
         self.fileTypes = fileTypes
@@ -43,7 +49,7 @@ public class ACMedia: UIViewController {
                     self.didPickDocuments(urls)
                 }
                 parentVC.present(vc, animated: true)
-
+                
                 
                 let pickerService = DocumentsPickerService(parentVC: vc)
                 pickerService.showPicker(types: ACMediaConfiguration.shared.documentsConfig.fileFormats)
@@ -69,9 +75,7 @@ public extension ACMedia {
 extension ACMedia: UIDocumentPickerDelegate {
     
     public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        print("didPickDocumentsAt....... \(urls)")
         self.didPickDocuments(urls)
-        //self.dismiss(animated: true)
     }
     
     public func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {}

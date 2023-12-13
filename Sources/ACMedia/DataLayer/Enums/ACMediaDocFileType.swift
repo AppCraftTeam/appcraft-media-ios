@@ -8,10 +8,11 @@
 import UIKit
 import MobileCoreServices
 import UniformTypeIdentifiers
+import MobileCoreServices
 
 public enum ACMediaDocFileType: CaseIterable {
-    #warning("todo add formats")
-    case png, jpeg, gif, bmp, text, pdf, zip
+    
+    case png, jpeg, gif, bmp, text, pdf, zip, docx, xlsx, mp3, mp4, csv, json
     
     var kutType: CFString {
         switch self {
@@ -29,6 +30,18 @@ public enum ACMediaDocFileType: CaseIterable {
             return kUTTypePDF
         case .zip:
             return kUTTypeZipArchive
+        case .docx:
+            return "org.openxmlformats.wordprocessingml.document" as CFString
+        case .xlsx:
+            return "org.openxmlformats.spreadsheetml.sheet" as CFString
+        case .mp3:
+            return kUTTypeMP3
+        case .mp4:
+            return kUTTypeMPEG4
+        case .csv:
+            return kUTTypeCommaSeparatedText
+        case .json:
+            return kUTTypeJSON
         }
     }
     
@@ -49,6 +62,18 @@ public enum ACMediaDocFileType: CaseIterable {
             return .pdf
         case .zip:
             return .zip
+        case .docx:
+            return UTType(exportedAs: "org.openxmlformats.wordprocessingml.document")
+        case .xlsx:
+            return UTType(exportedAs: "org.openxmlformats.spreadsheetml.sheet")
+        case .mp3:
+            return .mp3
+        case .mp4:
+            return .mpeg4Movie
+        case .csv:
+            return .commaSeparatedText
+        case .json:
+            return .json
         }
     }
 }

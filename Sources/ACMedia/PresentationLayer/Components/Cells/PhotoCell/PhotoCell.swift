@@ -93,7 +93,6 @@ private extension PhotoCell {
         checkButton.setImage(image, for: [])
         
         cellOverlay.addSubview(checkButton)
-        print("age selected setupComponents \(self.cellModel?.isSelected) index \(self.cellModel?.index)")
         
         checkButton.snp.makeConstraints {
             $0.size.equalTo(44)
