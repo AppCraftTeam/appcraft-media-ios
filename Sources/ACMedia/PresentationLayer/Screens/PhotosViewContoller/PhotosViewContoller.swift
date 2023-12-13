@@ -369,6 +369,9 @@ public final class PhotoGridViewController: UIViewController {
     }
     
     private func setupCamera() {
+        guard ACMediaConfiguration.shared.photoConfig.allowCamera else {
+            return
+        }
         captureSession.stopRunning()
         if let inputs = captureSession.inputs as? [AVCaptureDeviceInput] {
             for input in inputs {
@@ -422,7 +425,7 @@ extension PhotoGridViewController: UICollectionViewDataSource {
     
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let cell = cell as? PhotoCell else { return }
-        var realIndexPath = ACMediaConfiguration.shared.photoConfig.allowCamera ? indexPath.row - 1 : indexPath.row
+        let realIndexPath = ACMediaConfiguration.shared.photoConfig.allowCamera ? indexPath.row - 1 : indexPath.row
         
         let updateCellClosure: (UIImage?) -> Void = { [unowned self] image in
             (self.viewModel.models[realIndexPath] as? PhotoCellModel)?.image = image
@@ -501,7 +504,7 @@ extension PhotoGridViewController: UICollectionViewDataSourcePrefetching {
     
     public func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
-            var realIndexPath = ACMediaConfiguration.shared.photoConfig.allowCamera ? indexPath.row - 1 : indexPath.row
+            let realIndexPath = ACMediaConfiguration.shared.photoConfig.allowCamera ? indexPath.row - 1 : indexPath.row
             
             if ACMediaConfiguration.shared.photoConfig.allowCamera {
                 guard indexPath.row != 0 else {

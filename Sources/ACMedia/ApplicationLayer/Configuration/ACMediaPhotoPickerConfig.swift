@@ -37,7 +37,7 @@ public struct ACMediaPhotoPickerConfig {
     public init(
         types: [PhotoPickerFilesType] = PhotoPickerFilesType.allCases,
         limiter: ACMediaPhotoRestrictions = .onlyOne,
-        allowCamera: Bool = false,
+        allowCamera: Bool = true,
         displayMinMaxRestrictions: Bool = false
     ) {
         self.types = types
