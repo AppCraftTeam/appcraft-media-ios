@@ -26,6 +26,7 @@ class PhotosViewModel {
     var onSetupDoneButton: (() -> Void)?
     var onShowPermissionAlert: (() -> Void)?
     var onShowEmptyPlaceholder: (() -> Void)?
+    var onHideEmptyPlaceholder: (() -> Void)?
     var onSetupNavbar: (() -> Void)?
     var onShowImageOnFullScreen: ((_ asset: PHAsset) -> Void)?
     var onShowCamera: (() -> Void)?
@@ -115,6 +116,8 @@ extension PhotosViewModel {
         if self.imagesData.count == 0 {
             onShowEmptyPlaceholder?()
             return []
+        } else {
+            onHideEmptyPlaceholder?()
         }
         
         return models

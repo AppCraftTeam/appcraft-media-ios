@@ -170,7 +170,10 @@ public final class PhotoGridViewController: UIViewController {
             self?.showPermissionAlert()
         }
         viewModel.onShowEmptyPlaceholder = { [weak self] in
-            self?.showEmptyAlbumLabel()
+            self?.showEmptyPlaceholder()
+        }
+        viewModel.onHideEmptyPlaceholder = { [weak self] in
+            self?.hideEmptyPlaceholder()
         }
         viewModel.onSetupNavbar = { [weak self] in
             self?.setupNavbar()
@@ -197,7 +200,9 @@ public final class PhotoGridViewController: UIViewController {
         if let model = viewModel.albumModel {
             viewModel.imagesData = model.assets
             if viewModel.imagesData.count == 0 {
-                showEmptyAlbumLabel()
+                showEmptyPlaceholder()
+            } else {
+                hideEmptyPlaceholder()
             }
         }
         
@@ -249,21 +254,26 @@ public final class PhotoGridViewController: UIViewController {
         collectionView.collectionViewLayout.invalidateLayout()
     }
     
-    private func showEmptyAlbumLabel() {
+    private func showEmptyPlaceholder() {
         collectionView.isHidden = true
         
         let label = UILabel()
         label.text = AppLocale.emptyAlbum.locale
         label.textColor = ACMediaConfig.appearance.foregroundColor
         label.font = ACMediaConfig.appearance.emptyAlbumFont
-        label.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(label)
-        let constraints = [
-            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ]
         
-        NSLayoutConstraint.activate(constraints)
+        view.subviews.filter { $0 is UILabel }.forEach { $0.removeFromSuperview() }
+        
+        view.addSubview(label)
+        label.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview()
+        }
+    }
+
+    private func hideEmptyPlaceholder() {
+        view.subviews.filter { $0 is UILabel }.forEach { $0.removeFromSuperview() }
+        collectionView.isHidden = false
     }
     
     private func showPermissionAlert() {
