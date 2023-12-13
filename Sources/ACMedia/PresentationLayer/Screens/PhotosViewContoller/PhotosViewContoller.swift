@@ -273,13 +273,7 @@ public final class PhotoGridViewController: UIViewController {
         let settingsTitle = AppLocale.assetsPermissionOpenSettings.locale
         let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { [weak self] _ in
             self?.dismiss(animated: true, completion: nil)
-            guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else {
-                return
-            }
-#warning("todo open settings")
-            //            if UIApplication.shared.canOpenURL(settingsURL) {
-            //                UIApplication.shared.open(settingsURL)
-            //            }
+            ((self?.navigationController as? MainNavigationController)?.acMediaService)?.didOpenSettings?()
         }
         
         let cancelTitle = AppLocale.cancel.locale

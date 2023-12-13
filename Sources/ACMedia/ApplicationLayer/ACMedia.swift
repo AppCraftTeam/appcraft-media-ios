@@ -13,6 +13,7 @@ public class ACMedia: UIViewController {
     // Callbacks
     public var assetsSelected: ((PhotoPickerCallbackModel) -> Void)?
     public var filesSelected: (([URL]) -> Void)?
+    public var didOpenSettings: (() -> Void)?
     
     public var fileTypes: [PickerFilesType] = []
     

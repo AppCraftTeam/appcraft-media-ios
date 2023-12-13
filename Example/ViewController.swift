@@ -109,6 +109,15 @@ private extension ViewController {
             }
         )
         
+        acMedia.didOpenSettings = {
+            guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else {
+                return
+            }
+            if UIApplication.shared.canOpenURL(settingsURL) {
+                UIApplication.shared.open(settingsURL)
+            }
+        }
+        
         ACMediaConfiguration.shared.appearance = ACMediaAppearance(tintColor: .red)
         ACMediaConfiguration.shared.photoConfig = ACMediaPhotoPickerConfig(types: [.photo], limiter: .onlyOne)
         
