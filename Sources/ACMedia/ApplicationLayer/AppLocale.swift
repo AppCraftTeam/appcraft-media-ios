@@ -21,6 +21,8 @@ enum AppLocale: String {
     case assetsPermissionMessage = "permissionRequiredDescription"
     case assetsPermissionOpenSettings = "settings"
     case selectedCount = "selectedCount"
+    case selectedMin = "selectedMin"
+    case selectedMax = "selectedMax"
     case requireSelect = "require"
     case selected = "selected"
     

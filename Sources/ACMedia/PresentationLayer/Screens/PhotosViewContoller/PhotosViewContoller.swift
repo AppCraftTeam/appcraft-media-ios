@@ -101,16 +101,17 @@ public final class PhotoGridViewController: UIViewController {
     
     
     private func checkDoneButtonCondition() {
-        let isSelectionRequired = false
-        let selectionLimit = 1
-        
-        var isEnabled: Bool
-        if isSelectionRequired {
-            isEnabled = SelectedImagesStack.shared.selectedCount == selectionLimit
-        } else {
-            isEnabled = SelectedImagesStack.shared.selectedCount > 0
+        let min = ACMediaConfiguration.shared.photoConfig.minimimSelection ?? 1
+        let max = ACMediaConfiguration.shared.photoConfig.maximumSelection
+
+        var isEnabled: Bool {
+            if let max = max {
+                return SelectedImagesStack.shared.selectedCount <= max && SelectedImagesStack.shared.selectedCount >= min
+            } else {
+                return SelectedImagesStack.shared.selectedCount >= min
+            }
         }
-        print("ssss \(SelectedImagesStack.shared.selectedCount)")
+
         doneButton.isEnabled = isEnabled
     }
     

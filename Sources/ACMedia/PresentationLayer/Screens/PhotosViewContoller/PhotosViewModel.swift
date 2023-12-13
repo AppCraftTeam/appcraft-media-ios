@@ -94,7 +94,7 @@ extension PhotosViewModel {
                     viewSelectedToggle: {
                         print("age selected Toggled selection \(index), \(self.models[index])")
                         if let model = self.models[index + 1] as? PhotoCellModel {
-                            self.selectedImage(model: model)
+                            self.handleImageSelection(model: model)
                         }
                     }
                 )
@@ -127,58 +127,40 @@ extension PhotosViewModel {
             }
         }
     }
-    
-    func selectedImage(model: PhotoCellModel) {
-        let maxSelection = ACMediaConfig.photoConfig.selectionLimit
-        print("Image selected at index \(model.index) is \(model.isSelected), all \(SelectedImagesStack.shared.selectedCount)")
+  
+    func handleImageSelection(model: PhotoCellModel) {
+        let maxSelection = ACMediaConfig.photoConfig.maximumSelection ?? Int.max
         let asset = imagesData[model.index]
         let indexPath = IndexPath(row: model.index + 1, section: 0)
-        
-        if maxSelection == 1 {
-            // Single
-            guard !SelectedImagesStack.shared.contains(asset) else {
-                SelectedImagesStack.shared.delete(asset)
-                self.onReloadCells?([indexPath])
-                self.onSetupDoneButton?()
+
+        handleMaximumSelection(maxSelection, asset, indexPath)
+    }
+    
+    private func handleMaximumSelection(_ maxSelection: Int, _ asset: PHAsset, _ indexPath: IndexPath) {
+        print("zzzz handleMaximumSelection maxSelection \(maxSelection)")
+        if SelectedImagesStack.shared.contains(asset) {
+            SelectedImagesStack.shared.delete(asset)
+        } else {
+            guard SelectedImagesStack.shared.selectedCount < maxSelection else {                
+                if let oldAsset = SelectedImagesStack.shared.fetchFirstAdded() {
+                    let oldIndex = imagesData.index(of: oldAsset)
+                    let oldIndexPath = IndexPath(item: oldIndex + 1, section: 0)
+                    SelectedImagesStack.shared.add(asset)
+                    
+                    let models = self.makeSections()
+                    self.models = models
+                    
+                    self.onReloadCells?([oldIndexPath, indexPath])
+                }
+                
                 return
             }
-            if let oldAsset = SelectedImagesStack.shared.fetchFirstAdded() {
-                let oldIndex = imagesData.index(of: oldAsset)
-                let oldIndexPath = IndexPath(item: oldIndex + 1, section: 0)
-                print("oldIndexPath - \(oldIndexPath), indexPath \(indexPath)")
-                SelectedImagesStack.shared.add(asset)
-                
-                let models = self.makeSections()
-                self.models = models
-                
-                self.onReloadCells?([oldIndexPath, indexPath])
-            } else {
-                SelectedImagesStack.shared.add(asset)
-                
-                
-                let models = self.makeSections()
-                self.models = models
-                
-                self.onReloadCells?([indexPath])
-            }
-        } else {
-            //Multiple
-            if SelectedImagesStack.shared.contains(asset) {
-                SelectedImagesStack.shared.delete(asset)
-            } else {
-                guard SelectedImagesStack.shared.selectedCount < maxSelection else { return }
-                SelectedImagesStack.shared.add(asset)
-            }
-            
-            let models = self.makeSections()
-            self.models = models
-            
-            self.onReloadCells?([indexPath])
+            SelectedImagesStack.shared.add(asset)
         }
         
-        let cells = self.models.filter({ $0 is PhotoCellModel }).map({ $0 as? PhotoCellModel })
-        print("ssss maxSelection - \(maxSelection), status \(cells.map({ "id \($0?.index) is \($0?.isSelected)"  }))")
-        
-        self.onSetupDoneButton?()
+        let models = makeSections()
+        self.models = models
+        onReloadCells?([indexPath])
+        onSetupDoneButton?()
     }
 }

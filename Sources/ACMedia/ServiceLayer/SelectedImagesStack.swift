@@ -10,7 +10,7 @@ import PhotosUI
 
 public class SelectedImagesStack {
     
-    private var selectedImageAssets = Set<PHAsset>() {
+    private var selectedImageAssets: [PHAsset] = [] {
         didSet {
             NotificationCenter.default.post(name: .onSelectedImagesChanged, object: nil)
         }
@@ -29,7 +29,9 @@ public class SelectedImagesStack {
     }
     
     public func delete(_ asset: PHAsset) {
-        selectedImageAssets.remove(asset)
+        if let index = selectedImageAssets.firstIndex(where: { $0 == asset }) {
+            selectedImageAssets.remove(at: index)
+        }
     }
     
     public func deleteAll() {
@@ -41,10 +43,12 @@ public class SelectedImagesStack {
     }
     
     public func add(_ asset: PHAsset) {
-        selectedImageAssets.insert(asset)
+        if !selectedImageAssets.contains(asset) {
+            selectedImageAssets += [asset]
+        }
     }
     
     public func fetchFirstAdded() -> PHAsset? {
-        selectedImageAssets.popFirst()
+        selectedImageAssets.removeFirst()
     }
 }

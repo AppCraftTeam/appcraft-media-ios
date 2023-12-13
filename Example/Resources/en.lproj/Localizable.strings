@@ -13,7 +13,9 @@
 "ACMedia.permissionRequiredDescription" = "Neededfor picker correct work";
 "ACMedia.settings" = "Allow permission in Settings";
 "ACMedia.selectedCount" = "Selected %i";
-"ACMedia.require" = "Require %i";
+"ACMedia.selectedCountFrom" = "Selected %i/%i";
+"ACMedia.selectedMin" = "minimum %i";
+"ACMedia.selectedMax" = "maximum %i";
 "ACMedia.selected" = "Select";
 "ACMedia.gallery" = "Fallery";
 "ACMedia.file" = "File";

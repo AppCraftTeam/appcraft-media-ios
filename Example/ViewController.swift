@@ -110,7 +110,7 @@ private extension ViewController {
         )
         
         ACMediaConfiguration.shared.appearance = ACMediaAppearance(tintColor: .red)
-        ACMediaConfiguration.shared.photoConfig = ACMediaPhotoPickerConfig(types: [.photo, .video], selectionLimit: 1)
+        ACMediaConfiguration.shared.photoConfig = ACMediaPhotoPickerConfig(types: [.photo], limiter: .onlyOne)
         
         acMedia.show(in: self)
     }
@@ -129,7 +129,7 @@ private extension ViewController {
         )
         
         ACMediaConfiguration.shared.appearance = ACMediaAppearance(tintColor: .orange)
-        ACMediaConfiguration.shared.photoConfig = ACMediaPhotoPickerConfig(types: [.photo], selectionLimit: 3)
+        ACMediaConfiguration.shared.photoConfig = ACMediaPhotoPickerConfig(types: [.photo, .video], limiter: .limit(min: 2, max: 4))
         ACMediaConfiguration.shared.documentsConfig = ACMediaPhotoDocConfig(fileFormats: [.zip])
         
         acMedia.show(in: self)
