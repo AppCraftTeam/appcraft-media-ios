@@ -31,14 +31,17 @@ public struct ACMediaPhotoPickerConfig {
         }
     }
     
+    public var allowCamera: Bool
     public var displayMinMaxRestrictions: Bool
     
     public init(
         types: [PhotoPickerFilesType] = PhotoPickerFilesType.allCases,
         limiter: ACMediaPhotoRestrictions = .onlyOne,
-        displayMinMaxRestrictions: Bool = true
+        allowCamera: Bool = true,
+        displayMinMaxRestrictions: Bool = false
     ) {
         self.types = types
+        self.allowCamera = allowCamera
         switch limiter {
         case .onlyOne:
             self.minimimSelection = 1

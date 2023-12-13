@@ -101,13 +101,15 @@ extension PhotosViewModel {
             ]
         }
         
-        let cameraModel = CameraCellModel(viewTapped: { [weak self] in
-            self?.onShowCamera?()
-        })
-        if models.isEmpty {
-            models = [cameraModel]
-        } else {
-            models.insert(cameraModel, at: 0)
+        if ACMediaConfiguration.shared.photoConfig.allowCamera {
+            let cameraModel = CameraCellModel(viewTapped: { [weak self] in
+                self?.onShowCamera?()
+            })
+            if models.isEmpty {
+                models = [cameraModel]
+            } else {
+                models.insert(cameraModel, at: 0)
+            }
         }
         
         if self.imagesData.count == 0 {

@@ -34,6 +34,12 @@ public class CameraCell: AppCollectionCell<CameraCellModel> {
         previewLayer = nil
     }
     
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        self.contentView.backgroundColor = .clear
+        self.containerView.layer.cornerRadius = ACMediaConfiguration.shared.appearance.previewCardCornerRadius
+    }
+    
     public func addCameraLayer(_ previewLayer: AVCaptureVideoPreviewLayer) {
         previewLayer.frame = self.bounds
         self.previewLayer = previewLayer
@@ -44,7 +50,6 @@ public class CameraCell: AppCollectionCell<CameraCellModel> {
     override func updateViews() {
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
-        self.contentView.layer.cornerRadius = 10.0
         
         contentView.addSubview(containerView)
         containerView.snp.makeConstraints {

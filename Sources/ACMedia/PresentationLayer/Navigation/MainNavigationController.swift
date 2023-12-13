@@ -13,6 +13,7 @@ open class MainNavigationController: UINavigationController {
     private lazy var selectedCounterLabel: UIBarButtonItem = {
         let item = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         item.tintColor = ACMediaConfiguration.shared.appearance.foregroundColor
+        item.setTitleTextAttributes([.font: ACMediaConfiguration.shared.appearance.toolbarFont], for: [])
         
         return item
     }()
@@ -54,6 +55,16 @@ private extension MainNavigationController {
     
     func setupNavigationBar() {
         navigationBar.tintColor = ACMediaConfiguration.shared.appearance.tintColor
+        
+        if #available(iOSApplicationExtension 13.0, *) {
+            let style = UINavigationBarAppearance()
+            style.buttonAppearance.normal.titleTextAttributes = [.font: ACMediaConfiguration.shared.appearance.cancelTitleFont]
+            style.doneButtonAppearance.normal.titleTextAttributes = [.font: ACMediaConfiguration.shared.appearance.doneTitleFont]
+            
+            navigationBar.standardAppearance = style
+            navigationBar.scrollEdgeAppearance = style
+            navigationBar.compactAppearance = style
+        }
     }
     
     func setupToolbar() {

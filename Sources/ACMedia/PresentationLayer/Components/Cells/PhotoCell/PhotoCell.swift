@@ -54,6 +54,7 @@ public class PhotoCell: AppCollectionCell<PhotoCellModel> {
     public override func layoutSubviews() {
         super.layoutSubviews()
         self.contentView.backgroundColor = .clear
+        self.previewImageView.layer.cornerRadius = ACMediaConfiguration.shared.appearance.previewCardCornerRadius
     }
     
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {

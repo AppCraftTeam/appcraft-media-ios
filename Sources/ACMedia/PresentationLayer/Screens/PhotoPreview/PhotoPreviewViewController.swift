@@ -92,7 +92,7 @@ private extension PhotoPreviewViewController {
         button.setTitle(AppLocale.back.locale, for: .normal)
         button.sizeToFit()
         button.setTitleColor(ACMediaConfiguration.shared.appearance.tintColor, for: [])
-        button.titleLabel?.font = .systemFont(ofSize: 17.0, weight: .regular)
+        button.titleLabel?.font = ACMediaConfiguration.shared.appearance.navBarTitleFont
         button.tintColor = ACMediaConfiguration.shared.appearance.tintColor
         button.addTarget(self, action: #selector(self.backButtonPressed), for: .touchUpInside)
         

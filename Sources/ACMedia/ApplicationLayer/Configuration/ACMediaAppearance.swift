@@ -29,7 +29,19 @@ public struct ACMediaAppearance {
             }
         }
     }
-    public var allowsPhotoPreviewZoom: Bool = true
+    public var previewCardCornerRadius: CGFloat {
+        willSet {
+            if newValue < 0 {
+                fatalError("Incorrecr grid spacing")
+            }
+        }
+    }
+    public var navBarTitleFont: UIFont
+    public var emptyAlbumFont: UIFont
+    public var cancelTitleFont: UIFont
+    public var doneTitleFont: UIFont
+    public var toolbarFont: UIFont
+    public var allowsPhotoPreviewZoom: Bool
     
     public init(
         tintColor: UIColor = ACMediaTheme.tintColor,
@@ -38,6 +50,12 @@ public struct ACMediaAppearance {
         checkmarkForegroundColor: UIColor = ACMediaTheme.checkmarkForegroundColor,
         cellsInRow: Int = 3,
         gridSpacing: CGFloat = 5,
+        previewCardCornerRadius: CGFloat = 0.0,
+        navBarTitleFont: UIFont = .systemFont(ofSize: 17.0, weight: .regular),
+        emptyAlbumFont: UIFont = .systemFont(ofSize: 22, weight: .bold),
+        cancelTitleFont: UIFont = .systemFont(ofSize: 17.0, weight: .regular),
+        doneTitleFont: UIFont = .systemFont(ofSize: 17.0, weight: .semibold),
+        toolbarFont: UIFont = .systemFont(ofSize: 17.0, weight: .regular),
         allowsPhotoPreviewZoom: Bool = true
     ) {
         self.tintColor = tintColor
@@ -46,6 +64,12 @@ public struct ACMediaAppearance {
         self.checkmarkForegroundColor = checkmarkForegroundColor
         self.cellsInRow = cellsInRow
         self.gridSpacing = gridSpacing
+        self.previewCardCornerRadius = previewCardCornerRadius
+        self.navBarTitleFont = navBarTitleFont
+        self.emptyAlbumFont = emptyAlbumFont
+        self.cancelTitleFont = cancelTitleFont
+        self.doneTitleFont = doneTitleFont
+        self.toolbarFont = toolbarFont
         self.allowsPhotoPreviewZoom = allowsPhotoPreviewZoom
     }
 }
