@@ -69,7 +69,6 @@ extension PhotosViewModel {
             }
             let models = strongSelf.makeSections()
             strongSelf.models = models
-            print("models: \(strongSelf.models.count)")
             strongSelf.onReloadCollection?()
         }
     }
@@ -88,12 +87,10 @@ extension PhotosViewModel {
                     index: index,
                     isSelected: SelectedImagesStack.shared.contains(asset),
                     viewTapped: {
-                        print("age selected View tapped \(index)")
                         self.selectedIndexPath = IndexPath(row: index + 1, section: 0)
                         self.onShowImageOnFullScreen?(asset)
                     },
                     viewSelectedToggle: {
-                        print("age selected Toggled selection \(index), \(self.models[index])")
                         if let model = self.models[index + 1] as? PhotoCellModel {
                             self.handleImageSelection(model: model)
                         }
@@ -142,7 +139,6 @@ extension PhotosViewModel {
     }
     
     private func handleMaximumSelection(_ maxSelection: Int, _ asset: PHAsset, _ indexPath: IndexPath) {
-        print("zzzz handleMaximumSelection maxSelection \(maxSelection)")
         if SelectedImagesStack.shared.contains(asset) {
             SelectedImagesStack.shared.delete(asset)
         } else {

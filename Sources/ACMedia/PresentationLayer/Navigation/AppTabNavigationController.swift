@@ -97,7 +97,6 @@ private extension AppTabBarController {
         self.delegate = adapter
         
         let items = tabBar.items ?? []
-        print("configureTabBar \(items)")
         items.enumerated().forEach({ (index, item) in
             if #available(iOSApplicationExtension 13.0, *) {
                 item.standardAppearance = tabBarAppearance

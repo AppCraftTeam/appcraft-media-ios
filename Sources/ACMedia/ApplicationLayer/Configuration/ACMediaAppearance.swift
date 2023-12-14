@@ -25,14 +25,14 @@ public struct ACMediaAppearance {
     public var gridSpacing: CGFloat {
         willSet {
             if newValue < 0 {
-                fatalError("Incorrecr grid spacing")
+                fatalError("Incorrect grid spacing")
             }
         }
     }
     public var previewCardCornerRadius: CGFloat {
         willSet {
             if newValue < 0 {
-                fatalError("Incorrecr grid spacing")
+                fatalError("Incorrect radius")
             }
         }
     }
