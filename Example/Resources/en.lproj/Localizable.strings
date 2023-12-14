@@ -10,7 +10,7 @@
 "ACMedia.cancel" = "Cancel";
 "ACMedia.emptyAlbumLabel" = "Empty album";
 "ACMedia.permissionRequired" = "Need photo permession";
-"ACMedia.permissionRequiredDescription" = "Neededfor picker correct work";
+"ACMedia.permissionRequiredDescription" = "Needed for picker correct work";
 "ACMedia.settings" = "Allow permission in Settings";
 "ACMedia.selectedCount" = "Selected %i";
 "ACMedia.selectedCountFrom" = "Selected %i/%i";
