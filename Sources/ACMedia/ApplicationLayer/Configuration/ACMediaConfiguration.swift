@@ -12,12 +12,16 @@ public var ACMediaConfig: ACMediaConfiguration {
 }
 
 public struct ACMediaConfiguration {
-    internal init(appearance: ACMediaAppearance = ACMediaAppearance(), photoConfig: ACMediaPhotoPickerConfig = ACMediaPhotoPickerConfig(), documentsConfig: ACMediaPhotoDocConfig = ACMediaPhotoDocConfig()) {
+    
+    internal init(
+        appearance: ACMediaAppearance = ACMediaAppearance(),
+        photoConfig: ACMediaPhotoPickerConfig = ACMediaPhotoPickerConfig(),
+        documentsConfig: ACMediaPhotoDocConfig = ACMediaPhotoDocConfig()
+    ) {
         self.appearance = appearance
         self.photoConfig = photoConfig
         self.documentsConfig = documentsConfig
     }
-    
     
     public static var shared: ACMediaConfiguration = ACMediaConfiguration()
     
