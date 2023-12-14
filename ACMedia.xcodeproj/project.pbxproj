@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -258,10 +258,10 @@
 			isa = PBXGroup;
 			children = (
 				9503F8DF2AEA499F00F016C7 /* ACMedia.swift */,
-				9514DF652AE2BE9D00A72A48 /* Configuration */,
+				9503F8DC2AEA1DE900F016C7 /* ACMediaTheme.swift */,
 				9514DF5F2AE2B01400A72A48 /* AppAssets.swift */,
 				95EDBCE02AE9409B002E7D53 /* AppLocale.swift */,
-				9503F8DC2AEA1DE900F016C7 /* ACMediaTheme.swift */,
+				9514DF652AE2BE9D00A72A48 /* Configuration */,
 			);
 			path = ApplicationLayer;
 			sourceTree = "<group>";
@@ -270,8 +270,8 @@
 			isa = PBXGroup;
 			children = (
 				95C14E4B2ACD885800714A43 /* AlbumModel.swift */,
-				9514DF5C2AE2A4F100A72A48 /* Enums */,
 				9503F8E12AEA72D300F016C7 /* PhotoPickerCallbackModel.swift */,
+				9514DF5C2AE2A4F100A72A48 /* Enums */,
 			);
 			path = DataLayer;
 			sourceTree = "<group>";
