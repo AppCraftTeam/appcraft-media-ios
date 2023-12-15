@@ -33,7 +33,7 @@ Open the `ACMedia.xcodeproj` and run the Example scheme.
 ## Images picker
 ```swift
 let acMedia = ACMedia(
-    fileTypes: [.gallery],
+    fileType: [.gallery],
     assetsSelected: { [weak self] assets in
         let images = assets.images
         let videos = assets.videoUrls
@@ -63,7 +63,7 @@ acMedia.show(in: self)
 ## Files picker
 ```swift
 let acMedia = ACMedia(
-    fileTypes: [.files],
+    fileType: .files,
     filesSelected: {
         [weak self] fileUrls in
         // Your logic with actions with files
@@ -84,7 +84,7 @@ Of course, you can configure it so that the user can select both files and image
 
 ```swift
  let acMedia = ACMedia(
-     fileTypes: [.gallery, .files],
+     fileType: .galleryAndFiles,
      assetsSelected: { [weak self] assets in
        
      },
@@ -119,7 +119,7 @@ Config for photo picker.
 
 ```swift
   ACMediaConfiguration.shared.photoConfig = ACMediaPhotoPickerConfig(
-     types: <[PhotoPickerFilesType]>,
+     fileType: <PhotoPickerFilesType>,
      limiter: <ACMediaPhotoRestrictions>,
      allowCamera: <Bool>,
      displayMinMaxRestrictions: <Bool>

@@ -16,17 +16,17 @@ public struct ACMediaPhotoPickerConfig {
     var types: [PhotoPickerFilesType]
     
     public var minimimSelection: Int = 1 {
-        willSet {
-            if newValue <= 0 {
-                fatalError("Incorrect minimim selection limit")
+        didSet {
+            if minimimSelection <= 0 {
+                minimimSelection = 1
             }
         }
     }
     
     public var maximumSelection: Int? {
-        willSet {
-            if let val = newValue, val <= 0 {
-                fatalError("Incorrect maximum selection limit")
+        didSet {
+            if let val = maximumSelection, val <= 0 {
+                maximumSelection = 1
             }
         }
     }

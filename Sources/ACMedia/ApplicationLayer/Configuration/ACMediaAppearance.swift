@@ -16,23 +16,23 @@ public struct ACMediaAppearance {
     public var foregroundColor: UIColor
     public var checkmarkForegroundColor: UIColor
     public var cellsInRow: Int {
-        willSet {
-            if newValue < 0 {
-                fatalError("Incorrecr cells count")
+        didSet {
+            if cellsInRow <= 0 {
+                cellsInRow = 3
             }
         }
     }
     public var gridSpacing: CGFloat {
-        willSet {
-            if newValue < 0 {
-                fatalError("Incorrect grid spacing")
+        didSet {
+            if gridSpacing < 0 {
+                gridSpacing = 0
             }
         }
     }
     public var previewCardCornerRadius: CGFloat {
-        willSet {
-            if newValue < 0 {
-                fatalError("Incorrect radius")
+        didSet {
+            if previewCardCornerRadius < 0 {
+                previewCardCornerRadius = 0
             }
         }
     }

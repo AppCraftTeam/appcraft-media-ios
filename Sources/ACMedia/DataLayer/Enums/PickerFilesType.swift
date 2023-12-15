@@ -10,4 +10,5 @@ import Foundation
 public enum PickerFilesType: CaseIterable {
     case gallery
     case files
+    case galleryAndFiles
 }
