@@ -37,8 +37,8 @@ public class ACMediaViewController: UIViewController {
             parentVC.present(vc, animated: true)
         case .files:
             let vc = DocumentsParentViewController()
-            vc.didPickDocuments = { urls in
-                self.didPickDocuments(urls)
+            vc.didPickDocuments = { [weak self] urls in
+                self?.didPickDocuments(urls)
             }
             parentVC.present(vc, animated: true)
             

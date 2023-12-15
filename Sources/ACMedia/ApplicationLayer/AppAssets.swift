@@ -38,9 +38,6 @@ public enum AppAssets {
         var image: UIImage? {
             switch self {
             case .downArrow:
-//                if #available(iOSApplicationExtension 13.0, *) {
-//                    return UIImage(systemName: "chevron.down")
-//                }
                 return UIImage(named: "down-arrow")
             case .checkmarkEmpty:
                 if #available(iOSApplicationExtension 13.0, *) {

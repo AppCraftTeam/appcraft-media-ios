@@ -131,7 +131,8 @@ extension ZoomTransitionDelegate: UIViewControllerAnimatedTransitioning {
             backgroundController: backgroundColorController,
             backgroundImageInView: bgImageView,
             foregroundImageInView: fgImageView,
-            snapshotView: snapshotView)
+            snapshotView: snapshotView
+        )
         
         foregroundColorController.view.layoutIfNeeded()
         
@@ -140,14 +141,15 @@ extension ZoomTransitionDelegate: UIViewControllerAnimatedTransitioning {
             usingSpringWithDamping: 1.0,
             initialSpringVelocity: 0,
             options: [],
-            animations: {
-                self.adjustViews(
+            animations: { [weak self] in
+                self?.adjustViews(
                     for: finalTransitionState,
                     containingView: container,
                     backgroundController: backgroundColorController,
                     backgroundImageInView: bgImageView,
                     foregroundImageInView: fgImageView,
-                    snapshotView: snapshotView)
+                    snapshotView: snapshotView
+                )
             },
             completion: { _ in
                 backgroundColorController.view.transform = CGAffineTransform.identity

@@ -13,16 +13,18 @@ enum AppTabBarItem {
     var item: UITabBarItem {
         switch self {
         case .gallery:
-            let tabBarItem = UITabBarItem(title: AppLocale.gallery.locale,
-                                          image: AppAssets.Navigation.gallery.image?.withRenderingMode(.alwaysTemplate),
-                                          selectedImage: AppAssets.Navigation.gallery.image?.withRenderingMode(.alwaysTemplate)
+            let tabBarItem = UITabBarItem(
+                title: AppLocale.gallery.locale,
+                image: AppAssets.Navigation.gallery.image?.withRenderingMode(.alwaysTemplate),
+                selectedImage: AppAssets.Navigation.gallery.image?.withRenderingMode(.alwaysTemplate)
             )
             tabBarItem.tag = 0
             return tabBarItem
         case .file:
-            let tabBarItem = UITabBarItem(title: AppLocale.file.locale,
-                                          image: AppAssets.Navigation.file.image?.withRenderingMode(.alwaysTemplate),
-                                          selectedImage: AppAssets.Navigation.file.image?.withRenderingMode(.alwaysTemplate)
+            let tabBarItem = UITabBarItem(
+                title: AppLocale.file.locale,
+                image: AppAssets.Navigation.file.image?.withRenderingMode(.alwaysTemplate),
+                selectedImage: AppAssets.Navigation.file.image?.withRenderingMode(.alwaysTemplate)
             )
             tabBarItem.tag = 1
             return tabBarItem
@@ -33,7 +35,7 @@ enum AppTabBarItem {
 open class AppTabBarController: UITabBarController {
     
     private let adapter = AppTabBarControllerAdapter()
-
+    
     private(set) lazy var photoController: MainNavigationController = {
         let vc = MainNavigationController(configuration: .shared, acMediaService: nil)
         vc.tabBarItem = AppTabBarItem.gallery.item

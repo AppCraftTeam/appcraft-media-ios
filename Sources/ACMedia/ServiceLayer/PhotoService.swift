@@ -40,11 +40,13 @@ public final class PhotoService: NSObject {
         let userAlbums = PHAssetCollection.fetchAssetCollections(
             with: .album,
             subtype: .albumRegular,
-            options: options)
+            options: options
+        )
         let smartCollections = PHAssetCollection.fetchAssetCollections(
             with: .smartAlbum,
             subtype: .smartAlbumUserLibrary,
-            options: options)
+            options: options
+        )
         let allCollections = [smartCollections, userAlbums]
         var albums: [AlbumModel] = []
         
