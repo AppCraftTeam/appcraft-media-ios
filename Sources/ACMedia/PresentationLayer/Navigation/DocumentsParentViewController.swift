@@ -17,4 +17,8 @@ class DocumentsParentViewController: UIViewController, UIDocumentPickerDelegate 
         self.didPickDocuments?(urls)
         self.dismiss(animated: true)
     }
+    
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        self.dismiss(animated: true)
+    }
 }

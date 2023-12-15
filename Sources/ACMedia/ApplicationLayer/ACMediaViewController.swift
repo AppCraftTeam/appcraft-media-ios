@@ -38,7 +38,10 @@ public class ACMediaViewController: UIViewController {
         case .files:
             let vc = DocumentsParentViewController()
             vc.didPickDocuments = { [weak self] urls in
+                print("sssss ffffff")
                 self?.didPickDocuments(urls)
+                vc.dismiss(animated: true)
+                self?.dismiss(animated: true)
             }
             parentVC.present(vc, animated: true)
             
@@ -65,6 +68,7 @@ public extension ACMediaViewController {
 extension ACMediaViewController: UIDocumentPickerDelegate {
     
     public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        print("sssss")
         self.didPickDocuments(urls)
     }
     
