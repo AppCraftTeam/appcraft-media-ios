@@ -1,5 +1,5 @@
 //
-//  PhotosViewContoller.swift
+//  PhotoGridViewController.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -77,7 +77,7 @@ public final class PhotoGridViewController: UIViewController {
     @available(iOSApplicationExtension 13.0, *)
     var demoMenu: UIMenu {
         var menuItems: [UIAction] {
-            return self.viewModel.albumsData.map({ albumModel in
+            self.viewModel.albumsData.map({ albumModel in
                 if #available(iOSApplicationExtension 15.0, *) {
                     return UIAction(title: albumModel.title, subtitle: String(albumModel.count), image: albumModel.previewImage, handler: { (_) in
                         self.viewModel.albumModel = albumModel
@@ -99,7 +99,6 @@ public final class PhotoGridViewController: UIViewController {
         return UIMenu(title: "", image: nil, identifier: nil, options: [], children: menuItems)
     }
     
-    
     private func checkDoneButtonCondition() {
         let min = ACMediaConfiguration.shared.photoConfig.minimimSelection
         let max = ACMediaConfiguration.shared.photoConfig.maximumSelection
@@ -113,36 +112,6 @@ public final class PhotoGridViewController: UIViewController {
         }
         
         doneButton.isEnabled = isEnabled
-    }
-    
-    // MARK: - Actions
-    @objc private func cancelAction() {
-        SelectedImagesStack.shared.deleteAll()
-        self.dismiss(animated: true, completion: nil)
-    }
-    
-    @objc private func doneAction() {
-        guard SelectedImagesStack.shared.selectedCount > 0 else {
-            cancelAction()
-            return
-        }
-        
-        DispatchQueue.main.async { [unowned self] in
-            let assets = SelectedImagesStack.shared.fetchAssets()
-            SelectedImagesStack.shared.deleteAll()
-            
-            let manager = PhotoService()
-            manager.fileTypes = ACMediaConfiguration.shared.photoConfig.types
-            
-            manager.fetchHighResImages(for: assets) { images in
-                manager.fetchVideoURL(for: assets) { videoUrls in
-                    let model = PhotoPickerCallbackModel(images: images, videoUrls: videoUrls)
-                    ((self.navigationController as? MainNavigationController)?.acMediaService)?.didPickAssets(model)
-                }
-            }
-            
-            dismiss(animated: true, completion: nil)
-        }
     }
     
     // MARK: - Methods
@@ -199,6 +168,7 @@ public final class PhotoGridViewController: UIViewController {
     func reloadData() {
         if let model = viewModel.albumModel {
             viewModel.imagesData = model.assets
+            // swiftlint:disable:next empty_count
             if viewModel.imagesData.count == 0 {
                 showEmptyPlaceholder()
             } else {
@@ -244,7 +214,6 @@ public final class PhotoGridViewController: UIViewController {
         self.navigationItem.rightBarButtonItem = self.doneButton
     }
     
-    
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
@@ -265,12 +234,13 @@ public final class PhotoGridViewController: UIViewController {
         view.subviews.filter { $0 is UILabel }.forEach { $0.removeFromSuperview() }
         
         view.addSubview(label)
-        label.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview()
-        }
+        label.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            label.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
-
+    
     private func hideEmptyPlaceholder() {
         view.subviews.filter { $0 is UILabel }.forEach { $0.removeFromSuperview() }
         collectionView.isHidden = false
@@ -307,12 +277,12 @@ public final class PhotoGridViewController: UIViewController {
         collectionView.register(CameraCell.self, forCellWithReuseIdentifier: "CameraCell")
         view.addSubview(collectionView)
         
-        collectionView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-            make.left.equalTo(view.safeAreaLayoutGuide.snp.left)
-            make.right.equalTo(view.safeAreaLayoutGuide.snp.right)
-        }
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+        ])
     }
     
     func presentImageDetailsViewController(with asset: PHAsset) {
@@ -327,32 +297,6 @@ public final class PhotoGridViewController: UIViewController {
                 guard self.navigationController?.topViewController == self else { return }
                 self.navigationController?.present(nav, animated: true)
             }
-        }
-    }
-    
-    @objc
-    private func showPhotoAlbumsAlert() {
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let cancel = UIAlertAction(title: AppLocale.cancel.locale, style: .cancel)
-        
-        self.viewModel.albumsData.forEach({ albumModel in
-            alert.addAction(
-                UIAlertAction(title: albumModel.title, style: .default) { _ in
-                    self.viewModel.albumModel = albumModel
-                    DispatchQueue.main.async {
-                        self.reloadData()
-                    }
-                })
-        })
-        
-        alert.addAction(cancel)
-        
-        if let popoverController = alert.popoverPresentationController {
-            popoverController.sourceView = self.view
-            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-            popoverController.permittedArrowDirections = []
-            
-            self.present(alert, animated:true, completion: nil)
         }
     }
     
@@ -402,7 +346,7 @@ public final class PhotoGridViewController: UIViewController {
 // MARK: - UIImagePickerControllerDelegate
 extension PhotoGridViewController: UIImagePickerControllerDelegate {
     
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         picker.dismiss(animated: true)
         
         guard let image = info[.editedImage] as? UIImage else {
@@ -538,7 +482,7 @@ extension PhotoGridViewController: UICollectionViewDataSourcePrefetching {
 extension PhotoGridViewController: UICollectionViewDelegateFlowLayout {
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return .init(width: cellWidth, height: cellWidth)
+        CGSize(width: cellWidth, height: cellWidth)
     }
 }
 
@@ -552,11 +496,72 @@ extension PhotoGridViewController: PHPhotoLibraryChangeObserver {
     }
 }
 
+// MARK: - Actions
+extension PhotoGridViewController {
+    
+    @objc
+    private func cancelAction() {
+        SelectedImagesStack.shared.deleteAll()
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc
+    private func doneAction() {
+        guard SelectedImagesStack.shared.selectedCount > 0 else {
+            cancelAction()
+            return
+        }
+        
+        DispatchQueue.main.async { [unowned self] in
+            let assets = SelectedImagesStack.shared.fetchAssets()
+            SelectedImagesStack.shared.deleteAll()
+            
+            let manager = PhotoService()
+            manager.fileTypes = ACMediaConfiguration.shared.photoConfig.types
+            
+            manager.fetchHighResImages(for: assets) { images in
+                manager.fetchVideoURL(for: assets) { videoUrls in
+                    let model = PhotoPickerCallbackModel(images: images, videoUrls: videoUrls)
+                    ((self.navigationController as? MainNavigationController)?.acMediaService)?.didPickAssets(model)
+                }
+            }
+            
+            dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    @objc
+    private func showPhotoAlbumsAlert() {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let cancel = UIAlertAction(title: AppLocale.cancel.locale, style: .cancel)
+        
+        self.viewModel.albumsData.forEach({ albumModel in
+            alert.addAction(
+                UIAlertAction(title: albumModel.title, style: .default) { _ in
+                    self.viewModel.albumModel = albumModel
+                    DispatchQueue.main.async {
+                        self.reloadData()
+                    }
+                })
+        })
+        
+        alert.addAction(cancel)
+        
+        if let popoverController = alert.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+            
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+}
+
 // MARK: - ZoomingViewController
 extension PhotoGridViewController: ZoomTransitionViewController {
     
     public func getZoomingImageView(for transition: ZoomTransitionDelegate) -> UIImageView? {
-        if let indexPath =  viewModel.selectedIndexPath,
+        if let indexPath = viewModel.selectedIndexPath,
            let cell = collectionView.cellForItem(at: indexPath) as? PhotoCell {
             return cell.getPreviewImageView()
         } else {

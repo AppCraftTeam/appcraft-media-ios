@@ -137,7 +137,8 @@ extension ZoomTransitionDelegate: UIViewControllerAnimatedTransitioning {
         foregroundColorController.view.layoutIfNeeded()
         
         UIView.animate(
-            withDuration: duration, delay: 0,
+            withDuration: duration,
+            delay: 0,
             usingSpringWithDamping: 1.0,
             initialSpringVelocity: 0,
             options: [],

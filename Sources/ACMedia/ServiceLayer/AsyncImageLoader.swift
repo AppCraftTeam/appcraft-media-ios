@@ -17,7 +17,7 @@ public class AsyncImageLoader: Operation {
     private var imageSize: CGSize
     
     public override var isAsynchronous: Bool {
-        return true
+        true
     }
     
     init(asset: PHAsset, imageSize: CGSize) {

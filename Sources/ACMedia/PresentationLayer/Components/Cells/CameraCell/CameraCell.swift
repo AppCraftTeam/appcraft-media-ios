@@ -28,7 +28,6 @@ public class CameraCell: AppCollectionCell<CameraCellModel> {
         return imageView
     }()
     
-    
     public override func prepareForReuse() {
         super.prepareForReuse()
         previewLayer = nil
@@ -52,19 +51,25 @@ public class CameraCell: AppCollectionCell<CameraCellModel> {
         self.contentView.backgroundColor = .clear
         
         contentView.addSubview(containerView)
-        containerView.snp.makeConstraints {
-            $0.top.bottom.left.right.equalToSuperview()
-        }
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            containerView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
         
         self.cameraIconImageView.image = AppAssets.Icon.camera.image?.withRenderingMode(.alwaysTemplate)
         self.cameraIconImageView.tintColor = .white
         containerView.addSubview(cameraIconImageView)
         
-        cameraIconImageView.snp.makeConstraints {
-            $0.size.equalTo(44)
-            $0.top.equalToSuperview().inset(4.0)
-            $0.right.equalToSuperview().inset(4.0)
-        }
+        cameraIconImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            cameraIconImageView.widthAnchor.constraint(equalToConstant: 44),
+            cameraIconImageView.heightAnchor.constraint(equalToConstant: 44),
+            cameraIconImageView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 4.0),
+            cameraIconImageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -4.0)
+        ])
     }
     
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -75,4 +80,3 @@ public class CameraCell: AppCollectionCell<CameraCellModel> {
         self.cellModel?.viewTapped?()
     }
 }
-

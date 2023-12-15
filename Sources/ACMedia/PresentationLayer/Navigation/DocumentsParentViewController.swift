@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 // Just wrapper to UIDocumentPickerDelegate work, because in this case UIDocumentPickerViewController presented vc and delegate must me same
-class DocumentsParentViewController: UIViewController,  UIDocumentPickerDelegate {
+class DocumentsParentViewController: UIViewController, UIDocumentPickerDelegate {
     
     var didPickDocuments: (([URL]) -> Void)?
     

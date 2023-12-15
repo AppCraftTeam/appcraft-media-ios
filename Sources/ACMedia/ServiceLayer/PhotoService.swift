@@ -116,9 +116,10 @@ public final class PhotoService: NSObject {
             for: asset,
             targetSize: size,
             contentMode: .aspectFill,
-            options: imageOptions) { (image, _) in
-                completion(image)
-            }
+            options: imageOptions
+        ) { (image, _) in
+            completion(image)
+        }
     }
     
     public func fetchOriginalImage(for asset: PHAsset, size: CGSize, completion: @escaping (UIImage?) -> Void) {
@@ -128,9 +129,10 @@ public final class PhotoService: NSObject {
             for: asset,
             targetSize: .init(),
             contentMode: .aspectFit,
-            options: imageOptions) { (image, _) in
-                completion(image)
-            }
+            options: imageOptions
+        ) { (image, _) in
+            completion(image)
+        }
     }
     
     public func fetchHighResImages(for assets: [PHAsset], completionHandler: @escaping ([UIImage]) -> Void) {
@@ -147,12 +149,13 @@ public final class PhotoService: NSObject {
                 for: asset,
                 targetSize: .init(),
                 contentMode: .aspectFill,
-                options: imageOptions) { (image, _) in
-                    if let img = image {
-                        images += [img]
-                    }
-                    group.leave()
+                options: imageOptions
+            ) { (image, _) in
+                if let img = image {
+                    images += [img]
                 }
+                group.leave()
+            }
         }
         
         group.notify(queue: .main) {
@@ -170,16 +173,17 @@ public final class PhotoService: NSObject {
             group.enter()
             PHImageManager.default().requestAVAsset(
                 forVideo: asset,
-                options: options) { avAsset, _, _ in
-                    guard let avURLAsset = avAsset as? AVURLAsset else {
-                        group.leave()
-                        return
-                    }
-                    
-                    let videoURL = avURLAsset.url
-                    urls += [videoURL]
+                options: options
+            ) { avAsset, _, _ in
+                guard let avURLAsset = avAsset as? AVURLAsset else {
                     group.leave()
+                    return
                 }
+                
+                let videoURL = avURLAsset.url
+                urls += [videoURL]
+                group.leave()
+            }
         }
         
         group.notify(queue: .main) {

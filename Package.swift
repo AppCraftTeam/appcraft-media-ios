@@ -12,13 +12,13 @@ let package = Package(
         .library(
             name: "ACMedia",
             targets: ["ACMedia"]
-        ),
+        )
     ],
     dependencies: [
         .package(
-            name: "SnapKit",
-            url: "https://github.com/SnapKit/SnapKit.git",
-            from: "5.0.1"
+            name: "DPUIKit",
+            url: "https://github.com/DPLibs/DPUIKit.git",
+            from: "5.0.0"
         )
     ],
     targets: [
@@ -36,6 +36,6 @@ let package = Package(
             name: "ACMediaTests",
             dependencies: ["ACMedia"],
             path: "Tests"
-        ),
+        )
     ]
 )

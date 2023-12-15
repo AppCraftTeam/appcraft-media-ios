@@ -6,7 +6,6 @@
 //
 
 import PhotosUI
-import SnapKit
 import UIKit
 
 public class PhotoCell: AppCollectionCell<PhotoCellModel> {
@@ -14,7 +13,7 @@ public class PhotoCell: AppCollectionCell<PhotoCellModel> {
     private(set) lazy var previewImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.masksToBounds = true
-        imageView.contentMode = .scaleAspectFill //.scaleToFill
+        imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
         return imageView
@@ -76,12 +75,6 @@ public class PhotoCell: AppCollectionCell<PhotoCellModel> {
 private extension PhotoCell {
     
     func setupComponents() {
-        contentView.addSubview(previewImageView)
-        previewImageView.snp.makeConstraints { $0.edges.equalToSuperview() }
-        
-        contentView.addSubview(cellOverlay)
-        cellOverlay.snp.makeConstraints { $0.edges.equalToSuperview() }
-        
         var image: UIImage? {
             guard let model = self.cellModel else {
                 return nil
@@ -91,15 +84,34 @@ private extension PhotoCell {
         }
         
         checkButton.setImage(image, for: [])
+        cellOverlay.isHidden = false
+        
+        contentView.addSubview(previewImageView)
+        previewImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            previewImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            previewImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            previewImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            previewImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
+        
+        contentView.addSubview(cellOverlay)
+        cellOverlay.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            cellOverlay.topAnchor.constraint(equalTo: contentView.topAnchor),
+            cellOverlay.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            cellOverlay.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            cellOverlay.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
         
         cellOverlay.addSubview(checkButton)
-        
-        checkButton.snp.makeConstraints {
-            $0.size.equalTo(44)
-            $0.top.equalToSuperview().inset(4.0)
-            $0.right.equalToSuperview().inset(4.0)
-        }
-        cellOverlay.isHidden = false
+        checkButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            checkButton.widthAnchor.constraint(equalToConstant: 44),
+            checkButton.heightAnchor.constraint(equalToConstant: 44),
+            checkButton.topAnchor.constraint(equalTo: cellOverlay.topAnchor, constant: 4.0),
+            checkButton.trailingAnchor.constraint(equalTo: cellOverlay.trailingAnchor, constant: -4.0)
+        ])
     }
 }
 

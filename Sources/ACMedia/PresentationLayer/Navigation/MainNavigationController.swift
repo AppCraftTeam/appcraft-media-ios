@@ -71,7 +71,7 @@ private extension MainNavigationController {
         let barItems: [UIBarButtonItem] = [
             .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
             selectedCounterLabel,
-            .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+            .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         ]
         
         self.toolbarItems = barItems

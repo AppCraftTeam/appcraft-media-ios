@@ -45,7 +45,7 @@ public final class PhotoPreviewViewController: UIViewController {
     }
 }
 
-//MARK: - Setup
+// MARK: - Setup
 private extension PhotoPreviewViewController {
     
     func setupComponents() {
@@ -105,7 +105,7 @@ private extension PhotoPreviewViewController {
     }
 }
 
-//MARK: - Zoom
+// MARK: - Zoom
 private extension PhotoPreviewViewController {
     
     func setZoomScale() {
@@ -142,7 +142,7 @@ private extension PhotoPreviewViewController {
     func zoomRectForScale(scale: CGFloat, center: CGPoint) -> CGRect {
         var zoomRect = CGRect.zero
         zoomRect.size.height = imageView.frame.size.height / scale
-        zoomRect.size.width  = imageView.frame.size.width  / scale
+        zoomRect.size.width  = imageView.frame.size.width / scale
         
         let newCenter = imageView.convert(center, from: scrollView)
         zoomRect.origin.x = newCenter.x - (zoomRect.size.width / 2.0)
@@ -152,7 +152,7 @@ private extension PhotoPreviewViewController {
     }
 }
 
-//MARK: - UIScrollViewDelegate
+// MARK: - UIScrollViewDelegate
 extension PhotoPreviewViewController: UIScrollViewDelegate {
     
     public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
@@ -160,7 +160,7 @@ extension PhotoPreviewViewController: UIScrollViewDelegate {
     }
 }
 
-//MARK: - Actions
+// MARK: - Actions
 private extension PhotoPreviewViewController {
     
     @objc

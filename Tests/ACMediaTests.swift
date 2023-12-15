@@ -12,7 +12,7 @@ import XCTest
 class ACMediaTests: XCTestCase {
     
     static var allTests = [
-        ("testExample", testExample),
+        ("testExample", testExample)
     ]
     
     func testExample() {}

@@ -40,8 +40,7 @@
 		95C14E472ACD7B9A00714A43 /* PhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C14E462ACD7B9A00714A43 /* PhotoService.swift */; };
 		95C14E4C2ACD885800714A43 /* AlbumModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C14E4B2ACD885800714A43 /* AlbumModel.swift */; };
 		95C14E542ACD8EE100714A43 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C14E532ACD8EE100714A43 /* PhotoCell.swift */; };
-		95C14E572ACD912900714A43 /* PhotosViewContoller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C14E562ACD912900714A43 /* PhotosViewContoller.swift */; };
-		95C14E5A2ACD981D00714A43 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 95C14E592ACD981D00714A43 /* SnapKit */; };
+		95C14E572ACD912900714A43 /* PhotoGridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C14E562ACD912900714A43 /* PhotoGridViewController.swift */; };
 		95E9538F2B18BDA000D6153A /* PhotoPreviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E9538E2B18BDA000D6153A /* PhotoPreviewViewModel.swift */; };
 		95EDBCE12AE9409B002E7D53 /* AppLocale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95EDBCE02AE9409B002E7D53 /* AppLocale.swift */; };
 		95EDBCE42AE9461F002E7D53 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 95EDBCE62AE9461F002E7D53 /* Localizable.strings */; };
@@ -53,6 +52,8 @@
 		95F184572ACEA62700E6FC75 /* ZoomTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F184562ACEA62700E6FC75 /* ZoomTransitionDelegate.swift */; };
 		95F184592ACEA64B00E6FC75 /* ACMediaConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F184582ACEA64B00E6FC75 /* ACMediaConfiguration.swift */; };
 		95F1845C2ACEA8E300E6FC75 /* PhotoPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F1845B2ACEA8E300E6FC75 /* PhotoPreviewViewController.swift */; };
+		95F562672B2C20B700592578 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 95F562662B2C20B700592578 /* .swiftlint.yml */; };
+		95F5626A2B2C375000592578 /* DPUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 95F562692B2C375000592578 /* DPUIKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -127,7 +128,7 @@
 		95C14E462ACD7B9A00714A43 /* PhotoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoService.swift; sourceTree = "<group>"; };
 		95C14E4B2ACD885800714A43 /* AlbumModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumModel.swift; sourceTree = "<group>"; };
 		95C14E532ACD8EE100714A43 /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
-		95C14E562ACD912900714A43 /* PhotosViewContoller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewContoller.swift; sourceTree = "<group>"; };
+		95C14E562ACD912900714A43 /* PhotoGridViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGridViewController.swift; sourceTree = "<group>"; };
 		95E9538E2B18BDA000D6153A /* PhotoPreviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPreviewViewModel.swift; sourceTree = "<group>"; };
 		95EDBCE02AE9409B002E7D53 /* AppLocale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLocale.swift; sourceTree = "<group>"; };
 		95EDBCE52AE9461F002E7D53 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -139,6 +140,7 @@
 		95F184562ACEA62700E6FC75 /* ZoomTransitionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomTransitionDelegate.swift; sourceTree = "<group>"; };
 		95F184582ACEA64B00E6FC75 /* ACMediaConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACMediaConfiguration.swift; sourceTree = "<group>"; };
 		95F1845B2ACEA8E300E6FC75 /* PhotoPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPreviewViewController.swift; sourceTree = "<group>"; };
+		95F562662B2C20B700592578 /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,7 +148,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				95C14E5A2ACD981D00714A43 /* SnapKit in Frameworks */,
+				95F5626A2B2C375000592578 /* DPUIKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,6 +292,7 @@
 		9514DF562AE2A2C100A72A48 /* SupportLayer */ = {
 			isa = PBXGroup;
 			children = (
+				95F562662B2C20B700592578 /* .swiftlint.yml */,
 				9514DF612AE2B44A00A72A48 /* Notifications.swift */,
 				952604292AD53F4500BB1EBB /* CollectionCell */,
 			);
@@ -395,7 +398,7 @@
 		95C14E552ACD90F600714A43 /* PhotosViewContoller */ = {
 			isa = PBXGroup;
 			children = (
-				95C14E562ACD912900714A43 /* PhotosViewContoller.swift */,
+				95C14E562ACD912900714A43 /* PhotoGridViewController.swift */,
 				951B93E02AD3B68E005BC1AE /* PhotosViewModel.swift */,
 			);
 			path = PhotosViewContoller;
@@ -448,7 +451,7 @@
 			);
 			name = "ACMedia-iOS";
 			packageProductDependencies = (
-				95C14E592ACD981D00714A43 /* SnapKit */,
+				95F562692B2C375000592578 /* DPUIKit */,
 			);
 			productName = ACMedia;
 			productReference = 3D9C429022745894000A6585 /* ACMedia.framework */;
@@ -523,7 +526,7 @@
 			);
 			mainGroup = 3D9C428622745894000A6585;
 			packageReferences = (
-				95C14E582ACD981D00714A43 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				95F562682B2C375000592578 /* XCRemoteSwiftPackageReference "DPUIKit" */,
 			);
 			productRefGroup = 3D9C429122745894000A6585 /* Products */;
 			projectDirPath = "";
@@ -541,6 +544,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95F562672B2C20B700592578 /* .swiftlint.yml in Resources */,
 				9593584D2B2AB6AB0007BEC3 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -581,7 +585,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -610,7 +614,7 @@
 				9514DF642AE2BE9800A72A48 /* ACMediaPhotoDocConfig.swift in Sources */,
 				95F184492ACE9CB100E6FC75 /* MainNavigationController.swift in Sources */,
 				95F1845C2ACEA8E300E6FC75 /* PhotoPreviewViewController.swift in Sources */,
-				95C14E572ACD912900714A43 /* PhotosViewContoller.swift in Sources */,
+				95C14E572ACD912900714A43 /* PhotoGridViewController.swift in Sources */,
 				9514DF602AE2B01400A72A48 /* AppAssets.swift in Sources */,
 				951B93E12AD3B68E005BC1AE /* PhotosViewModel.swift in Sources */,
 				95F184572ACEA62700E6FC75 /* ZoomTransitionDelegate.swift in Sources */,
@@ -989,9 +993,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		95C14E582ACD981D00714A43 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+		95F562682B2C375000592578 /* XCRemoteSwiftPackageReference "DPUIKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			repositoryURL = "https://github.com/DPLibs/DPUIKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.0.0;
@@ -1000,10 +1004,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		95C14E592ACD981D00714A43 /* SnapKit */ = {
+		95F562692B2C375000592578 /* DPUIKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 95C14E582ACD981D00714A43 /* XCRemoteSwiftPackageReference "SnapKit" */;
-			productName = SnapKit;
+			package = 95F562682B2C375000592578 /* XCRemoteSwiftPackageReference "DPUIKit" */;
+			productName = DPUIKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -99,7 +99,7 @@ private extension AppTabBarController {
         self.delegate = adapter
         
         let items = tabBar.items ?? []
-        items.enumerated().forEach({ (index, item) in
+        items.forEach({ item in
             if #available(iOSApplicationExtension 13.0, *) {
                 item.standardAppearance = tabBarAppearance
             }
@@ -109,7 +109,7 @@ private extension AppTabBarController {
     func makeNavControllers() -> [UINavigationController] {
         [
             photoController,
-            UINavigationController(rootViewController: documentsViewController),
+            UINavigationController(rootViewController: documentsViewController)
         ]
     }
 }

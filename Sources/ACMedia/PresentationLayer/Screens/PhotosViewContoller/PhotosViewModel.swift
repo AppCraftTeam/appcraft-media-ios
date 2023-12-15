@@ -110,6 +110,7 @@ extension PhotosViewModel {
             }
         }
         
+        // swiftlint:disable:next empty_count
         if self.imagesData.count == 0 {
             onShowEmptyPlaceholder?()
             return []
