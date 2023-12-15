@@ -1,5 +1,5 @@
 //
-//  ACMedia.swift
+//  ACMediaViewController.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-public class ACMedia: UIViewController {
+public class ACMediaViewController: UIViewController {
     
     public var fileType: PickerFilesType
     // Callbacks
@@ -50,7 +50,7 @@ public class ACMedia: UIViewController {
     }
 }
 
-public extension ACMedia {
+public extension ACMediaViewController {
     
     func didPickAssets(_ model: PhotoPickerCallbackModel) {
         self.assetsSelected?(model)
@@ -62,7 +62,7 @@ public extension ACMedia {
 }
 
 // MARK: - AppTabBarController
-extension ACMedia: UIDocumentPickerDelegate {
+extension ACMediaViewController: UIDocumentPickerDelegate {
     
     public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         self.didPickDocuments(urls)

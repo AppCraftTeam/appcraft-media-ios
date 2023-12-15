@@ -19,7 +19,7 @@ open class MainNavigationController: UINavigationController {
     }()
     
     // MARK: - Params
-    public var acMediaService: ACMedia?
+    public var acMediaService: ACMediaViewController?
     private let navigationTransition = ZoomTransitionDelegate()
     
     override open func viewDidLoad() {
@@ -39,7 +39,7 @@ open class MainNavigationController: UINavigationController {
         viewControllers = [imageGridController]
     }
     
-    public required init(configuration: ACMediaConfiguration, acMediaService: ACMedia?) {
+    public required init(configuration: ACMediaConfiguration, acMediaService: ACMediaViewController?) {
         self.acMediaService = acMediaService
         SelectedImagesStack.shared.deleteAll()
         ACMediaConfiguration.shared = configuration

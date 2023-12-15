@@ -68,9 +68,9 @@ open class AppTabBarController: UITabBarController {
         super.viewDidLayoutSubviews()
     }
     
-    public var acMediaService: ACMedia?
+    public var acMediaService: ACMediaViewController?
     
-    open func showPicker(in parent: UIViewController, acMediaService: ACMedia) {
+    open func showPicker(in parent: UIViewController, acMediaService: ACMediaViewController) {
         self.photoController.acMediaService = acMediaService
         self.acMediaService = acMediaService
         self.adapter.types = ACMediaConfiguration.shared.documentsConfig.fileFormats

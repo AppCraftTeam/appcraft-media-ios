@@ -101,7 +101,7 @@ private extension ViewController {
     
     @objc
     func openSingleImagePicker() {
-        let acMedia = ACMedia(
+        let acMedia = ACMediaViewController(
             fileType: .gallery,
             assetsSelected: { [weak self] assets in
                 self?.didPickImages(assets.images)
@@ -126,7 +126,7 @@ private extension ViewController {
     
     @objc
     func openImageAndFilesPicker() {
-        let acMedia = ACMedia(
+        let acMedia = ACMediaViewController(
             fileType: .galleryAndFiles,
             assetsSelected: { [weak self] assets in
                 self?.didPickImages(assets.images)
@@ -146,7 +146,7 @@ private extension ViewController {
     
     @objc
     func openFilesPicker() {
-        let acMedia = ACMedia(
+        let acMedia = ACMediaViewController(
             fileType: .files,
             filesSelected: { [weak self] fileUrls in
                 self?.didPickDocuments(fileUrls)

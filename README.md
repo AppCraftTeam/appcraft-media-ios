@@ -32,8 +32,8 @@ Open the `ACMedia.xcodeproj` and run the Example scheme.
 
 ## Images picker
 ```swift
-let acMedia = ACMedia(
-    fileType: [.gallery],
+let acMedia = ACMediaViewController(
+    fileType: .gallery,
     assetsSelected: { [weak self] assets in
         let images = assets.images
         let videos = assets.videoUrls
@@ -62,7 +62,7 @@ acMedia.show(in: self)
 
 ## Files picker
 ```swift
-let acMedia = ACMedia(
+let acMedia = ACMediaViewController(
     fileType: .files,
     filesSelected: {
         [weak self] fileUrls in
@@ -83,7 +83,7 @@ acMedia.show(in: self)
 Of course, you can configure it so that the user can select both files and images. To do this, you just need to specify both types.
 
 ```swift
- let acMedia = ACMedia(
+ let acMedia = ACMediaViewController(
      fileType: .galleryAndFiles,
      assetsSelected: { [weak self] assets in
        
