@@ -6,14 +6,15 @@
 //
 
 import Foundation
+import DPUIKit
 import Photos
 import UIKit
 
 class PhotosViewModel {
     
     public var albumModel: AlbumModel?
-    var models: [AppCellIdentifiable] = []
-    
+    private(set) var sections: [Section] = []
+
     // MARK: - Properties
     var selectedIndexPath: IndexPath?
     var imagesData = PHFetchResult<PHAsset>()
@@ -67,21 +68,20 @@ extension PhotosViewModel {
             if let model = strongSelf.albumModel {
                 strongSelf.imagesData = model.assets
             }
-            let models = strongSelf.makeSections()
-            strongSelf.models = models
-            strongSelf.onReloadCollection?()
+            strongSelf.makeSections()
         }
     }
     
-    func makeSections() -> [AppCellIdentifiable] {
-        var models: [AppCellIdentifiable] = []
-        
+    func makeSections() {
         guard let model = self.albumModel else {
-            return []
+            return
         }
         
+        var photosViewModels: [PhotoCellModel] = []
+        var cameraModel: CameraCellModel?
+        
         model.assets.enumerateObjects { asset, index, _ in
-            models += [
+            photosViewModels += [
                 PhotoCellModel(
                     image: nil,
                     index: index,
@@ -91,7 +91,7 @@ extension PhotosViewModel {
                         self.onShowImageOnFullScreen?(asset)
                     },
                     viewSelectedToggle: {
-                        if let model = self.models[index + 1] as? PhotoCellModel {
+                        if let model = photosViewModels[index] as? PhotoCellModel {
                             self.handleImageSelection(model: model)
                         }
                     }
@@ -100,25 +100,22 @@ extension PhotosViewModel {
         }
         
         if ACMediaConfiguration.shared.photoConfig.allowCamera {
-            let cameraModel = CameraCellModel(viewTapped: { [weak self] in
+            cameraModel = CameraCellModel(viewTapped: { [weak self] in
                 self?.onShowCamera?()
             })
-            if models.isEmpty {
-                models = [cameraModel]
-            } else {
-                models.insert(cameraModel, at: 0)
-            }
         }
+        
+        self.sections.removeAll()
+        self.sections = [Section(photos: photosViewModels, camera: cameraModel)]
         
         // swiftlint:disable:next empty_count
         if self.imagesData.count == 0 {
             onShowEmptyPlaceholder?()
-            return []
         } else {
             onHideEmptyPlaceholder?()
         }
         
-        return models
+        onReloadCollection?()
     }
     
     func fetchAlbumData() {
@@ -149,9 +146,7 @@ extension PhotosViewModel {
                     let oldIndexPath = IndexPath(item: oldIndex + 1, section: 0)
                     SelectedImagesStack.shared.add(asset)
                     
-                    let models = self.makeSections()
-                    self.models = models
-                    
+                    self.makeSections()
                     self.onReloadCells?([oldIndexPath, indexPath])
                 }
                 
@@ -160,9 +155,31 @@ extension PhotosViewModel {
             SelectedImagesStack.shared.add(asset)
         }
         
-        let models = makeSections()
-        self.models = models
+        self.makeSections()
         onReloadCells?([indexPath])
         onSetupDoneButton?()
+    }
+}
+
+// MARK: - Section
+extension PhotosViewModel {
+    
+    struct Section: DPCollectionSectionType, Identifiable {
+        
+        // MARK: - Init
+        init(photos: [PhotoCellModel], camera: CameraCellModel?) {
+            self.items = photos
+            if let camera = camera {
+                self.items.append(camera)
+            }
+            self.header = nil
+            self.footer = nil
+        }
+        
+        // MARK: - Props
+        let id = UUID()
+        var items: [Sendable]
+        var header: Sendable?
+        var footer: Sendable?
     }
 }

@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-public class CameraCellModel: AppCellIdentifiable {
+public class CameraCellModel {
 
     var viewTapped: (() -> Void)?
 

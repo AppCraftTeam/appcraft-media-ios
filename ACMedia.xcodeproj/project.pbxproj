@@ -31,8 +31,6 @@
 		9514DF692AE2BF0A00A72A48 /* ACMediaAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9514DF682AE2BF0A00A72A48 /* ACMediaAppearance.swift */; };
 		951B93E12AD3B68E005BC1AE /* PhotosViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951B93E02AD3B68E005BC1AE /* PhotosViewModel.swift */; };
 		952604272AD5394B00BB1EBB /* CameraCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 952604262AD5394B00BB1EBB /* CameraCell.swift */; };
-		9526042B2AD53F5D00BB1EBB /* AppCellIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9526042A2AD53F5D00BB1EBB /* AppCellIdentifiable.swift */; };
-		9526042D2AD53F6D00BB1EBB /* AppCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9526042C2AD53F6D00BB1EBB /* AppCollectionCell.swift */; };
 		9526042F2AD5411B00BB1EBB /* CameraCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9526042E2AD5411B00BB1EBB /* CameraCellModel.swift */; };
 		952604312AD5414D00BB1EBB /* PhotoCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 952604302AD5414D00BB1EBB /* PhotoCellModel.swift */; };
 		9539F85C2B2873020042B05A /* DocumentsParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9539F85B2B2873020042B05A /* DocumentsParentViewController.swift */; };
@@ -53,7 +51,6 @@
 		95F184592ACEA64B00E6FC75 /* ACMediaConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F184582ACEA64B00E6FC75 /* ACMediaConfiguration.swift */; };
 		95F1845C2ACEA8E300E6FC75 /* PhotoPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F1845B2ACEA8E300E6FC75 /* PhotoPreviewViewController.swift */; };
 		95F562672B2C20B700592578 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 95F562662B2C20B700592578 /* .swiftlint.yml */; };
-		95F5626A2B2C375000592578 /* DPUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 95F562692B2C375000592578 /* DPUIKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,8 +116,6 @@
 		9514DF682AE2BF0A00A72A48 /* ACMediaAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACMediaAppearance.swift; sourceTree = "<group>"; };
 		951B93E02AD3B68E005BC1AE /* PhotosViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewModel.swift; sourceTree = "<group>"; };
 		952604262AD5394B00BB1EBB /* CameraCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCell.swift; sourceTree = "<group>"; };
-		9526042A2AD53F5D00BB1EBB /* AppCellIdentifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCellIdentifiable.swift; sourceTree = "<group>"; };
-		9526042C2AD53F6D00BB1EBB /* AppCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCollectionCell.swift; sourceTree = "<group>"; };
 		9526042E2AD5411B00BB1EBB /* CameraCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCellModel.swift; sourceTree = "<group>"; };
 		952604302AD5414D00BB1EBB /* PhotoCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCellModel.swift; sourceTree = "<group>"; };
 		9539F85B2B2873020042B05A /* DocumentsParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentsParentViewController.swift; sourceTree = "<group>"; };
@@ -148,7 +143,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				95F5626A2B2C375000592578 /* DPUIKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -180,6 +174,7 @@
 				3D9C429B227458E8000A6585 /* Configs */,
 				9593584C2B2AB6AB0007BEC3 /* README.md */,
 				3D9C429122745894000A6585 /* Products */,
+				95F5626E2B2C565600592578 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -294,7 +289,6 @@
 			children = (
 				95F562662B2C20B700592578 /* .swiftlint.yml */,
 				9514DF612AE2B44A00A72A48 /* Notifications.swift */,
-				952604292AD53F4500BB1EBB /* CollectionCell */,
 			);
 			path = SupportLayer;
 			sourceTree = "<group>";
@@ -377,15 +371,6 @@
 			path = CameraCell;
 			sourceTree = "<group>";
 		};
-		952604292AD53F4500BB1EBB /* CollectionCell */ = {
-			isa = PBXGroup;
-			children = (
-				9526042A2AD53F5D00BB1EBB /* AppCellIdentifiable.swift */,
-				9526042C2AD53F6D00BB1EBB /* AppCollectionCell.swift */,
-			);
-			path = CollectionCell;
-			sourceTree = "<group>";
-		};
 		95C14E522ACD8EDB00714A43 /* PhotoCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -422,6 +407,13 @@
 			path = PhotoPreview;
 			sourceTree = "<group>";
 		};
+		95F5626E2B2C565600592578 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -451,7 +443,6 @@
 			);
 			name = "ACMedia-iOS";
 			packageProductDependencies = (
-				95F562692B2C375000592578 /* DPUIKit */,
 			);
 			productName = ACMedia;
 			productReference = 3D9C429022745894000A6585 /* ACMedia.framework */;
@@ -527,7 +518,6 @@
 			);
 			mainGroup = 3D9C428622745894000A6585;
 			packageReferences = (
-				95F562682B2C375000592578 /* XCRemoteSwiftPackageReference "DPUIKit" */,
 			);
 			productRefGroup = 3D9C429122745894000A6585 /* Products */;
 			projectDirPath = "";
@@ -596,14 +586,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				95C14E472ACD7B9A00714A43 /* PhotoService.swift in Sources */,
-				9526042B2AD53F5D00BB1EBB /* AppCellIdentifiable.swift in Sources */,
 				9514DF4C2AE2663D00A72A48 /* PickerFilesType.swift in Sources */,
 				9514DF622AE2B44A00A72A48 /* Notifications.swift in Sources */,
 				9503F8DD2AEA1DE900F016C7 /* ACMediaTheme.swift in Sources */,
 				95C14E542ACD8EE100714A43 /* PhotoCell.swift in Sources */,
 				9503F8E22AEA72D300F016C7 /* PhotoPickerCallbackModel.swift in Sources */,
 				95EDBCE12AE9409B002E7D53 /* AppLocale.swift in Sources */,
-				9526042D2AD53F6D00BB1EBB /* AppCollectionCell.swift in Sources */,
 				9514DF522AE2844E00A72A48 /* AppTabNavigationController.swift in Sources */,
 				9514DF672AE2BEC900A72A48 /* ACMediaPhotoPickerConfig.swift in Sources */,
 				95F184522ACEA5FC00E6FC75 /* SelectedImagesStack.swift in Sources */,
@@ -1004,25 +992,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		95F562682B2C375000592578 /* XCRemoteSwiftPackageReference "DPUIKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/DPLibs/DPUIKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		95F562692B2C375000592578 /* DPUIKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 95F562682B2C375000592578 /* XCRemoteSwiftPackageReference "DPUIKit" */;
-			productName = DPUIKit;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3D9C428722745894000A6585 /* Project object */;
 }

@@ -25,10 +25,7 @@ let package = Package(
         .target(
             name: "ACMedia",
             dependencies: [
-                .product(
-                    name: "SnapKit",
-                    package: "SnapKit"
-                )
+                "DPUIKit"
             ],
             path: "Sources"
         ),

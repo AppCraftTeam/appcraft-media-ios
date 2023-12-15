@@ -5,6 +5,7 @@
 //  Copyright © 2023 AppCraft. All rights reserved.
 //
 
+import DPUIKit
 import PhotosUI
 import UIKit
 
@@ -34,6 +35,57 @@ public final class PhotoGridViewController: UIViewController {
         return done
     }()
     
+    private lazy var collectionView: UICollectionView = {
+        UICollectionView()
+    }()
+    /*
+    private lazy var collectionViewTest: DPCollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.sectionInset = UIEdgeInsets(
+            top: 10,
+            left: leftSpacing,
+            bottom: bottomSpacing,
+            right: rightSpacing
+        )
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = interSpacing
+        
+        let result = DPCollectionView(frame: .zero, collectionViewLayout: layout)
+        result.prefetchDataSource = self
+        
+        result.adapter = DPCollectionAdapter(
+            itemAdapters: [
+                PhotoCell.Adapter(
+                    didSelect: { [weak self] ctx in
+                        print("did...")
+                    },
+                    onSizeForItem: { [weak self] ctx in
+                        guard let self else { return nil }
+                        return CGSize(width: self.cellWidth, height: self.cellWidth)
+                    }
+                ),
+                CameraCell.Adapter(
+                    didSelect: { [weak self] ctx in
+                        
+                    },
+                    onSizeForItem: { [weak self] ctx in
+                        guard let self else { return nil }
+                        return CGSize(width: self.cellWidth, height: self.cellWidth)
+                    }
+                )
+            ],
+            supplementaryAdapters: []
+        )
+        /*
+        result.adapter?.willDisplayItem = { [weak self] in
+            
+        }
+*/
+        return result
+    }()
+    */
+    
     // MARK: - Params
     private var topSpacing: CGFloat = 5
     private var bottomSpacing: CGFloat = 5
@@ -47,32 +99,9 @@ public final class PhotoGridViewController: UIViewController {
         let itemsInRow = CGFloat(ACMediaConfig.appearance.cellsInRow)
         
         let spacing: CGFloat = leftSpacing + rightSpacing + 2 * interSpacing
-        let cellWidth = (collectionView.frame.width - spacing) / itemsInRow
+        let cellWidth = (self.view.frame.width - spacing) / itemsInRow
         return cellWidth
     }
-    
-    private lazy var collectionView: UICollectionView = {
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.minimumInteritemSpacing = 0
-        layout.minimumLineSpacing = interSpacing
-        layout.sectionInset = UIEdgeInsets(
-            top: 10,
-            left: leftSpacing,
-            bottom: bottomSpacing,
-            right: rightSpacing)
-        
-        let collectionView = UICollectionView(
-            frame: self.view.frame,
-            collectionViewLayout: layout)
-        
-        collectionView.backgroundColor = .clear
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.prefetchDataSource = self
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        return collectionView
-    }()
     
     @available(iOSApplicationExtension 13.0, *)
     var demoMenu: UIMenu {
@@ -97,21 +126,6 @@ public final class PhotoGridViewController: UIViewController {
         }
         
         return UIMenu(title: "", image: nil, identifier: nil, options: [], children: menuItems)
-    }
-    
-    private func checkDoneButtonCondition() {
-        let min = ACMediaConfiguration.shared.photoConfig.minimimSelection
-        let max = ACMediaConfiguration.shared.photoConfig.maximumSelection
-        
-        var isEnabled: Bool {
-            if let max = max {
-                return SelectedImagesStack.shared.selectedCount <= max && SelectedImagesStack.shared.selectedCount >= min
-            } else {
-                return SelectedImagesStack.shared.selectedCount >= min
-            }
-        }
-        
-        doneButton.isEnabled = isEnabled
     }
     
     // MARK: - Methods
@@ -214,6 +228,21 @@ public final class PhotoGridViewController: UIViewController {
         self.navigationItem.rightBarButtonItem = self.doneButton
     }
     
+    private func checkDoneButtonCondition() {
+        let min = ACMediaConfiguration.shared.photoConfig.minimimSelection
+        let max = ACMediaConfiguration.shared.photoConfig.maximumSelection
+        
+        var isEnabled: Bool {
+            if let max = max {
+                return SelectedImagesStack.shared.selectedCount <= max && SelectedImagesStack.shared.selectedCount >= min
+            } else {
+                return SelectedImagesStack.shared.selectedCount >= min
+            }
+        }
+        
+        doneButton.isEnabled = isEnabled
+    }
+    
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
@@ -223,7 +252,26 @@ public final class PhotoGridViewController: UIViewController {
         collectionView.collectionViewLayout.invalidateLayout()
     }
     
-    private func showEmptyPlaceholder() {
+    func presentImageDetailsViewController(with asset: PHAsset) {
+        viewModel.photoService.fetchThumbnail(for: asset, size: CGSize()) { [unowned self] _ in
+            let vc = PhotoPreviewViewController()
+            vc.viewModel = PhotoPreviewViewModel(asset: asset)
+            
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .fullScreen
+            
+            DispatchQueue.main.async {
+                guard self.navigationController?.topViewController == self else { return }
+                self.navigationController?.present(nav, animated: true)
+            }
+        }
+    }
+}
+
+// MARK: - Module methods
+private extension PhotoGridViewController {
+    
+    func showEmptyPlaceholder() {
         collectionView.isHidden = true
         
         let label = UILabel()
@@ -241,12 +289,12 @@ public final class PhotoGridViewController: UIViewController {
         ])
     }
     
-    private func hideEmptyPlaceholder() {
+    func hideEmptyPlaceholder() {
         view.subviews.filter { $0 is UILabel }.forEach { $0.removeFromSuperview() }
         collectionView.isHidden = false
     }
     
-    private func showPermissionAlert() {
+    func showPermissionAlert() {
         let title = AppLocale.assetsPermissionTitle.locale
         let message = AppLocale.assetsPermissionMessage.locale
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -267,14 +315,12 @@ public final class PhotoGridViewController: UIViewController {
         present(alert, animated: true)
     }
     
-    private func configureToolbar() {
+    func configureToolbar() {
         navigationController?.isToolbarHidden = false
         toolbarItems = navigationController?.toolbarItems
     }
     
-    private func configureCollectionView() {
-        collectionView.register(PhotoCell.self, forCellWithReuseIdentifier: "PhotoCardCell")
-        collectionView.register(CameraCell.self, forCellWithReuseIdentifier: "CameraCell")
+    func configureCollectionView() {
         view.addSubview(collectionView)
         
         NSLayoutConstraint.activate([
@@ -285,22 +331,7 @@ public final class PhotoGridViewController: UIViewController {
         ])
     }
     
-    func presentImageDetailsViewController(with asset: PHAsset) {
-        viewModel.photoService.fetchThumbnail(for: asset, size: CGSize()) { [unowned self] _ in
-            let vc = PhotoPreviewViewController()
-            vc.viewModel = PhotoPreviewViewModel(asset: asset)
-            
-            let nav = UINavigationController(rootViewController: vc)
-            nav.modalPresentationStyle = .fullScreen
-            
-            DispatchQueue.main.async {
-                guard self.navigationController?.topViewController == self else { return }
-                self.navigationController?.present(nav, animated: true)
-            }
-        }
-    }
-    
-    private func showCamera() {
+    func showCamera() {
         let vc = UIImagePickerController()
         vc.sourceType = .camera
         vc.allowsEditing = true
@@ -308,7 +339,7 @@ public final class PhotoGridViewController: UIViewController {
         present(vc, animated: true)
     }
     
-    private func setupCamera() {
+    func setupCamera() {
         guard ACMediaConfiguration.shared.photoConfig.allowCamera else {
             return
         }
@@ -322,10 +353,10 @@ public final class PhotoGridViewController: UIViewController {
         let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         previewLayer.videoGravity = .resizeAspectFill
         DispatchQueue.main.async {
-            guard let cell = self.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) as? CameraCell else {
-                return
-            }
-            cell.addCameraLayer(previewLayer)
+//            guard let cell = self.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) as? CameraCell else {
+//                return
+//            }
+//            cell.addCameraLayer(previewLayer)
         }
         
         if let captureDevice = AVCaptureDevice.default(for: .video) {
@@ -359,7 +390,7 @@ extension PhotoGridViewController: UIImagePickerControllerDelegate {
 
 // MARK: - UINavigationControllerDelegate
 extension PhotoGridViewController: UINavigationControllerDelegate {}
-
+/*
 // MARK: - UICollectionViewDataSource
 extension PhotoGridViewController: UICollectionViewDataSource {
     
@@ -403,42 +434,8 @@ extension PhotoGridViewController: UICollectionViewDataSource {
             viewModel.loadingOperations.removeValue(forKey: indexPath)
         }
     }
-    
-    public func numberOfSections(in collectionView: UICollectionView) -> Int {
-        1
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.models.count
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let model = self.viewModel.models[indexPath.row]
-        
-        if let model = model as? CameraCellModel {
-            guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "CameraCell",
-                for: indexPath) as? CameraCell
-            else {
-                return UICollectionViewCell()
-            }
-            cell.cellModel = model
-            return cell
-        } else if let model = model as? PhotoCellModel {
-            guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "PhotoCardCell",
-                for: indexPath) as? PhotoCell
-            else {
-                return UICollectionViewCell()
-            }
-            cell.cellModel = model
-            return cell
-        }
-        
-        return UICollectionViewCell()
-    }
 }
-
+*/
 // MARK: - UICollectionViewDataSourcePrefetching
 extension PhotoGridViewController: UICollectionViewDataSourcePrefetching {
     
@@ -475,14 +472,6 @@ extension PhotoGridViewController: UICollectionViewDataSourcePrefetching {
                 viewModel.loadingOperations.removeValue(forKey: indexPath)
             }
         }
-    }
-}
-
-// MARK: - UICollectionViewDelegateFlowLayout
-extension PhotoGridViewController: UICollectionViewDelegateFlowLayout {
-    
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(width: cellWidth, height: cellWidth)
     }
 }
 
@@ -561,11 +550,12 @@ extension PhotoGridViewController {
 extension PhotoGridViewController: ZoomTransitionViewController {
     
     public func getZoomingImageView(for transition: ZoomTransitionDelegate) -> UIImageView? {
-        if let indexPath = viewModel.selectedIndexPath,
-           let cell = collectionView.cellForItem(at: indexPath) as? PhotoCell {
-            return cell.getPreviewImageView()
-        } else {
-            return nil
-        }
+//        if let indexPath = viewModel.selectedIndexPath,
+//           let cell = collectionView.cellForItem(at: indexPath) as? PhotoCell {
+//            return cell.getPreviewImageView()
+//        } else {
+//            return nil
+//        }
+        return nil
     }
 }

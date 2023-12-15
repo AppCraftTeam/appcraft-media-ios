@@ -4,12 +4,20 @@
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
 //
-
+/*
+import DPUIKit
 import PhotosUI
 import UIKit
 
-public class PhotoCell: AppCollectionCell<PhotoCellModel> {
+public final class PhotoCell: DPCollectionItemCell {
     
+    // MARK: - Props
+    var model: PhotoCellModel? {
+        get { self._model as? PhotoCellModel }
+        set { self._model = newValue }
+    }
+    
+    // MARK: - Components
     private(set) lazy var previewImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.masksToBounds = true
@@ -41,50 +49,10 @@ public class PhotoCell: AppCollectionCell<PhotoCellModel> {
         return button
     }()
     
-    override func updateViews() {
-        self.setupComponents()
-    }
-    
-    public override func prepareForReuse() {
-        super.prepareForReuse()
-        previewImageView.image = nil
-    }
-    
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        self.contentView.backgroundColor = .clear
-        self.previewImageView.layer.cornerRadius = ACMediaConfiguration.shared.appearance.previewCardCornerRadius
-    }
-    
-    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
-        guard let event, event.type == .touches else {
-            return
-        }
-        self.cellModel?.viewTapped?()
-    }
-    
-    @objc
-    private func checkButtonTapped() {
-        self.cellModel?.isSelected.toggle()
-        self.cellModel?.viewSelectedToggle?()
-        self.updateViews()
-    }
-}
-
-private extension PhotoCell {
-    
-    func setupComponents() {
-        var image: UIImage? {
-            guard let model = self.cellModel else {
-                return nil
-            }
-            let icon = model.isSelected ? AppAssets.Icon.checkmarkFilled.image : AppAssets.Icon.checkmarkEmpty.image
-            return icon?.withRenderingMode(.alwaysTemplate)
-        }
-        
-        checkButton.setImage(image, for: [])
-        cellOverlay.isHidden = false
+    // MARK: - Methods
+    public override func setupComponents() {
+        super.setupComponents()
+        //self.updateComponents()
         
         contentView.addSubview(previewImageView)
         previewImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -113,6 +81,52 @@ private extension PhotoCell {
             checkButton.trailingAnchor.constraint(equalTo: cellOverlay.trailingAnchor, constant: -4.0)
         ])
     }
+    
+    public override func updateComponents() {
+        super.updateComponents()
+        
+        var image: UIImage? {
+            guard let model = self.model else {
+                return nil
+            }
+            let icon = model.isSelected ? AppAssets.Icon.checkmarkFilled.image : AppAssets.Icon.checkmarkEmpty.image
+            return icon?.withRenderingMode(.alwaysTemplate)
+        }
+        
+        checkButton.setImage(image, for: [])
+        cellOverlay.isHidden = false
+    }
+    
+    public override func prepareForReuse() {
+        super.prepareForReuse()
+        previewImageView.image = nil
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        self.contentView.backgroundColor = .clear
+        self.previewImageView.layer.cornerRadius = ACMediaConfiguration.shared.appearance.previewCardCornerRadius
+    }
+    
+    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        guard let event, event.type == .touches else {
+            return
+        }
+        self.model?.viewTapped?()
+    }
+}
+
+// MARK: - Actions
+
+private extension PhotoCell {
+    
+    @objc
+    private func checkButtonTapped() {
+        self.model?.isSelected.toggle()
+        self.model?.viewSelectedToggle?()
+        self.updateComponents()
+    }
 }
 
 public extension PhotoCell {
@@ -127,3 +141,9 @@ public extension PhotoCell {
         previewImageView
     }
 }
+
+// MARK: - Types
+extension PhotoCell {
+    typealias Adapter = DPCollectionItemAdapter<PhotoCell, PhotoCellModel>
+}
+*/
