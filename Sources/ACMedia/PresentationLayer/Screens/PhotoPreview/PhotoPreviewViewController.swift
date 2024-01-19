@@ -84,7 +84,7 @@ private extension PhotoPreviewViewController {
         navigationController?.isToolbarHidden = true
         
         let button = UIButton(type: .custom)
-        if #available(iOSApplicationExtension 13.0, *) {
+        if #available(iOS 13.0, *) {
             button.setImage(UIImage(systemName: "chevron.left"), for: .normal)
         } else {
             button.setImage(UIImage(named: "back")?.withRenderingMode(.alwaysTemplate), for: .normal)

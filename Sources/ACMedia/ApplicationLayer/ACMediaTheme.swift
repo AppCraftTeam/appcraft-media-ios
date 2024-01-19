@@ -11,7 +11,7 @@ import UIKit
 public enum ACMediaTheme {
     
     public static var backgroundColor: UIColor {
-        if #available(iOSApplicationExtension 13.0, *) {
+        if #available(iOS 13.0, *) {
             return .systemBackground
         } else {
             return .white
@@ -19,7 +19,7 @@ public enum ACMediaTheme {
     }
     
     public static var tintColor: UIColor {
-        if #available(iOSApplicationExtension 13.0, *) {
+        if #available(iOS 13.0, *) {
             return .systemBlue
         } else {
             return .blue
@@ -27,7 +27,7 @@ public enum ACMediaTheme {
     }
     
     public static var foregroundColor: UIColor {
-        if #available(iOSApplicationExtension 13.0, *) {
+        if #available(iOS 13.0, *) {
             return .label
         } else {
             return .black
@@ -35,7 +35,7 @@ public enum ACMediaTheme {
     }
     
     public static var checkmarkForegroundColor: UIColor {
-        if #available(iOSApplicationExtension 13.0, *) {
+        if #available(iOS 13.0, *) {
             return .systemBackground
         } else {
             return .white

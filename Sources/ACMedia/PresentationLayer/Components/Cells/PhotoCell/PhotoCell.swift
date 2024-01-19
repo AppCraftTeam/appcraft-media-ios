@@ -41,7 +41,7 @@ public final class PhotoCell: DPCollectionItemCell {
         button.backgroundColor = .clear
         button.tintColor = .white
         button.imageEdgeInsets = .zero
-        if #available(iOSApplicationExtension 13.0, *) {
+        if #available(iOS 13.0, *) {
             button.setPreferredSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 48), forImageIn: .normal)
         }
         

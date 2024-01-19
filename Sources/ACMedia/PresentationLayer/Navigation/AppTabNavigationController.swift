@@ -49,7 +49,7 @@ open class AppTabBarController: UITabBarController {
         return vc
     }()
     
-    @available(iOSApplicationExtension 13.0, *)
+    @available(iOS 13.0, *)
     var tabBarAppearance: UITabBarAppearance {
         let appearance = UITabBarAppearance()
         appearance.configureWithDefaultBackground()
@@ -100,7 +100,7 @@ private extension AppTabBarController {
         
         let items = tabBar.items ?? []
         items.forEach({ item in
-            if #available(iOSApplicationExtension 13.0, *) {
+            if #available(iOS 13.0, *) {
                 item.standardAppearance = tabBarAppearance
             }
         })

@@ -1,13 +1,14 @@
-// swift-tools-version:5.3
+// swift-tools-version: 5.8
+// The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "ACMedia",
+    defaultLocalization: "en",
     platforms: [
         .iOS(.v12)
     ],
-    defaultLocalization: "en",
     products: [
         .library(
             name: "ACMedia",
@@ -16,7 +17,6 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            name: "DPUIKit",
             url: "https://github.com/DPLibs/DPUIKit.git",
             from: "5.0.0"
         )
@@ -28,11 +28,6 @@ let package = Package(
                 "DPUIKit"
             ],
             path: "Sources"
-        ),
-        .testTarget(
-            name: "ACMediaTests",
-            dependencies: ["ACMedia"],
-            path: "Tests"
         )
     ]
 )

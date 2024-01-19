@@ -18,7 +18,7 @@ public class DocumentsPickerService: NSObject {
     }
     
     func showPicker(types: [ACMediaDocFileType]) {
-        if #available(iOSApplicationExtension 14.0, *) {
+        if #available(iOS 14.0, *) {
             let pickerViewController = UIDocumentPickerViewController(forOpeningContentTypes: types.map({ $0.utType }), asCopy: true)
             pickerViewController.delegate = parentVC as? any UIDocumentPickerDelegate
             pickerViewController.allowsMultipleSelection = ACMediaConfig.documentsConfig.allowsMultipleSelection

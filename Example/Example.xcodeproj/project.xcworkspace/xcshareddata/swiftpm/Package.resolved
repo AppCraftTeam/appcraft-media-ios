@@ -1,0 +1,23 @@
+{
+  "pins" : [
+    {
+      "identity" : "dpuikit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/DPLibs/DPUIKit.git",
+      "state" : {
+        "revision" : "865c44d10f3d3b9c3764714b7afbe0612d463210",
+        "version" : "5.0.1"
+      }
+    },
+    {
+      "identity" : "kingfisher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/onevcat/Kingfisher.git",
+      "state" : {
+        "revision" : "1a0c2df04b31ed7aa318354f3583faea24f006fc",
+        "version" : "5.15.8"
+      }
+    }
+  ],
+  "version" : 2
+}

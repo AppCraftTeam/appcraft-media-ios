@@ -56,7 +56,7 @@ private extension MainNavigationController {
     func setupNavigationBar() {
         navigationBar.tintColor = ACMediaConfiguration.shared.appearance.tintColor
         
-        if #available(iOSApplicationExtension 13.0, *) {
+        if #available(iOS 13.0, *) {
             let style = UINavigationBarAppearance()
             style.buttonAppearance.normal.titleTextAttributes = [.font: ACMediaConfiguration.shared.appearance.cancelTitleFont]
             style.doneButtonAppearance.normal.titleTextAttributes = [.font: ACMediaConfiguration.shared.appearance.doneTitleFont]

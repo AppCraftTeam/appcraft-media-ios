@@ -103,11 +103,11 @@ public final class PhotoGridViewController: UIViewController {
         return cellWidth
     }
     
-    @available(iOSApplicationExtension 13.0, *)
+    @available(iOS 13.0, *)
     var demoMenu: UIMenu {
         var menuItems: [UIAction] {
             self.viewModel.albumsData.map({ albumModel in
-                if #available(iOSApplicationExtension 15.0, *) {
+                if #available(iOS 15.0, *) {
                     return UIAction(title: albumModel.title, subtitle: String(albumModel.count), image: albumModel.previewImage, handler: { (_) in
                         self.viewModel.albumModel = albumModel
                         DispatchQueue.main.async {
@@ -216,7 +216,7 @@ public final class PhotoGridViewController: UIViewController {
         button.titleLabel?.font = .boldSystemFont(ofSize: 17.0)
         button.tintColor = ACMediaConfiguration.shared.appearance.foregroundColor
         
-        if #available(iOSApplicationExtension 14.0, *) {
+        if #available(iOS 14.0, *) {
             button.menu = demoMenu
             button.showsMenuAsPrimaryAction = true
         } else {
