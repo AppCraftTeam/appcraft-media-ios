@@ -4,7 +4,7 @@
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
 //
-/*
+
 import DPUIKit
 import PhotosUI
 import UIKit
@@ -146,4 +146,3 @@ public extension PhotoCell {
 extension PhotoCell {
     typealias Adapter = DPCollectionItemAdapter<PhotoCell, PhotoCellModel>
 }
-*/

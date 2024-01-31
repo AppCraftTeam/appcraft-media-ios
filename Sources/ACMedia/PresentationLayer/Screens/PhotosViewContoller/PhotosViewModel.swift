@@ -22,7 +22,7 @@ class PhotosViewModel {
     var albumsData: [AlbumModel] = []
     
     // MARK: - Actions
-    var onReloadCollection: (() -> Void)?
+    var onReloadCollection: ((_ sections: [Section]) -> Void)?
     var onReloadCells: ((_ indexes: [IndexPath]) -> Void)?
     var onSetupDoneButton: (() -> Void)?
     var onShowPermissionAlert: (() -> Void)?
@@ -91,9 +91,7 @@ extension PhotosViewModel {
                         self.onShowImageOnFullScreen?(asset)
                     },
                     viewSelectedToggle: {
-                        if let model = photosViewModels[index] as? PhotoCellModel {
-                            self.handleImageSelection(model: model)
-                        }
+                        self.handleImageSelection(model: photosViewModels[index])
                     }
                 )
             ]
@@ -115,7 +113,7 @@ extension PhotosViewModel {
             onHideEmptyPlaceholder?()
         }
         
-        onReloadCollection?()
+        onReloadCollection?(self.sections)
     }
     
     func fetchAlbumData() {

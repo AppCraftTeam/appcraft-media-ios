@@ -9,9 +9,6 @@ import AVFoundation
 import DPUIKit
 import UIKit
 
-final class AdsListCollectionItemCell: DPCollectionItemCell {}
-
-/*
 public final class CameraCell: DPCollectionItemCell {
     
     // MARK: - Props
@@ -103,5 +100,3 @@ public final class CameraCell: DPCollectionItemCell {
 extension CameraCell {
     typealias Adapter = DPCollectionItemAdapter<CameraCell, CameraCellModel>
 }
-
-*/
