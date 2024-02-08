@@ -10,12 +10,17 @@ import UIKit
 
 public final class PhotoService: NSObject {
     
+    /// Types of files from the gallery that will be displayed in the picker
     public var fileTypes: [PhotoPickerFilesType] = PhotoPickerFilesType.allCases
     
+    /// Request permission to access your camera roll
+    /// - Parameter completion: Auth status
     public func authorize(completion: @escaping (PHAuthorizationStatus) -> Void) {
         PHPhotoLibrary.requestAuthorization(completion)
     }
     
+    /// Get the "recent photos" album
+    /// - Returns: Album info model
     public func fetchRecentsAlbum() -> AlbumModel? {
         let options = PHFetchOptions()
         
@@ -34,6 +39,8 @@ public final class PhotoService: NSObject {
         return albumData
     }
     
+    /// Get a list of all albums from camera roll
+    /// - Returns: Album info models
     public func fetchAllAlbums() -> [AlbumModel] {
         let options = PHFetchOptions()
         
@@ -61,6 +68,10 @@ public final class PhotoService: NSObject {
         return albums
     }
     
+    /// Get preview image for albums
+    /// - Parameters:
+    ///   - albums: Album info models without preview
+    ///   - completion: Album info models wuth preview
     public func fetchPreviewsFor(albums: [AlbumModel], completion: @escaping ([AlbumModel]) -> Void) {
         var albumData = albums
         var completionFlags: [Bool] = []
@@ -87,6 +98,9 @@ public final class PhotoService: NSObject {
         })
     }
     
+    /// Request all assets from a photo collection
+    /// - Parameter collection: Photo collection
+    /// - Returns: Assets
     private func pullAssets(fromCollection collection: PHAssetCollection) -> PHFetchResult<PHAsset> {
         let optionsOfPhotos = PHFetchOptions()
         optionsOfPhotos.sortDescriptors = [
@@ -108,6 +122,11 @@ public final class PhotoService: NSObject {
         return PHAsset.fetchAssets(in: collection, options: optionsOfPhotos)
     }
     
+    /// Get a preview thumbnail for an asset
+    /// - Parameters:
+    ///   - asset: Image asset
+    ///   - size: Required preview size
+    ///   - completion: Image preview object
     public func fetchThumbnail(for asset: PHAsset, size: CGSize, completion: @escaping (UIImage?) -> Void) {
         let imageOptions = PHImageRequestOptions()
         imageOptions.resizeMode = .none
@@ -122,12 +141,17 @@ public final class PhotoService: NSObject {
         }
     }
     
-    public func fetchOriginalImage(for asset: PHAsset, size: CGSize, completion: @escaping (UIImage?) -> Void) {
+    /// Get original image from asset
+    /// - Parameters:
+    ///   - asset: Image asset
+    ///   - size: Image size, if necessary
+    ///   - completion: Full image
+    public func fetchOriginalImage(for asset: PHAsset, size: CGSize? = nil, completion: @escaping (UIImage?) -> Void) {
         let imageOptions = PHImageRequestOptions()
         imageOptions.deliveryMode = .highQualityFormat
         PHImageManager.default().requestImage(
             for: asset,
-            targetSize: .init(),
+            targetSize: size ?? CGSize(),
             contentMode: .aspectFit,
             options: imageOptions
         ) { (image, _) in
@@ -135,6 +159,10 @@ public final class PhotoService: NSObject {
         }
     }
     
+    /// Get original image from assets array
+    /// - Parameters:
+    ///   - assets: Image (video) assets
+    ///   - completionHandler: Original images
     public func fetchHighResImages(for assets: [PHAsset], completionHandler: @escaping ([UIImage]) -> Void) {
         var images: [UIImage] = []
         let group = DispatchGroup()
@@ -163,6 +191,10 @@ public final class PhotoService: NSObject {
         }
     }
     
+    /// Get full path to video files from gallery
+    /// - Parameters:
+    ///   - assets: Video assets
+    ///   - completionHandler: video urls
     public func fetchVideoURL(for assets: [PHAsset], completionHandler: @escaping ([URL]) -> Void) {
         var urls: [URL] = []
         let group = DispatchGroup()

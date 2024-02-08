@@ -17,6 +17,9 @@ public class DocumentsPickerService: NSObject {
         self.parentVC = parentVC
     }
     
+    
+    /// Show picker for selecting documents
+    /// - Parameter types: File types
     func showPicker(types: [ACMediaDocFileType]) {
         if #available(iOS 14.0, *) {
             let pickerViewController = UIDocumentPickerViewController(forOpeningContentTypes: types.map({ $0.utType }), asCopy: true)
