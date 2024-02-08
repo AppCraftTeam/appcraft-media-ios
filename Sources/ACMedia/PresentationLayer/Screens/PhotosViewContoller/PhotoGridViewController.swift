@@ -382,14 +382,14 @@ private extension PhotoGridViewController {
         let realIndexPath = indexPath.row //ACMediaConfiguration.shared.photoConfig.allowCamera ? indexPath.row - 1 : indexPath.row
         //print("indexPath - \(indexPath), realIndexPath - \(realIndexPath), all \(viewModel.imagesData.count).")
         let updateCellClosure: (UIImage?) -> Void = { [unowned self] image in
-            (self.viewModel.sections[0].items[realIndexPath] as? PhotoCellModel)?.image = image
+            (self.viewModel.sections[safeIndex: 0]?.items[realIndexPath] as? PhotoCellModel)?.image = image
             cell.updateThumbImage(image)
             self.viewModel.loadingOperations.removeValue(forKey: indexPath)
         }
         
         if let dataLoader = viewModel.loadingOperations[indexPath] {
             if let image = dataLoader.img {
-                (self.viewModel.sections[0].items[realIndexPath] as? PhotoCellModel)?.image = image
+                (self.viewModel.sections[safeIndex: 0]?.items[realIndexPath] as? PhotoCellModel)?.image = image
                 cell.updateThumbImage(image)
                 viewModel.loadingOperations.removeValue(forKey: indexPath)
             } else {

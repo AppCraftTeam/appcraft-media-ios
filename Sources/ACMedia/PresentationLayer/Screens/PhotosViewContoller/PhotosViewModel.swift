@@ -85,7 +85,7 @@ extension PhotosViewModel {
                 guard self.sections.first?.items.count ?? -1 >= index else {
                     return nil
                 }
-                return (self.sections[0].items[index] as? PhotoCellModel)?.image
+                return (self.sections[safeIndex: 0]?.items[safeIndex: index] as? PhotoCellModel)?.image
             }
             
             photosViewModels += [
@@ -98,7 +98,9 @@ extension PhotosViewModel {
                         self.onShowImageOnFullScreen?(asset)
                     },
                     viewSelectedToggle: {
-                        self.handleImageSelection(model: photosViewModels[index])
+                        if let model = photosViewModels[safeIndex: index] {
+                            self.handleImageSelection(model: model)
+                        }
                     }
                 )
             ]
