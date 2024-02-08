@@ -81,9 +81,16 @@ extension PhotosViewModel {
         var cameraModel: CameraCellModel?
         
         model.assets.enumerateObjects { asset, index, _ in
+            var image: UIImage? {
+                guard self.sections.first?.items.count ?? -1 >= index else {
+                    return nil
+                }
+                return (self.sections[0].items[index] as? PhotoCellModel)?.image
+            }
+            
             photosViewModels += [
                 PhotoCellModel(
-                    image: nil,
+                    image: image,
                     index: index,
                     isSelected: SelectedImagesStack.shared.contains(asset),
                     viewTapped: {
@@ -143,7 +150,7 @@ extension PhotosViewModel {
                     let oldIndex = imagesData.index(of: oldAsset)
                     let oldIndexPath = IndexPath(item: oldIndex + 1, section: 0)
                     SelectedImagesStack.shared.add(asset)
-                    
+                    //
                     self.makeSections()
                     self.onReloadCells?([oldIndexPath, indexPath])
                 }
@@ -152,7 +159,7 @@ extension PhotosViewModel {
             }
             SelectedImagesStack.shared.add(asset)
         }
-        
+        //
         self.makeSections()
         onReloadCells?([indexPath])
         onSetupDoneButton?()

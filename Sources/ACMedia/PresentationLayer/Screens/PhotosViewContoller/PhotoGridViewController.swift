@@ -141,10 +141,7 @@ public final class PhotoGridViewController: UIViewController {
                 return
             }
             strongSelf.collectionView.adapter?.reloadData(sections)
-            //strongSelf.collectionView.adapter?.performBatchUpdates([.reloadItems(at: <#T##[IndexPath]#>)])
-            
-            print("onReloadCollection... \(strongSelf.collectionView.adapter?.sections), zzz \(strongSelf.collectionView.numberOfItems(inSection: 0))")
-            
+                        
             AVCaptureDevice.requestAccess(for: .video) { granted in
                 if granted {
                     strongSelf.setupCamera()
@@ -173,8 +170,10 @@ public final class PhotoGridViewController: UIViewController {
 #endif
         }
         viewModel.onReloadCells = { [weak self] indexes in
-            print("onReloadCells....")
-            self?.collectionView.reloadItems(at: indexes )
+            print("onReloadCells.... indexes - \(indexes)")
+            //self?.collectionView.adapter?.reloadData()
+            //self?.collectionView.reloadItems(at: indexes )
+            self?.collectionView.adapter?.reloadData(self?.viewModel.sections ?? [])
         }
         viewModel.onSetupDoneButton = { [weak self] in
             self?.checkDoneButtonCondition()
@@ -371,6 +370,8 @@ private extension PhotoGridViewController {
         captureSession.commitConfiguration()
         
         DispatchQueue(label: "ACMedia.CameraThread", attributes: .concurrent).async {
+            self.captureSession.beginConfiguration()
+            self.captureSession.commitConfiguration()
             self.captureSession.startRunning()
         }
     }
@@ -379,7 +380,7 @@ private extension PhotoGridViewController {
         guard let cell = data.cell as? PhotoCell else { return }
         let indexPath = data.indexPath
         let realIndexPath = indexPath.row //ACMediaConfiguration.shared.photoConfig.allowCamera ? indexPath.row - 1 : indexPath.row
-        print("indexPath - \(indexPath), realIndexPath - \(realIndexPath), all \(viewModel.imagesData.count).")
+        //print("indexPath - \(indexPath), realIndexPath - \(realIndexPath), all \(viewModel.imagesData.count).")
         let updateCellClosure: (UIImage?) -> Void = { [unowned self] image in
             (self.viewModel.sections[0].items[realIndexPath] as? PhotoCellModel)?.image = image
             cell.updateThumbImage(image)

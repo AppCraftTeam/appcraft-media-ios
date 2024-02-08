@@ -94,6 +94,7 @@ public final class PhotoCell: DPCollectionItemCell {
         }
         
         checkButton.setImage(image, for: [])
+        self.previewImageView.image = self.model?.image
         cellOverlay.isHidden = false
     }
     
