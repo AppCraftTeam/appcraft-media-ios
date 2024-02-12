@@ -64,7 +64,7 @@ extension PhotosViewModel {
                 return
             }
             if strongSelf.albumModel == nil {
-                strongSelf.albumModel = strongSelf.photoService.fetchRecentsAlbum()
+                strongSelf.albumModel = strongSelf.photoService.fetchRecentAlbum()
             }
             
             if let model = strongSelf.albumModel {

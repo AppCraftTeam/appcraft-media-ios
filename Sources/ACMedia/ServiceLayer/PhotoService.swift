@@ -21,7 +21,7 @@ public final class PhotoService: NSObject {
     
     /// Get the "recent photos" album
     /// - Returns: Album info model
-    public func fetchRecentsAlbum() -> AlbumModel? {
+    public func fetchRecentAlbum() -> AlbumModel? {
         let options = PHFetchOptions()
         
         let smartCollections = PHAssetCollection.fetchAssetCollections(
@@ -86,9 +86,10 @@ public final class PhotoService: NSObject {
                 }
                 return
             }
-            let dimensions = CGSize(width: 30, height: 30)
             
-            self.fetchThumbnail(for: asset, size: dimensions) { image in
+            let size = CGSize(width: 30, height: 30)
+            // Fetch mini preview for album
+            self.fetchThumbnail(for: asset, size: size) { image in
                 albumData[index].previewImage = image
                 completionFlags += [image != nil]
                 if completionFlags.count == albumData.count {
@@ -109,8 +110,8 @@ public final class PhotoService: NSObject {
         
         var predicates: NSPredicate {
             if self.fileTypes.count == PhotoPickerFilesType.allCases.count {
-                let videoPred = NSPredicate(format: "mediaType = %d", PHAssetMediaType.video.rawValue)
-                let imagePred = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
+                let videoPred = NSPredicate(format: "mediaType = %d", PHAssetMediaType.video.rawValue) // video
+                let imagePred = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue) // photo
                 let compoundPred = NSCompoundPredicate(orPredicateWithSubpredicates: [videoPred, imagePred])
                 return compoundPred
             }

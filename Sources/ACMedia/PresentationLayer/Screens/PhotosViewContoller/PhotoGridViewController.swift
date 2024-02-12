@@ -432,6 +432,7 @@ extension PhotoGridViewController: UIImagePickerControllerDelegate {
         guard let image = info[.editedImage] as? UIImage else {
             return
         }
+        // Return to the parent app user photo captured in the camera
         ((self.navigationController as? MainNavigationController)?.acMediaService)?.didPickAssets(PhotoPickerCallbackModel(images: [image], videoUrls: []))
         dismiss(animated: true, completion: nil)
     }
@@ -445,17 +446,15 @@ extension PhotoGridViewController: UICollectionViewDataSourcePrefetching {
     
     public func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
-            let rowIndexPath = ACMediaConfiguration.shared.photoConfig.allowCamera ? indexPath.row - 1 : indexPath.row
-            
-            if ACMediaConfiguration.shared.photoConfig.allowCamera {
-                guard indexPath.row != 0 else {
-                    return
-                }
+            guard isNotCameraCell(on: indexPath) else {
+                return
             }
+            let rowIndexPath = ACMediaConfiguration.shared.photoConfig.allowCamera ? indexPath.row - 1 : indexPath.row
             if viewModel.loadingOperations[indexPath] != nil { return }
             
             let model = viewModel.imagesData[rowIndexPath]
             let size = CGSize(width: cellWidth, height: cellWidth)
+            // Set fetching image preview operation
             if let dataLoader = AsyncImageLoader.fetchImage(from: model, withSize: size) {
                 viewModel.loadingQueue.addOperation(dataLoader)
                 viewModel.loadingOperations[indexPath] = dataLoader
@@ -465,17 +464,22 @@ extension PhotoGridViewController: UICollectionViewDataSourcePrefetching {
     
     public func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
-            if ACMediaConfiguration.shared.photoConfig.allowCamera {
-                guard indexPath.row != 0 else {
-                    return
-                }
+            guard isNotCameraCell(on: indexPath),
+                  let dataLoader = viewModel.loadingOperations[indexPath] else {
+                return
             }
-            
-            if let dataLoader = viewModel.loadingOperations[indexPath] {
-                dataLoader.cancel()
-                viewModel.loadingOperations.removeValue(forKey: indexPath)
-            }
+            // Cancelling fetching image preview operation
+            dataLoader.cancel()
+            viewModel.loadingOperations.removeValue(forKey: indexPath)
         }
+    }
+    
+    // To make sure it's an asset and not a preview camera.
+    private func isNotCameraCell(on indexPath: IndexPath) -> Bool {
+        if ACMediaConfiguration.shared.photoConfig.allowCamera {
+            return indexPath.row != 0
+        }
+        return true
     }
 }
 
@@ -512,7 +516,9 @@ extension PhotoGridViewController {
             let manager = PhotoService()
             manager.fileTypes = ACMediaConfiguration.shared.photoConfig.types
             
+            // Get originals for selecting photos
             manager.fetchHighResImages(for: assets) { images in
+                // Get paths for selecting videos
                 manager.fetchVideoURL(for: assets) { videoUrls in
                     let model = PhotoPickerCallbackModel(images: images, videoUrls: videoUrls)
                     ((self.navigationController as? MainNavigationController)?.acMediaService)?.didPickAssets(model)
@@ -556,6 +562,7 @@ extension PhotoGridViewController: ZoomTransitionViewController {
     public func getZoomingImageView(for transition: ZoomTransitionDelegate) -> UIImageView? {
         if let indexPath = viewModel.selectedIndexPath,
            let cell = collectionView.cellForItem(at: indexPath) as? PhotoCell {
+            // For previewing photo screen animation
             return cell.getPreviewImageView()
         } else {
             return nil
