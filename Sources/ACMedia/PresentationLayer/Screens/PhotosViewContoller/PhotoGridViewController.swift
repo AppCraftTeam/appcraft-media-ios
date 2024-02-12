@@ -12,6 +12,7 @@ import UIKit
 public final class PhotoGridViewController: UIViewController {
     
     private var viewModel = PhotosViewModel()
+    // Session for camera preview
     private let captureSession = AVCaptureSession()
     
     // MARK: - Components
@@ -97,7 +98,7 @@ public final class PhotoGridViewController: UIViewController {
     }
     
     @available(iOS 13.0, *)
-    var demoMenu: UIMenu {
+    private var albumsListMenu: UIMenu {
         var menuItems: [UIAction] {
             self.viewModel.albumsData.map({ albumModel in
                 if #available(iOS 15.0, *) {
@@ -171,6 +172,19 @@ public final class PhotoGridViewController: UIViewController {
         }
         reloadData()
     }
+
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionView.collectionViewLayout.invalidateLayout()
+    }
+}
+
+// MARK: - Module methods
+private extension PhotoGridViewController {
     
     func reloadData() {
         if let model = viewModel.albumModel {
@@ -188,63 +202,8 @@ public final class PhotoGridViewController: UIViewController {
         viewModel.reloadData()
     }
     
-    func setupNavbar() {
-        let button = UIButton(type: .system)
-        var icon = AppAssets.Icon.downArrow.image?.withRenderingMode(.alwaysTemplate)
-        
-        let targetSize = CGSize(width: 17, height: 17)
-        UIGraphicsBeginImageContextWithOptions(targetSize, false, 0.0)
-        icon?.draw(in: CGRect(x: 0, y: 0, width: targetSize.width, height: targetSize.height))
-        icon = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        button.setImage(icon, for: .normal)
-        button.setTitle(self.viewModel.albumModel?.title ?? "-", for: .normal)
-        button.semanticContentAttribute = .forceRightToLeft
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0)
-        button.sizeToFit()
-        
-        button.setTitleColor(ACMediaConfiguration.shared.appearance.foregroundColor, for: [])
-        button.titleLabel?.textColor = ACMediaConfiguration.shared.appearance.foregroundColor
-        button.titleLabel?.font = .boldSystemFont(ofSize: 17.0)
-        button.tintColor = ACMediaConfiguration.shared.appearance.foregroundColor
-        
-        if #available(iOS 14.0, *) {
-            button.menu = demoMenu
-            button.showsMenuAsPrimaryAction = true
-        } else {
-            button.addTarget(self, action: #selector(self.showPhotoAlbumsAlert), for: .touchUpInside)
-        }
-        
-        self.navigationItem.leftBarButtonItem = self.cancelButton
-        self.navigationItem.titleView = button
-        self.navigationItem.rightBarButtonItem = self.doneButton
-    }
-    
-    private func checkDoneButtonCondition() {
-        let min = ACMediaConfiguration.shared.photoConfig.minimimSelection
-        let max = ACMediaConfiguration.shared.photoConfig.maximumSelection
-        
-        var isEnabled: Bool {
-            if let max = max {
-                return SelectedImagesStack.shared.selectedCount <= max && SelectedImagesStack.shared.selectedCount >= min
-            } else {
-                return SelectedImagesStack.shared.selectedCount >= min
-            }
-        }
-        
-        doneButton.isEnabled = isEnabled
-    }
-    
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-    
-    public override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        collectionView.collectionViewLayout.invalidateLayout()
-    }
-    
+    /// Show photo preview VC
+    /// - Parameter asset: Photo asset
     func presentImageDetailsViewController(with asset: PHAsset) {
         viewModel.photoService.fetchThumbnail(for: asset, size: CGSize()) { [unowned self] _ in
             let vc = PhotoPreviewViewController()
@@ -259,11 +218,8 @@ public final class PhotoGridViewController: UIViewController {
             }
         }
     }
-}
-
-// MARK: - Module methods
-private extension PhotoGridViewController {
     
+    /// Show placeholder
     func showEmptyPlaceholder() {
         collectionView.isHidden = true
         
@@ -282,11 +238,13 @@ private extension PhotoGridViewController {
         ])
     }
     
+    /// Hide placeholder
     func hideEmptyPlaceholder() {
         view.subviews.filter { $0 is UILabel }.forEach { $0.removeFromSuperview() }
         collectionView.isHidden = false
     }
     
+    /// Show an alert asking to allow photo access in the settings
     func showPermissionAlert() {
         let title = AppLocale.assetsPermissionTitle.locale
         let message = AppLocale.assetsPermissionMessage.locale
@@ -308,11 +266,13 @@ private extension PhotoGridViewController {
         present(alert, animated: true)
     }
     
+    /// Setup controller toolbar
     func configureToolbar() {
         navigationController?.isToolbarHidden = false
         toolbarItems = navigationController?.toolbarItems
     }
     
+    /// Setup collection view position on screen
     func configureCollectionView() {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
@@ -325,6 +285,7 @@ private extension PhotoGridViewController {
         ])
     }
     
+    /// Show camera picker VC
     func showCamera() {
         let vc = UIImagePickerController()
         vc.sourceType = .camera
@@ -333,6 +294,7 @@ private extension PhotoGridViewController {
         present(vc, animated: true)
     }
     
+    /// Setup camera preview
     func setupCamera() {
         guard ACMediaConfiguration.shared.photoConfig.allowCamera else {
             return
@@ -367,6 +329,8 @@ private extension PhotoGridViewController {
         }
     }
     
+    /// Handling of the event of cell display begining with assertion
+    /// - Parameter data: Collection cell data
     func handleWillDispayCellEvent(data: DPCollectionAdapter.ItemContext) {
         guard let cell = data.cell as? PhotoCell else { return }
         let indexPath = data.indexPath
@@ -376,7 +340,7 @@ private extension PhotoGridViewController {
             cell.updateThumbImage(image)
             self.viewModel.loadingOperations.removeValue(forKey: indexPath)
         }
-        
+        // Trying to get a preview of the asset
         if let dataLoader = viewModel.loadingOperations[indexPath] {
             if let image = dataLoader.img {
                 (self.viewModel.sections[safeIndex: 0]?.items[rowIndexPath] as? PhotoCellModel)?.image = image
@@ -396,14 +360,66 @@ private extension PhotoGridViewController {
         }
     }
     
+    /// Handling of the event of cell display finishing with assertion
+    /// - Parameter data: Collection cell data
     func handleDidEndDisplayingCellEvent(data: DPCollectionAdapter.ItemContext) {
         guard data.cell as? PhotoCell != nil,
               let dataLoader = viewModel.loadingOperations[data.indexPath]
         else {
             return
         }
-        
+        // Cancel operation for getting asset preview
         dataLoader.cancel()
+    }
+    
+    /// Changing the availability of the confirmation button depending on the number of selected assets
+    func checkDoneButtonCondition() {
+        let min = ACMediaConfiguration.shared.photoConfig.minimimSelection
+        let max = ACMediaConfiguration.shared.photoConfig.maximumSelection
+        
+        var isEnabled: Bool {
+            if let max = max {
+                return SelectedImagesStack.shared.selectedCount <= max && SelectedImagesStack.shared.selectedCount >= min
+            } else {
+                return SelectedImagesStack.shared.selectedCount >= min
+            }
+        }
+        
+        doneButton.isEnabled = isEnabled
+    }
+    
+    /// Setup controller navigation bar
+    func setupNavbar() {
+        let button = UIButton(type: .system)
+        var icon = AppAssets.Icon.downArrow.image?.withRenderingMode(.alwaysTemplate)
+        
+        let targetSize = CGSize(width: 17, height: 17)
+        UIGraphicsBeginImageContextWithOptions(targetSize, false, 0.0)
+        icon?.draw(in: CGRect(x: 0, y: 0, width: targetSize.width, height: targetSize.height))
+        icon = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        button.setImage(icon, for: .normal)
+        button.setTitle(self.viewModel.albumModel?.title ?? "-", for: .normal)
+        button.semanticContentAttribute = .forceRightToLeft
+        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0)
+        button.sizeToFit()
+        
+        button.setTitleColor(ACMediaConfiguration.shared.appearance.foregroundColor, for: [])
+        button.titleLabel?.textColor = ACMediaConfiguration.shared.appearance.foregroundColor
+        button.titleLabel?.font = .boldSystemFont(ofSize: 17.0)
+        button.tintColor = ACMediaConfiguration.shared.appearance.foregroundColor
+        
+        if #available(iOS 14.0, *) {
+            button.menu = albumsListMenu
+            button.showsMenuAsPrimaryAction = true
+        } else {
+            button.addTarget(self, action: #selector(self.showPhotoAlbumsAlert), for: .touchUpInside)
+        }
+        
+        self.navigationItem.leftBarButtonItem = self.cancelButton
+        self.navigationItem.titleView = button
+        self.navigationItem.rightBarButtonItem = self.doneButton
     }
 }
 

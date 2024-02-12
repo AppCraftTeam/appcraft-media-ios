@@ -118,7 +118,6 @@ public final class PhotoCell: DPCollectionItemCell {
 }
 
 // MARK: - Actions
-
 private extension PhotoCell {
     
     @objc

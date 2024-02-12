@@ -17,7 +17,7 @@ public final class CameraCell: DPCollectionItemCell {
         set { self._model = newValue }
     }
     
-    //Layout for camera
+    // Layout for camera
     private var previewLayer: AVCaptureVideoPreviewLayer?
     
     // MARK: - Components
