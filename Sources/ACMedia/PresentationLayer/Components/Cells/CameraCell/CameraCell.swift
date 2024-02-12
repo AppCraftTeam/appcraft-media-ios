@@ -17,7 +17,8 @@ public final class CameraCell: DPCollectionItemCell {
         set { self._model = newValue }
     }
     
-    var previewLayer: AVCaptureVideoPreviewLayer?
+    //Layout for camera
+    private var previewLayer: AVCaptureVideoPreviewLayer?
     
     // MARK: - Components
     private(set) lazy var containerView: UIView = {

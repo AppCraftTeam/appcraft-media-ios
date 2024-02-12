@@ -13,6 +13,7 @@ private protocol Asset {
 
 public enum AppAssets {
     
+    /// Icons for tabbar
     enum Navigation: Asset {
         case gallery, file
         
@@ -32,6 +33,7 @@ public enum AppAssets {
         }
     }
     
+    /// Icons for cells
     enum Icon: Asset {
         case downArrow, checkmarkEmpty, checkmarkFilled, camera
         

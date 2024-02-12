@@ -8,6 +8,7 @@
 import Foundation
 import PhotosUI
 
+/// A stack that contains assets selected by the user for their further transfer to the application
 public class SelectedImagesStack {
     
     private var selectedImageAssets: [PHAsset] = [] {

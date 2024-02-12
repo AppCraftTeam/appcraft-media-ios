@@ -52,7 +52,6 @@ public final class PhotoCell: DPCollectionItemCell {
     // MARK: - Methods
     public override func setupComponents() {
         super.setupComponents()
-        //self.updateComponents()
         
         contentView.addSubview(previewImageView)
         previewImageView.translatesAutoresizingMaskIntoConstraints = false

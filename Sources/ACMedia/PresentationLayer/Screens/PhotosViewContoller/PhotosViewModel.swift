@@ -42,6 +42,7 @@ class PhotosViewModel {
 
 extension PhotosViewModel {
     
+    /// Request access to a user's gallery
     func authorize() {
         photoService.authorize { [weak self] status in
             switch status {
@@ -56,6 +57,7 @@ extension PhotosViewModel {
         }
     }
     
+    /// Request an asset list for the selected album
     func fetchImageData() {
         DispatchQueue.main.async { [weak self] in
             guard let strongSelf = self else {
@@ -72,6 +74,7 @@ extension PhotosViewModel {
         }
     }
     
+    /// Create models to represent the assets in the collection view
     func makeSections() {
         guard let model = self.albumModel else {
             return
@@ -94,10 +97,12 @@ extension PhotosViewModel {
                     index: index,
                     isSelected: SelectedImagesStack.shared.contains(asset),
                     viewTapped: {
+                        // Open photo in full screen preview
                         self.selectedIndexPath = IndexPath(row: index + 1, section: 0)
                         self.onShowImageOnFullScreen?(asset)
                     },
                     viewSelectedToggle: {
+                        // Change selection status
                         if let model = photosViewModels[safeIndex: index] {
                             self.handleImageSelection(model: model)
                         }
@@ -106,6 +111,7 @@ extension PhotosViewModel {
             ]
         }
         
+        // Try add camera cell
         if ACMediaConfiguration.shared.photoConfig.allowCamera {
             cameraModel = CameraCellModel(viewTapped: { [weak self] in
                 self?.onShowCamera?()
@@ -115,6 +121,7 @@ extension PhotosViewModel {
         self.sections.removeAll()
         self.sections = [Section(photos: photosViewModels, camera: cameraModel)]
         
+        //Placeholder
         // swiftlint:disable:next empty_count
         if self.imagesData.count == 0 {
             onShowEmptyPlaceholder?()
@@ -125,6 +132,7 @@ extension PhotosViewModel {
         onReloadCollection?(self.sections)
     }
     
+    /// Get albums list
     func fetchAlbumData() {
         albumsData = photoService.fetchAllAlbums()
         photoService.fetchPreviewsFor(albums: albumsData) { albums in
@@ -134,7 +142,9 @@ extension PhotosViewModel {
             }
         }
     }
-  
+    
+    /// Processing asset selection
+    /// - Parameter model: Selection photo cell model
     func handleImageSelection(model: PhotoCellModel) {
         let maxSelection = ACMediaConfig.photoConfig.maximumSelection ?? Int.max
         let asset = imagesData[model.index]
@@ -143,25 +153,32 @@ extension PhotosViewModel {
         handleMaximumSelection(maxSelection, asset, indexPath)
     }
     
+    /// Asset selection processing
+    /// - Parameters:
+    ///   - maxSelection: Limit - how many assets maximum can be selected
+    ///   - asset: Selected asset
+    ///   - indexPath: Asset position in collection view
     private func handleMaximumSelection(_ maxSelection: Int, _ asset: PHAsset, _ indexPath: IndexPath) {
         if SelectedImagesStack.shared.contains(asset) {
             SelectedImagesStack.shared.delete(asset)
         } else {
             guard SelectedImagesStack.shared.selectedCount < maxSelection else {                
                 if let oldAsset = SelectedImagesStack.shared.fetchFirstAdded() {
+                    // Unselect the first selected asset
                     let oldIndex = imagesData.index(of: oldAsset)
                     let oldIndexPath = IndexPath(item: oldIndex + 1, section: 0)
                     SelectedImagesStack.shared.add(asset)
-                    //
+                    
                     self.makeSections()
                     self.onReloadCells?([oldIndexPath, indexPath])
                 }
                 
                 return
             }
+            // Add asset in stack
             SelectedImagesStack.shared.add(asset)
         }
-        //
+        
         self.makeSections()
         onReloadCells?([indexPath])
         onSetupDoneButton?()

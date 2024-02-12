@@ -29,6 +29,7 @@ open class MainNavigationController: UINavigationController {
         setupToolbar()
         setupNavigationBar()
         
+        // Subscribe to notification to track changes in the count of selected assets
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(refreshToolbar),
@@ -88,6 +89,7 @@ private extension MainNavigationController {
         updateToolbarText()
     }
     
+    /// Update the text in the toolbar to show the current number of selected assets
     func updateToolbarText() {
         let totalImages = SelectedImagesStack.shared.selectedCount
         let selectedStr = String(format: AppLocale.selectedCount.locale, totalImages)

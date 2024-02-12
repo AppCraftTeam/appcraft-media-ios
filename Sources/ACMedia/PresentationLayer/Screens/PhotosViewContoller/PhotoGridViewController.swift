@@ -53,18 +53,12 @@ public final class PhotoGridViewController: UIViewController {
         result.adapter = DPCollectionAdapter(
             itemAdapters: [
                 PhotoCell.Adapter(
-                    didSelect: { [weak self] ctx in
-                        print("did...")
-                    },
                     onSizeForItem: { [weak self] ctx in
                         guard let self else { return nil }
                         return CGSize(width: self.cellWidth, height: self.cellWidth)
                     }
                 ),
                 CameraCell.Adapter(
-                    didSelect: { [weak self] ctx in
-                        
-                    },
                     onSizeForItem: { [weak self] ctx in
                         guard let self else { return nil }
                         return CGSize(width: self.cellWidth, height: self.cellWidth)
@@ -141,7 +135,7 @@ public final class PhotoGridViewController: UIViewController {
                 return
             }
             strongSelf.collectionView.adapter?.reloadData(sections)
-                        
+            
             AVCaptureDevice.requestAccess(for: .video) { granted in
                 if granted {
                     strongSelf.setupCamera()
@@ -170,9 +164,6 @@ public final class PhotoGridViewController: UIViewController {
 #endif
         }
         viewModel.onReloadCells = { [weak self] indexes in
-            print("onReloadCells.... indexes - \(indexes)")
-            //self?.collectionView.adapter?.reloadData()
-            //self?.collectionView.reloadItems(at: indexes )
             self?.collectionView.adapter?.reloadData(self?.viewModel.sections ?? [])
         }
         viewModel.onSetupDoneButton = { [weak self] in
@@ -379,24 +370,23 @@ private extension PhotoGridViewController {
     func handleWillDispayCellEvent(data: DPCollectionAdapter.ItemContext) {
         guard let cell = data.cell as? PhotoCell else { return }
         let indexPath = data.indexPath
-        let realIndexPath = indexPath.row //ACMediaConfiguration.shared.photoConfig.allowCamera ? indexPath.row - 1 : indexPath.row
-        //print("indexPath - \(indexPath), realIndexPath - \(realIndexPath), all \(viewModel.imagesData.count).")
+        let rowIndexPath = indexPath.row
         let updateCellClosure: (UIImage?) -> Void = { [unowned self] image in
-            (self.viewModel.sections[safeIndex: 0]?.items[realIndexPath] as? PhotoCellModel)?.image = image
+            (self.viewModel.sections[safeIndex: 0]?.items[rowIndexPath] as? PhotoCellModel)?.image = image
             cell.updateThumbImage(image)
             self.viewModel.loadingOperations.removeValue(forKey: indexPath)
         }
         
         if let dataLoader = viewModel.loadingOperations[indexPath] {
             if let image = dataLoader.img {
-                (self.viewModel.sections[safeIndex: 0]?.items[realIndexPath] as? PhotoCellModel)?.image = image
+                (self.viewModel.sections[safeIndex: 0]?.items[rowIndexPath] as? PhotoCellModel)?.image = image
                 cell.updateThumbImage(image)
                 viewModel.loadingOperations.removeValue(forKey: indexPath)
             } else {
                 dataLoader.onFinishLoadingImage = updateCellClosure
             }
         } else {
-            let model = viewModel.imagesData[realIndexPath]
+            let model = viewModel.imagesData[rowIndexPath]
             let size = CGSize(width: cellWidth, height: cellWidth)
             if let dataLoader = AsyncImageLoader.fetchImage(from: model, withSize: size) {
                 dataLoader.onFinishLoadingImage = updateCellClosure
@@ -407,17 +397,13 @@ private extension PhotoGridViewController {
     }
     
     func handleDidEndDisplayingCellEvent(data: DPCollectionAdapter.ItemContext) {
-        let indexPath = data.indexPath
+        guard data.cell as? PhotoCell != nil,
+              let dataLoader = viewModel.loadingOperations[data.indexPath]
+        else {
+            return
+        }
         
-        if ACMediaConfiguration.shared.photoConfig.allowCamera {
-            guard indexPath.row != 0 else {
-                return
-            }
-        }
-        if let dataLoader = viewModel.loadingOperations[indexPath] {
-            dataLoader.cancel()
-            viewModel.loadingOperations.removeValue(forKey: indexPath)
-        }
+        dataLoader.cancel()
     }
 }
 
@@ -443,7 +429,7 @@ extension PhotoGridViewController: UICollectionViewDataSourcePrefetching {
     
     public func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
-            let realIndexPath = ACMediaConfiguration.shared.photoConfig.allowCamera ? indexPath.row - 1 : indexPath.row
+            let rowIndexPath = ACMediaConfiguration.shared.photoConfig.allowCamera ? indexPath.row - 1 : indexPath.row
             
             if ACMediaConfiguration.shared.photoConfig.allowCamera {
                 guard indexPath.row != 0 else {
@@ -452,7 +438,7 @@ extension PhotoGridViewController: UICollectionViewDataSourcePrefetching {
             }
             if viewModel.loadingOperations[indexPath] != nil { return }
             
-            let model = viewModel.imagesData[realIndexPath]
+            let model = viewModel.imagesData[rowIndexPath]
             let size = CGSize(width: cellWidth, height: cellWidth)
             if let dataLoader = AsyncImageLoader.fetchImage(from: model, withSize: size) {
                 viewModel.loadingQueue.addOperation(dataLoader)
@@ -552,12 +538,11 @@ extension PhotoGridViewController {
 extension PhotoGridViewController: ZoomTransitionViewController {
     
     public func getZoomingImageView(for transition: ZoomTransitionDelegate) -> UIImageView? {
-        //        if let indexPath = viewModel.selectedIndexPath,
-        //           let cell = collectionView.cellForItem(at: indexPath) as? PhotoCell {
-        //            return cell.getPreviewImageView()
-        //        } else {
-        //            return nil
-        //        }
-        return nil
+        if let indexPath = viewModel.selectedIndexPath,
+           let cell = collectionView.cellForItem(at: indexPath) as? PhotoCell {
+            return cell.getPreviewImageView()
+        } else {
+            return nil
+        }
     }
 }

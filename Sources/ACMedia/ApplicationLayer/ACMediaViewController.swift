@@ -28,6 +28,8 @@ public class ACMediaViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    /// Present picker controller
+    /// - Parameter parentVC: parent view controller
     public func show(in parentVC: UIViewController) {
         let tabbarController = AppTabBarController()
         
@@ -67,7 +69,6 @@ public extension ACMediaViewController {
 extension ACMediaViewController: UIDocumentPickerDelegate {
     
     public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        print("sssss")
         self.didPickDocuments(urls)
     }
     
