@@ -13,18 +13,19 @@ private protocol Asset {
 
 public enum AppAssets {
     
+    /// Icons for tabbar
     enum Navigation: Asset {
         case gallery, file
         
         var image: UIImage? {
             switch self {
             case .gallery:
-                if #available(iOSApplicationExtension 13.0, *) {
+                if #available(iOS 13.0, *) {
                     return UIImage(systemName: "photo.stack")
                 }
                 return UIImage(named: "gallery")
             case .file:
-                if #available(iOSApplicationExtension 13.0, *) {
+                if #available(iOS 13.0, *) {
                     return UIImage(systemName: "folder")
                 }
                 return UIImage(named: "file")
@@ -32,28 +33,26 @@ public enum AppAssets {
         }
     }
     
+    /// Icons for cells
     enum Icon: Asset {
         case downArrow, checkmarkEmpty, checkmarkFilled, camera
         
         var image: UIImage? {
             switch self {
             case .downArrow:
-//                if #available(iOSApplicationExtension 13.0, *) {
-//                    return UIImage(systemName: "chevron.down")
-//                }
                 return UIImage(named: "down-arrow")
             case .checkmarkEmpty:
-                if #available(iOSApplicationExtension 13.0, *) {
+                if #available(iOS 13.0, *) {
                     return UIImage(systemName: "circle")
                 }
                 return UIImage(named: "circle")
             case .checkmarkFilled:
-                if #available(iOSApplicationExtension 13.0, *) {
+                if #available(iOS 13.0, *) {
                     return UIImage(systemName: "checkmark.circle")
                 }
                 return UIImage(named: "check")
             case .camera:
-                if #available(iOSApplicationExtension 13.0, *) {
+                if #available(iOS 13.0, *) {
                     return UIImage(systemName: "circle.square")
                 }
                 return UIImage(named: "camera")

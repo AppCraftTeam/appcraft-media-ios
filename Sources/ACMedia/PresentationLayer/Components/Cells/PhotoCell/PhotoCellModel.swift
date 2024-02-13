@@ -8,14 +8,21 @@
 import Foundation
 import UIKit
 
-public class PhotoCellModel: AppCellIdentifiable {
+public class PhotoCellModel {
     
     var image: UIImage?
     var index: Int
     var isSelected: Bool
     var viewTapped: (() -> Void)?
     var viewSelectedToggle: (() -> Void)?
-
+    
+    /// Create cell model
+    /// - Parameters:
+    ///   - image: Photo image
+    ///   - index: position (row) in collection view
+    ///   - isSelected: selected status
+    ///   - viewTapped: tap callback
+    ///   - viewSelectedToggle: changing selection callback
     init(image: UIImage?, index: Int, isSelected: Bool, viewTapped: (() -> Void)?, viewSelectedToggle: (() -> Void)?) {
         self.image = image
         self.index = index

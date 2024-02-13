@@ -19,7 +19,7 @@ open class MainNavigationController: UINavigationController {
     }()
     
     // MARK: - Params
-    public var acMediaService: ACMedia?
+    public var acMediaService: ACMediaViewController?
     private let navigationTransition = ZoomTransitionDelegate()
     
     override open func viewDidLoad() {
@@ -29,6 +29,7 @@ open class MainNavigationController: UINavigationController {
         setupToolbar()
         setupNavigationBar()
         
+        // Subscribe to notification to track changes in the count of selected assets
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(refreshToolbar),
@@ -39,7 +40,7 @@ open class MainNavigationController: UINavigationController {
         viewControllers = [imageGridController]
     }
     
-    public required init(configuration: ACMediaConfiguration, acMediaService: ACMedia?) {
+    public required init(configuration: ACMediaConfiguration, acMediaService: ACMediaViewController?) {
         self.acMediaService = acMediaService
         SelectedImagesStack.shared.deleteAll()
         ACMediaConfiguration.shared = configuration
@@ -56,7 +57,7 @@ private extension MainNavigationController {
     func setupNavigationBar() {
         navigationBar.tintColor = ACMediaConfiguration.shared.appearance.tintColor
         
-        if #available(iOSApplicationExtension 13.0, *) {
+        if #available(iOS 13.0, *) {
             let style = UINavigationBarAppearance()
             style.buttonAppearance.normal.titleTextAttributes = [.font: ACMediaConfiguration.shared.appearance.cancelTitleFont]
             style.doneButtonAppearance.normal.titleTextAttributes = [.font: ACMediaConfiguration.shared.appearance.doneTitleFont]
@@ -71,7 +72,7 @@ private extension MainNavigationController {
         let barItems: [UIBarButtonItem] = [
             .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
             selectedCounterLabel,
-            .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+            .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         ]
         
         self.toolbarItems = barItems
@@ -88,6 +89,7 @@ private extension MainNavigationController {
         updateToolbarText()
     }
     
+    /// Update the text in the toolbar to show the current number of selected assets
     func updateToolbarText() {
         let totalImages = SelectedImagesStack.shared.selectedCount
         let selectedStr = String(format: AppLocale.selectedCount.locale, totalImages)

@@ -8,7 +8,6 @@
 import UIKit
 import MobileCoreServices
 import UniformTypeIdentifiers
-import MobileCoreServices
 
 public enum ACMediaDocFileType: CaseIterable {
     
@@ -45,7 +44,7 @@ public enum ACMediaDocFileType: CaseIterable {
         }
     }
     
-    @available(iOSApplicationExtension 14.0, *)
+    @available(iOS 14.0, *)
     var utType: UTType {
         switch self {
         case .png:

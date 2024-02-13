@@ -23,6 +23,8 @@ class PhotoPreviewViewModel {
         self.asset = asset
     }
     
+    /// Load original photo
+    /// - Parameter size: photo size
     func loadPhoto(size: CGSize) {
         guard let asset = self.asset else {
             return

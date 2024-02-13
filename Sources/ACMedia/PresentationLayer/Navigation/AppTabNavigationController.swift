@@ -13,16 +13,18 @@ enum AppTabBarItem {
     var item: UITabBarItem {
         switch self {
         case .gallery:
-            let tabBarItem = UITabBarItem(title: AppLocale.gallery.locale,
-                                          image: AppAssets.Navigation.gallery.image?.withRenderingMode(.alwaysTemplate),
-                                          selectedImage: AppAssets.Navigation.gallery.image?.withRenderingMode(.alwaysTemplate)
+            let tabBarItem = UITabBarItem(
+                title: AppLocale.gallery.locale,
+                image: AppAssets.Navigation.gallery.image?.withRenderingMode(.alwaysTemplate),
+                selectedImage: AppAssets.Navigation.gallery.image?.withRenderingMode(.alwaysTemplate)
             )
             tabBarItem.tag = 0
             return tabBarItem
         case .file:
-            let tabBarItem = UITabBarItem(title: AppLocale.file.locale,
-                                          image: AppAssets.Navigation.file.image?.withRenderingMode(.alwaysTemplate),
-                                          selectedImage: AppAssets.Navigation.file.image?.withRenderingMode(.alwaysTemplate)
+            let tabBarItem = UITabBarItem(
+                title: AppLocale.file.locale,
+                image: AppAssets.Navigation.file.image?.withRenderingMode(.alwaysTemplate),
+                selectedImage: AppAssets.Navigation.file.image?.withRenderingMode(.alwaysTemplate)
             )
             tabBarItem.tag = 1
             return tabBarItem
@@ -33,7 +35,7 @@ enum AppTabBarItem {
 open class AppTabBarController: UITabBarController {
     
     private let adapter = AppTabBarControllerAdapter()
-
+    
     private(set) lazy var photoController: MainNavigationController = {
         let vc = MainNavigationController(configuration: .shared, acMediaService: nil)
         vc.tabBarItem = AppTabBarItem.gallery.item
@@ -47,7 +49,7 @@ open class AppTabBarController: UITabBarController {
         return vc
     }()
     
-    @available(iOSApplicationExtension 13.0, *)
+    @available(iOS 13.0, *)
     var tabBarAppearance: UITabBarAppearance {
         let appearance = UITabBarAppearance()
         appearance.configureWithDefaultBackground()
@@ -68,9 +70,9 @@ open class AppTabBarController: UITabBarController {
         super.viewDidLayoutSubviews()
     }
     
-    public var acMediaService: ACMedia?
+    public var acMediaService: ACMediaViewController?
     
-    open func showPicker(in parent: UIViewController, acMediaService: ACMedia) {
+    open func showPicker(in parent: UIViewController, acMediaService: ACMediaViewController) {
         self.photoController.acMediaService = acMediaService
         self.acMediaService = acMediaService
         self.adapter.types = ACMediaConfiguration.shared.documentsConfig.fileFormats
@@ -97,8 +99,8 @@ private extension AppTabBarController {
         self.delegate = adapter
         
         let items = tabBar.items ?? []
-        items.enumerated().forEach({ (index, item) in
-            if #available(iOSApplicationExtension 13.0, *) {
+        items.forEach({ item in
+            if #available(iOS 13.0, *) {
                 item.standardAppearance = tabBarAppearance
             }
         })
@@ -107,7 +109,7 @@ private extension AppTabBarController {
     func makeNavControllers() -> [UINavigationController] {
         [
             photoController,
-            UINavigationController(rootViewController: documentsViewController),
+            UINavigationController(rootViewController: documentsViewController)
         ]
     }
 }

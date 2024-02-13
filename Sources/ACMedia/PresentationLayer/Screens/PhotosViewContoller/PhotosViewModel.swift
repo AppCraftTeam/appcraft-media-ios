@@ -6,14 +6,15 @@
 //
 
 import Foundation
+import DPUIKit
 import Photos
 import UIKit
 
 class PhotosViewModel {
     
     public var albumModel: AlbumModel?
-    var models: [AppCellIdentifiable] = []
-    
+    private(set) var sections: [Section] = []
+
     // MARK: - Properties
     var selectedIndexPath: IndexPath?
     var imagesData = PHFetchResult<PHAsset>()
@@ -21,7 +22,7 @@ class PhotosViewModel {
     var albumsData: [AlbumModel] = []
     
     // MARK: - Actions
-    var onReloadCollection: (() -> Void)?
+    var onReloadCollection: ((_ sections: [Section]) -> Void)?
     var onReloadCells: ((_ indexes: [IndexPath]) -> Void)?
     var onSetupDoneButton: (() -> Void)?
     var onShowPermissionAlert: (() -> Void)?
@@ -41,6 +42,7 @@ class PhotosViewModel {
 
 extension PhotosViewModel {
     
+    /// Request access to a user's gallery
     func authorize() {
         photoService.authorize { [weak self] status in
             switch status {
@@ -55,43 +57,53 @@ extension PhotosViewModel {
         }
     }
     
+    /// Request an asset list for the selected album
     func fetchImageData() {
         DispatchQueue.main.async { [weak self] in
             guard let strongSelf = self else {
                 return
             }
             if strongSelf.albumModel == nil {
-                strongSelf.albumModel = strongSelf.photoService.fetchRecentsAlbum()
+                strongSelf.albumModel = strongSelf.photoService.fetchRecentAlbum()
             }
             
             if let model = strongSelf.albumModel {
                 strongSelf.imagesData = model.assets
             }
-            let models = strongSelf.makeSections()
-            strongSelf.models = models
-            strongSelf.onReloadCollection?()
+            strongSelf.makeSections()
         }
     }
     
-    func makeSections() -> [AppCellIdentifiable] {
-        var models: [AppCellIdentifiable] = []
-        
+    /// Create models to represent the assets in the collection view
+    func makeSections() {
         guard let model = self.albumModel else {
-            return []
+            return
         }
         
+        var photosViewModels: [PhotoCellModel] = []
+        var cameraModel: CameraCellModel?
+        
         model.assets.enumerateObjects { asset, index, _ in
-            models += [
+            var image: UIImage? {
+                guard self.sections.first?.items.count ?? -1 >= index else {
+                    return nil
+                }
+                return (self.sections[safeIndex: 0]?.items[safeIndex: index] as? PhotoCellModel)?.image
+            }
+            
+            photosViewModels += [
                 PhotoCellModel(
-                    image: nil,
+                    image: image,
                     index: index,
                     isSelected: SelectedImagesStack.shared.contains(asset),
                     viewTapped: {
+                        // Open photo in full screen preview
                         self.selectedIndexPath = IndexPath(row: index + 1, section: 0)
                         self.onShowImageOnFullScreen?(asset)
                     },
                     viewSelectedToggle: {
-                        if let model = self.models[index + 1] as? PhotoCellModel {
+                        // Change selection status
+                        if let model = photosViewModels[safeIndex: index] {
                             self.handleImageSelection(model: model)
                         }
                     }
@@ -99,27 +111,28 @@ extension PhotosViewModel {
             ]
         }
         
+        // Try add camera cell
         if ACMediaConfiguration.shared.photoConfig.allowCamera {
-            let cameraModel = CameraCellModel(viewTapped: { [weak self] in
+            cameraModel = CameraCellModel(viewTapped: { [weak self] in
                 self?.onShowCamera?()
             })
-            if models.isEmpty {
-                models = [cameraModel]
-            } else {
-                models.insert(cameraModel, at: 0)
-            }
         }
         
+        self.sections.removeAll()
+        self.sections = [Section(photos: photosViewModels, camera: cameraModel)]
+        
+        //Placeholder
+        // swiftlint:disable:next empty_count
         if self.imagesData.count == 0 {
             onShowEmptyPlaceholder?()
-            return []
         } else {
             onHideEmptyPlaceholder?()
         }
         
-        return models
+        onReloadCollection?(self.sections)
     }
     
+    /// Get albums list
     func fetchAlbumData() {
         albumsData = photoService.fetchAllAlbums()
         photoService.fetchPreviewsFor(albums: albumsData) { albums in
@@ -129,7 +142,9 @@ extension PhotosViewModel {
             }
         }
     }
-  
+    
+    /// Processing asset selection
+    /// - Parameter model: Selection photo cell model
     func handleImageSelection(model: PhotoCellModel) {
         let maxSelection = ACMediaConfig.photoConfig.maximumSelection ?? Int.max
         let asset = imagesData[model.index]
@@ -138,30 +153,57 @@ extension PhotosViewModel {
         handleMaximumSelection(maxSelection, asset, indexPath)
     }
     
+    /// Asset selection processing
+    /// - Parameters:
+    ///   - maxSelection: Limit - how many assets maximum can be selected
+    ///   - asset: Selected asset
+    ///   - indexPath: Asset position in collection view
     private func handleMaximumSelection(_ maxSelection: Int, _ asset: PHAsset, _ indexPath: IndexPath) {
         if SelectedImagesStack.shared.contains(asset) {
             SelectedImagesStack.shared.delete(asset)
         } else {
             guard SelectedImagesStack.shared.selectedCount < maxSelection else {                
                 if let oldAsset = SelectedImagesStack.shared.fetchFirstAdded() {
+                    // Unselect the first selected asset
                     let oldIndex = imagesData.index(of: oldAsset)
                     let oldIndexPath = IndexPath(item: oldIndex + 1, section: 0)
                     SelectedImagesStack.shared.add(asset)
                     
-                    let models = self.makeSections()
-                    self.models = models
-                    
+                    self.makeSections()
                     self.onReloadCells?([oldIndexPath, indexPath])
                 }
                 
                 return
             }
+            // Add asset in stack
             SelectedImagesStack.shared.add(asset)
         }
         
-        let models = makeSections()
-        self.models = models
+        self.makeSections()
         onReloadCells?([indexPath])
         onSetupDoneButton?()
+    }
+}
+
+// MARK: - Section
+extension PhotosViewModel {
+    
+    struct Section: DPCollectionSectionType, Identifiable {
+        
+        // MARK: - Init
+        init(photos: [PhotoCellModel], camera: CameraCellModel?) {
+            self.items = photos
+            if let camera = camera {
+                self.items.append(camera)
+            }
+            self.header = nil
+            self.footer = nil
+        }
+        
+        // MARK: - Props
+        let id = UUID()
+        var items: [Sendable]
+        var header: Sendable?
+        var footer: Sendable?
     }
 }

@@ -23,6 +23,14 @@ public final class ZoomTransitionDelegate: NSObject {
     private let scalingFactor: CGFloat = 15
     private let shrinkFactor: CGFloat = 0.75
     
+    /// Setting the frame for the container
+    /// - Parameters:
+    ///   - status: Transition status
+    ///   - containingView: Container for transition
+    ///   - backgroundController: Origin transition controller
+    ///   - backgroundImageInView: Image view in background
+    ///   - foregroundImageInView: Image view in foreground
+    ///   - snapshotView: Snapshot
     private func adjustViews(
         for status: ScreenTransitionState,
         containingView: UIView,
@@ -131,23 +139,26 @@ extension ZoomTransitionDelegate: UIViewControllerAnimatedTransitioning {
             backgroundController: backgroundColorController,
             backgroundImageInView: bgImageView,
             foregroundImageInView: fgImageView,
-            snapshotView: snapshotView)
+            snapshotView: snapshotView
+        )
         
         foregroundColorController.view.layoutIfNeeded()
         
         UIView.animate(
-            withDuration: duration, delay: 0,
+            withDuration: duration,
+            delay: 0,
             usingSpringWithDamping: 1.0,
             initialSpringVelocity: 0,
             options: [],
-            animations: {
-                self.adjustViews(
+            animations: { [weak self] in
+                self?.adjustViews(
                     for: finalTransitionState,
                     containingView: container,
                     backgroundController: backgroundColorController,
                     backgroundImageInView: bgImageView,
                     foregroundImageInView: fgImageView,
-                    snapshotView: snapshotView)
+                    snapshotView: snapshotView
+                )
             },
             completion: { _ in
                 backgroundColorController.view.transform = CGAffineTransform.identity

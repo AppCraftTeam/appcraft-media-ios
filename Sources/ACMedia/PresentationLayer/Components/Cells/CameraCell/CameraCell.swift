@@ -6,12 +6,21 @@
 //
 
 import AVFoundation
+import DPUIKit
 import UIKit
 
-public class CameraCell: AppCollectionCell<CameraCellModel> {
+public final class CameraCell: DPCollectionItemCell {
     
-    var previewLayer: AVCaptureVideoPreviewLayer?
+    // MARK: - Props
+    var model: CameraCellModel? {
+        get { self._model as? CameraCellModel }
+        set { self._model = newValue }
+    }
     
+    // Layout for camera
+    private var previewLayer: AVCaptureVideoPreviewLayer?
+    
+    // MARK: - Components
     private(set) lazy var containerView: UIView = {
         let view = UIView()
         view.backgroundColor = ACMediaConfiguration.shared.appearance.backgroundColor
@@ -28,6 +37,38 @@ public class CameraCell: AppCollectionCell<CameraCellModel> {
         return imageView
     }()
     
+    // MARK: - Methods
+    public override func setupComponents() {
+        super.setupComponents()
+        
+        self.backgroundColor = .clear
+        self.contentView.backgroundColor = .clear
+        
+        contentView.addSubview(containerView)
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            containerView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
+        
+        self.cameraIconImageView.image = AppAssets.Icon.camera.image?.withRenderingMode(.alwaysTemplate)
+        self.cameraIconImageView.tintColor = .white
+        containerView.addSubview(cameraIconImageView)
+        
+        cameraIconImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            cameraIconImageView.widthAnchor.constraint(equalToConstant: 44),
+            cameraIconImageView.heightAnchor.constraint(equalToConstant: 44),
+            cameraIconImageView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 4.0),
+            cameraIconImageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -4.0)
+        ])
+    }
+    
+    public override func updateComponents() {
+        super.updateComponents()
+    }
     
     public override func prepareForReuse() {
         super.prepareForReuse()
@@ -47,32 +88,16 @@ public class CameraCell: AppCollectionCell<CameraCellModel> {
         self.containerView.layer.insertSublayer(previewLayer, at: 0)
     }
     
-    override func updateViews() {
-        self.backgroundColor = .clear
-        self.contentView.backgroundColor = .clear
-        
-        contentView.addSubview(containerView)
-        containerView.snp.makeConstraints {
-            $0.top.bottom.left.right.equalToSuperview()
-        }
-        
-        self.cameraIconImageView.image = AppAssets.Icon.camera.image?.withRenderingMode(.alwaysTemplate)
-        self.cameraIconImageView.tintColor = .white
-        containerView.addSubview(cameraIconImageView)
-        
-        cameraIconImageView.snp.makeConstraints {
-            $0.size.equalTo(44)
-            $0.top.equalToSuperview().inset(4.0)
-            $0.right.equalToSuperview().inset(4.0)
-        }
-    }
-    
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         guard let event, event.type == .touches else {
             return
         }
-        self.cellModel?.viewTapped?()
+        self.model?.viewTapped?()
     }
 }
 
+// MARK: - Types
+extension CameraCell {
+    typealias Adapter = DPCollectionItemAdapter<CameraCell, CameraCellModel>
+}

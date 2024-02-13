@@ -5,16 +5,23 @@
 //  Copyright © 2023 AppCraft. All rights reserved.
 //
 
+import DPUIKit
 import PhotosUI
-import SnapKit
 import UIKit
 
-public class PhotoCell: AppCollectionCell<PhotoCellModel> {
+public final class PhotoCell: DPCollectionItemCell {
     
+    // MARK: - Props
+    var model: PhotoCellModel? {
+        get { self._model as? PhotoCellModel }
+        set { self._model = newValue }
+    }
+    
+    // MARK: - Components
     private(set) lazy var previewImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.masksToBounds = true
-        imageView.contentMode = .scaleAspectFill //.scaleToFill
+        imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
         return imageView
@@ -34,7 +41,7 @@ public class PhotoCell: AppCollectionCell<PhotoCellModel> {
         button.backgroundColor = .clear
         button.tintColor = .white
         button.imageEdgeInsets = .zero
-        if #available(iOSApplicationExtension 13.0, *) {
+        if #available(iOS 13.0, *) {
             button.setPreferredSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 48), forImageIn: .normal)
         }
         
@@ -42,8 +49,52 @@ public class PhotoCell: AppCollectionCell<PhotoCellModel> {
         return button
     }()
     
-    override func updateViews() {
-        self.setupComponents()
+    // MARK: - Methods
+    public override func setupComponents() {
+        super.setupComponents()
+        
+        contentView.addSubview(previewImageView)
+        previewImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            previewImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            previewImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            previewImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            previewImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
+        
+        contentView.addSubview(cellOverlay)
+        cellOverlay.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            cellOverlay.topAnchor.constraint(equalTo: contentView.topAnchor),
+            cellOverlay.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            cellOverlay.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            cellOverlay.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
+        
+        cellOverlay.addSubview(checkButton)
+        checkButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            checkButton.widthAnchor.constraint(equalToConstant: 44),
+            checkButton.heightAnchor.constraint(equalToConstant: 44),
+            checkButton.topAnchor.constraint(equalTo: cellOverlay.topAnchor, constant: 4.0),
+            checkButton.trailingAnchor.constraint(equalTo: cellOverlay.trailingAnchor, constant: -4.0)
+        ])
+    }
+    
+    public override func updateComponents() {
+        super.updateComponents()
+        
+        var image: UIImage? {
+            guard let model = self.model else {
+                return nil
+            }
+            let icon = model.isSelected ? AppAssets.Icon.checkmarkFilled.image : AppAssets.Icon.checkmarkEmpty.image
+            return icon?.withRenderingMode(.alwaysTemplate)
+        }
+        
+        checkButton.setImage(image, for: [])
+        self.previewImageView.image = self.model?.image
+        cellOverlay.isHidden = false
     }
     
     public override func prepareForReuse() {
@@ -62,44 +113,18 @@ public class PhotoCell: AppCollectionCell<PhotoCellModel> {
         guard let event, event.type == .touches else {
             return
         }
-        self.cellModel?.viewTapped?()
-    }
-    
-    @objc
-    private func checkButtonTapped() {
-        self.cellModel?.isSelected.toggle()
-        self.cellModel?.viewSelectedToggle?()
-        self.updateViews()
+        self.model?.viewTapped?()
     }
 }
 
+// MARK: - Actions
 private extension PhotoCell {
     
-    func setupComponents() {
-        contentView.addSubview(previewImageView)
-        previewImageView.snp.makeConstraints { $0.edges.equalToSuperview() }
-        
-        contentView.addSubview(cellOverlay)
-        cellOverlay.snp.makeConstraints { $0.edges.equalToSuperview() }
-        
-        var image: UIImage? {
-            guard let model = self.cellModel else {
-                return nil
-            }
-            let icon = model.isSelected ? AppAssets.Icon.checkmarkFilled.image : AppAssets.Icon.checkmarkEmpty.image
-            return icon?.withRenderingMode(.alwaysTemplate)
-        }
-        
-        checkButton.setImage(image, for: [])
-        
-        cellOverlay.addSubview(checkButton)
-        
-        checkButton.snp.makeConstraints {
-            $0.size.equalTo(44)
-            $0.top.equalToSuperview().inset(4.0)
-            $0.right.equalToSuperview().inset(4.0)
-        }
-        cellOverlay.isHidden = false
+    @objc
+    private func checkButtonTapped() {
+        self.model?.isSelected.toggle()
+        self.model?.viewSelectedToggle?()
+        self.updateComponents()
     }
 }
 
@@ -114,4 +139,9 @@ public extension PhotoCell {
     func getPreviewImageView() -> UIImageView? {
         previewImageView
     }
+}
+
+// MARK: - Types
+extension PhotoCell {
+    typealias Adapter = DPCollectionItemAdapter<PhotoCell, PhotoCellModel>
 }

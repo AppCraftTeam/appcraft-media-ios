@@ -17,7 +17,7 @@ public class AsyncImageLoader: Operation {
     private var imageSize: CGSize
     
     public override var isAsynchronous: Bool {
-        return true
+        true
     }
     
     init(asset: PHAsset, imageSize: CGSize) {
@@ -25,6 +25,7 @@ public class AsyncImageLoader: Operation {
         self.imageSize = imageSize
     }
     
+    /// Performs the receiver’s non-concurrent task - fetch asset preview
     public override func main() {
         if isCancelled {
             return
@@ -45,6 +46,11 @@ public class AsyncImageLoader: Operation {
         }
     }
     
+    /// Run a task to get a preview of an asset
+    /// - Parameters:
+    ///   - asset: Asset
+    ///   - size: Image size
+    /// - Returns: asynced operation
     public static func fetchImage(from asset: PHAsset, withSize size: CGSize) -> AsyncImageLoader? {
         AsyncImageLoader(asset: asset, imageSize: size)
     }
