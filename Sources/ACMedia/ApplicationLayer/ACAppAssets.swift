@@ -1,5 +1,5 @@
 //
-//  AppAssets.swift
+//  ACAppAssets.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -11,7 +11,7 @@ private protocol Asset {
     var image: UIImage? { get }
 }
 
-public enum AppAssets {
+public enum ACAppAssets {
     
     /// Icons for tabbar
     enum Navigation: Asset {

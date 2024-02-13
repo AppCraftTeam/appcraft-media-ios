@@ -53,7 +53,7 @@ public final class CameraCell: DPCollectionItemCell {
             containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
         
-        self.cameraIconImageView.image = AppAssets.Icon.camera.image?.withRenderingMode(.alwaysTemplate)
+        self.cameraIconImageView.image = ACAppAssets.Icon.camera.image?.withRenderingMode(.alwaysTemplate)
         self.cameraIconImageView.tintColor = .white
         containerView.addSubview(cameraIconImageView)
         

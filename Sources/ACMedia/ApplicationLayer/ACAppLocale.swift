@@ -1,5 +1,5 @@
 //
-//  AppLocale.swift
+//  ACAppLocale.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum AppLocale: String {
+enum ACAppLocale: String {
     
     static private let key = "ACMedia."
     
@@ -27,6 +27,6 @@ enum AppLocale: String {
     case selected = "selected"
     
     var locale: String {
-        String.locale(for: AppLocale.key + self.rawValue)
+        String.locale(for: ACAppLocale.key + self.rawValue)
     }
 }

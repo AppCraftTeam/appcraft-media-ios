@@ -92,7 +92,7 @@ private extension MainNavigationController {
     /// Update the text in the toolbar to show the current number of selected assets
     func updateToolbarText() {
         let totalImages = SelectedImagesStack.shared.selectedCount
-        let selectedStr = String(format: AppLocale.selectedCount.locale, totalImages)
+        let selectedStr = String(format: ACAppLocale.selectedCount.locale, totalImages)
         var displayedText: String {
             guard ACMediaConfig.photoConfig.displayMinMaxRestrictions else {
                 return selectedStr
@@ -100,10 +100,10 @@ private extension MainNavigationController {
             var additionalStr: [String] = []
             let min = ACMediaConfig.photoConfig.minimimSelection
             if min > 1 {
-                additionalStr += [String(format: AppLocale.selectedMin.locale, min)]
+                additionalStr += [String(format: ACAppLocale.selectedMin.locale, min)]
             }
             if let max = ACMediaConfig.photoConfig.maximumSelection {
-                additionalStr += [String(format: AppLocale.selectedMax.locale, max)]
+                additionalStr += [String(format: ACAppLocale.selectedMax.locale, max)]
             }
             return selectedStr + ", " + additionalStr.joined(separator: ", ")
         }

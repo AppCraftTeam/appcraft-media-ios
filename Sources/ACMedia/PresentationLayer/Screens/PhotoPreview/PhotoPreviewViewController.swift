@@ -89,7 +89,7 @@ private extension PhotoPreviewViewController {
         } else {
             button.setImage(UIImage(named: "back")?.withRenderingMode(.alwaysTemplate), for: .normal)
         }
-        button.setTitle(AppLocale.back.locale, for: .normal)
+        button.setTitle(ACAppLocale.back.locale, for: .normal)
         button.sizeToFit()
         button.setTitleColor(ACMediaConfiguration.shared.appearance.tintColor, for: [])
         button.titleLabel?.font = ACMediaConfiguration.shared.appearance.navBarTitleFont

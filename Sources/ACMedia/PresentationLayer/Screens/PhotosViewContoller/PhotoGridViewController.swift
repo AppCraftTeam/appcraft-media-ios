@@ -18,7 +18,7 @@ public final class PhotoGridViewController: UIViewController {
     // MARK: - Components
     private lazy var doneButton: UIBarButtonItem = {
         let done = UIBarButtonItem(
-            title: AppLocale.done.locale,
+            title: ACAppLocale.done.locale,
             style: .done,
             target: self,
             action: #selector(doneAction))
@@ -28,7 +28,7 @@ public final class PhotoGridViewController: UIViewController {
     
     private lazy var cancelButton: UIBarButtonItem = {
         let done = UIBarButtonItem(
-            title: AppLocale.cancel.locale,
+            title: ACAppLocale.cancel.locale,
             style: .plain,
             target: self,
             action: #selector(cancelAction))
@@ -224,7 +224,7 @@ private extension PhotoGridViewController {
         collectionView.isHidden = true
         
         let label = UILabel()
-        label.text = AppLocale.emptyAlbum.locale
+        label.text = ACAppLocale.emptyAlbum.locale
         label.textColor = ACMediaConfig.appearance.foregroundColor
         label.font = ACMediaConfig.appearance.emptyAlbumFont
         
@@ -246,17 +246,17 @@ private extension PhotoGridViewController {
     
     /// Show an alert asking to allow photo access in the settings
     func showPermissionAlert() {
-        let title = AppLocale.assetsPermissionTitle.locale
-        let message = AppLocale.assetsPermissionMessage.locale
+        let title = ACAppLocale.assetsPermissionTitle.locale
+        let message = ACAppLocale.assetsPermissionMessage.locale
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
-        let settingsTitle = AppLocale.assetsPermissionOpenSettings.locale
+        let settingsTitle = ACAppLocale.assetsPermissionOpenSettings.locale
         let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { [weak self] _ in
             self?.dismiss(animated: true, completion: nil)
             ((self?.navigationController as? MainNavigationController)?.acMediaService)?.didOpenSettings?()
         }
         
-        let cancelTitle = AppLocale.cancel.locale
+        let cancelTitle = ACAppLocale.cancel.locale
         let cancelAction = UIAlertAction(title: cancelTitle, style: .cancel) { [weak self] _ in
             self?.dismiss(animated: true, completion: nil)
         }
@@ -391,7 +391,7 @@ private extension PhotoGridViewController {
     /// Setup controller navigation bar
     func setupNavbar() {
         let button = UIButton(type: .system)
-        var icon = AppAssets.Icon.downArrow.image?.withRenderingMode(.alwaysTemplate)
+        var icon = ACAppAssets.Icon.downArrow.image?.withRenderingMode(.alwaysTemplate)
         
         let targetSize = CGSize(width: 17, height: 17)
         UIGraphicsBeginImageContextWithOptions(targetSize, false, 0.0)
@@ -433,7 +433,7 @@ extension PhotoGridViewController: UIImagePickerControllerDelegate {
             return
         }
         // Return to the parent app user photo captured in the camera
-        ((self.navigationController as? MainNavigationController)?.acMediaService)?.didPickAssets(PhotoPickerCallbackModel(images: [image], videoUrls: []))
+        ((self.navigationController as? MainNavigationController)?.acMediaService)?.didPickAssets(ACPickerCallbackModel(images: [image], videoUrls: []))
         dismiss(animated: true, completion: nil)
     }
 }
@@ -520,7 +520,7 @@ extension PhotoGridViewController {
             manager.fetchHighResImages(for: assets) { images in
                 // Get paths for selecting videos
                 manager.fetchVideoURL(for: assets) { videoUrls in
-                    let model = PhotoPickerCallbackModel(images: images, videoUrls: videoUrls)
+                    let model = ACPickerCallbackModel(images: images, videoUrls: videoUrls)
                     ((self.navigationController as? MainNavigationController)?.acMediaService)?.didPickAssets(model)
                 }
             }
@@ -532,7 +532,7 @@ extension PhotoGridViewController {
     @objc
     private func showPhotoAlbumsAlert() {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let cancel = UIAlertAction(title: AppLocale.cancel.locale, style: .cancel)
+        let cancel = UIAlertAction(title: ACAppLocale.cancel.locale, style: .cancel)
         
         self.viewModel.albumsData.forEach({ albumModel in
             alert.addAction(

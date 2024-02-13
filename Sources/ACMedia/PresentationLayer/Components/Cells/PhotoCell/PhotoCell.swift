@@ -88,7 +88,7 @@ public final class PhotoCell: DPCollectionItemCell {
             guard let model = self.model else {
                 return nil
             }
-            let icon = model.isSelected ? AppAssets.Icon.checkmarkFilled.image : AppAssets.Icon.checkmarkEmpty.image
+            let icon = model.isSelected ? ACAppAssets.Icon.checkmarkFilled.image : ACAppAssets.Icon.checkmarkEmpty.image
             return icon?.withRenderingMode(.alwaysTemplate)
         }
         

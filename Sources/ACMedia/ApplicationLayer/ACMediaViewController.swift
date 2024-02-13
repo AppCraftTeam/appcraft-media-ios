@@ -12,11 +12,11 @@ public class ACMediaViewController: UIViewController {
     
     public var fileType: PickerFilesType
     // Callbacks
-    public var assetsSelected: ((PhotoPickerCallbackModel) -> Void)?
+    public var assetsSelected: ((ACPickerCallbackModel) -> Void)?
     public var filesSelected: (([URL]) -> Void)?
     public var didOpenSettings: (() -> Void)?
     
-    public init(fileType: PickerFilesType, assetsSelected: ((PhotoPickerCallbackModel) -> Void)? = nil, filesSelected: (([URL]) -> Void)? = nil) {
+    public init(fileType: PickerFilesType, assetsSelected: ((ACPickerCallbackModel) -> Void)? = nil, filesSelected: (([URL]) -> Void)? = nil) {
         self.fileType = fileType
         self.assetsSelected = assetsSelected
         self.filesSelected = filesSelected
@@ -56,7 +56,7 @@ public class ACMediaViewController: UIViewController {
 
 public extension ACMediaViewController {
     
-    func didPickAssets(_ model: PhotoPickerCallbackModel) {
+    func didPickAssets(_ model: ACPickerCallbackModel) {
         self.assetsSelected?(model)
     }
     
