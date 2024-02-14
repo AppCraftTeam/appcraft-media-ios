@@ -10,12 +10,13 @@ import DPUIKit
 import Photos
 import UIKit
 
-class PhotosViewModel {
+public class PhotosViewModel {
     
     public var albumModel: AlbumModel?
     private(set) var sections: [Section] = []
 
     // MARK: - Properties
+    var configuration: ACMediaConfiguration
     var selectedIndexPath: IndexPath?
     var imagesData = PHFetchResult<PHAsset>()
     var photoService = PhotoService()
@@ -37,6 +38,10 @@ class PhotosViewModel {
     
     func reloadData() {
         authorize()
+    }
+    
+    init(configuration: ACMediaConfiguration) {
+        self.configuration = configuration
     }
 }
 
@@ -96,6 +101,7 @@ extension PhotosViewModel {
                     image: image,
                     index: index,
                     isSelected: SelectedImagesStack.shared.contains(asset),
+                    configuration: self.configuration,
                     viewTapped: {
                         // Open photo in full screen preview
                         self.selectedIndexPath = IndexPath(row: index + 1, section: 0)
@@ -112,10 +118,13 @@ extension PhotosViewModel {
         }
         
         // Try add camera cell
-        if ACMediaConfiguration.shared.photoConfig.allowCamera {
-            cameraModel = CameraCellModel(viewTapped: { [weak self] in
-                self?.onShowCamera?()
-            })
+        if configuration.photoConfig.allowCamera {
+            cameraModel = CameraCellModel(
+                configuration: self.configuration,
+                viewTapped: { [weak self] in
+                    self?.onShowCamera?()
+                }
+            )
         }
         
         self.sections.removeAll()
@@ -146,7 +155,7 @@ extension PhotosViewModel {
     /// Processing asset selection
     /// - Parameter model: Selection photo cell model
     func handleImageSelection(model: PhotoCellModel) {
-        let maxSelection = ACMediaConfig.photoConfig.maximumSelection ?? Int.max
+        let maxSelection = configuration.photoConfig.maximumSelection ?? Int.max
         let asset = imagesData[model.index]
         let indexPath = IndexPath(row: model.index + 1, section: 0)
 

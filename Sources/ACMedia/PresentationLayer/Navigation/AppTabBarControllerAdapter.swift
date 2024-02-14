@@ -11,12 +11,19 @@ import UIKit
 // MARK: - UITabBarDelegate
 class AppTabBarControllerAdapter: NSObject, UITabBarControllerDelegate {
     
+    var configuration: ACMediaConfiguration
     var types: [ACMediaDocFileType] = []
     weak var parentVC: UIViewController?
     
+    init(configuration: ACMediaConfiguration, types: [ACMediaDocFileType], parentVC: UIViewController?) {
+        self.configuration = configuration
+        self.types = types
+        self.parentVC = parentVC
+    }
+    
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         if viewController.tabBarItem.tag == 1 {
-            let pickerService = DocumentsPickerService(parentVC: parentVC)
+            let pickerService = DocumentsPickerService(configuration: configuration, parentVC: parentVC)
             pickerService.showPicker(types: types)
             return false
         }

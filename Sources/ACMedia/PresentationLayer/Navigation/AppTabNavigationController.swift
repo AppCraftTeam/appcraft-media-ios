@@ -34,10 +34,11 @@ enum AppTabBarItem {
 
 open class AppTabBarController: UITabBarController {
     
-    private let adapter = AppTabBarControllerAdapter()
-    
+    private let adapter: AppTabBarControllerAdapter
+    public var configuration: ACMediaConfiguration
+
     private(set) lazy var photoController: MainNavigationController = {
-        let vc = MainNavigationController(configuration: .shared, acMediaService: nil)
+        let vc = MainNavigationController(configuration: configuration, acMediaService: nil)
         vc.tabBarItem = AppTabBarItem.gallery.item
         return vc
     }()
@@ -54,6 +55,16 @@ open class AppTabBarController: UITabBarController {
         let appearance = UITabBarAppearance()
         appearance.configureWithDefaultBackground()
         return appearance
+    }
+    
+    public required init(configuration: ACMediaConfiguration) {
+        self.configuration = configuration
+        self.adapter = AppTabBarControllerAdapter(configuration: configuration, types: [], parentVC: nil)
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     open override func viewDidLoad() {
@@ -75,7 +86,7 @@ open class AppTabBarController: UITabBarController {
     open func showPicker(in parent: UIViewController, acMediaService: ACMediaViewController) {
         self.photoController.acMediaService = acMediaService
         self.acMediaService = acMediaService
-        self.adapter.types = ACMediaConfiguration.shared.documentsConfig.fileFormats
+        self.adapter.types = configuration.documentsConfig.fileFormats
         self.adapter.parentVC = self
         
         parent.present(self, animated: true)
@@ -93,7 +104,7 @@ private extension AppTabBarController {
     }
     
     func configureTabBar() {
-        tabBar.tintColor = ACMediaConfig.appearance.tintColor
+        tabBar.tintColor = configuration.appearance.tintColor
         tabBar.barStyle = .default
         tabBar.isTranslucent = true
         self.delegate = adapter

@@ -9,9 +9,10 @@ import Foundation
 import Photos
 import UIKit
 
-class PhotoPreviewViewModel {
+public class PhotoPreviewViewModel {
         
     // MARK: - Properties
+    var configuration: ACMediaConfiguration
     var image: UIImage?
     private var asset: PHAsset?
     private var photoService = PhotoService()
@@ -19,7 +20,8 @@ class PhotoPreviewViewModel {
     // MARK: - Actions
     var onSetImage: ((_ image: UIImage) -> Void)?
     
-    init(asset: PHAsset?) {
+    init(configuration: ACMediaConfiguration, asset: PHAsset?) {
+        self.configuration = configuration
         self.asset = asset
     }
     

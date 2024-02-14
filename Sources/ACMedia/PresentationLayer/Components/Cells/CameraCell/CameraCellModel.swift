@@ -10,11 +10,15 @@ import UIKit
 
 public class CameraCellModel {
     
+    var configuration: ACMediaConfiguration
+    
     var viewTapped: (() -> Void)?
     
     /// Create cell model
+    /// - Parameter configuration: App config
     /// - Parameter viewTapped: tap callback
-    init(viewTapped: (() -> Void)?) {
+    init(configuration: ACMediaConfiguration, viewTapped: (() -> Void)?) {
+        self.configuration = configuration
         self.viewTapped = viewTapped
     }
 }

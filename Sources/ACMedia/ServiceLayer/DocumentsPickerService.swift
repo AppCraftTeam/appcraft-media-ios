@@ -11,9 +11,11 @@ import UniformTypeIdentifiers
 
 public class DocumentsPickerService: NSObject {
     
+    var configuration: ACMediaConfiguration
     weak var parentVC: UIViewController?
     
-    init(parentVC: UIViewController?) {
+    init(configuration: ACMediaConfiguration, parentVC: UIViewController?) {
+        self.configuration = configuration
         self.parentVC = parentVC
     }
     
@@ -24,13 +26,13 @@ public class DocumentsPickerService: NSObject {
         if #available(iOS 14.0, *) {
             let pickerViewController = UIDocumentPickerViewController(forOpeningContentTypes: types.map({ $0.utType }), asCopy: true)
             pickerViewController.delegate = parentVC as? any UIDocumentPickerDelegate
-            pickerViewController.allowsMultipleSelection = ACMediaConfig.documentsConfig.allowsMultipleSelection
-            pickerViewController.shouldShowFileExtensions = ACMediaConfig.documentsConfig.shouldShowFileExtensions
+            pickerViewController.allowsMultipleSelection = configuration.documentsConfig.allowsMultipleSelection
+            pickerViewController.shouldShowFileExtensions = configuration.documentsConfig.shouldShowFileExtensions
             parentVC?.present(pickerViewController, animated: true, completion: nil)
         } else {
             let documentPicker = UIDocumentPickerViewController(documentTypes: types.map({ $0.kutType as String }), in: .import)
             documentPicker.delegate = parentVC as? any UIDocumentPickerDelegate
-            documentPicker.allowsMultipleSelection = ACMediaConfig.documentsConfig.allowsMultipleSelection
+            documentPicker.allowsMultipleSelection = configuration.documentsConfig.allowsMultipleSelection
             parentVC?.present(documentPicker, animated: true, completion: nil)
         }
     }

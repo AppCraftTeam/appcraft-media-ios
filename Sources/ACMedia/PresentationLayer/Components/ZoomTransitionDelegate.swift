@@ -17,11 +17,17 @@ public enum ScreenTransitionState {
 }
 
 public final class ZoomTransitionDelegate: NSObject {
+    
+    var configuration: ACMediaConfiguration
     var durationOfTransition: TimeInterval = 0.6
     var navOperation: UINavigationController.Operation = .none
     
     private let scalingFactor: CGFloat = 15
     private let shrinkFactor: CGFloat = 0.75
+    
+    public init(configuration: ACMediaConfiguration) {
+        self.configuration = configuration
+    }
     
     /// Setting the frame for the container
     /// - Parameters:
@@ -125,7 +131,7 @@ extension ZoomTransitionDelegate: UIViewControllerAnimatedTransitioning {
         let originalControllerBackgroundColor = foregroundColorController.view.backgroundColor
         foregroundColorController.view.backgroundColor = UIColor.clear
         
-        container.backgroundColor = ACMediaConfiguration.shared.appearance.backgroundColor
+        container.backgroundColor = configuration.appearance.backgroundColor
         container.addSubview(backgroundColorController.view)
         container.addSubview(foregroundColorController.view)
         container.addSubview(snapshotView)

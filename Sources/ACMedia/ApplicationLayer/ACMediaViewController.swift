@@ -8,20 +8,20 @@
 import Foundation
 import UIKit
 
-public class ACMediaViewController: UIViewController {
+public class ACMediaViewController {
     
+    public var configuration: ACMediaConfiguration
     public var fileType: PickerFilesType
     // Callbacks
     public var assetsSelected: ((ACPickerCallbackModel) -> Void)?
     public var filesSelected: (([URL]) -> Void)?
     public var didOpenSettings: (() -> Void)?
     
-    public init(fileType: PickerFilesType, assetsSelected: ((ACPickerCallbackModel) -> Void)? = nil, filesSelected: (([URL]) -> Void)? = nil) {
+    public init(configuration: ACMediaConfiguration, fileType: PickerFilesType, assetsSelected: ((ACPickerCallbackModel) -> Void)? = nil, filesSelected: (([URL]) -> Void)? = nil) {
+        self.configuration = configuration
         self.fileType = fileType
         self.assetsSelected = assetsSelected
         self.filesSelected = filesSelected
-        
-        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -31,23 +31,24 @@ public class ACMediaViewController: UIViewController {
     /// Present picker controller
     /// - Parameter parentVC: parent view controller
     public func show(in parentVC: UIViewController) {
-        let tabbarController = AppTabBarController()
+        let tabbarController = AppTabBarController(configuration: configuration)
         
         switch fileType {
         case .gallery:
-            let vc = MainNavigationController(configuration: .shared, acMediaService: self)
+            let vc = MainNavigationController(configuration: configuration, acMediaService: self)
             parentVC.present(vc, animated: true)
         case .files:
-            let vc = DocumentsParentViewController()
+            let vc = ACDocumentPickerViewController()
             vc.didPickDocuments = { [weak self] urls in
+                print("vvvv - \(urls), didPickDocuments - \(self?.didPickDocuments == nil), self \(self)")
                 self?.didPickDocuments(urls)
+                self?.filesSelected?(urls)
                 vc.dismiss(animated: true)
-                self?.dismiss(animated: true)
             }
             parentVC.present(vc, animated: true)
             
-            let pickerService = DocumentsPickerService(parentVC: vc)
-            pickerService.showPicker(types: ACMediaConfiguration.shared.documentsConfig.fileFormats)
+            let pickerService = DocumentsPickerService(configuration: configuration, parentVC: vc)
+            pickerService.showPicker(types: configuration.documentsConfig.fileFormats)
         case .galleryAndFiles:
             tabbarController.showPicker(in: parentVC, acMediaService: self)
         }
@@ -63,14 +64,4 @@ public extension ACMediaViewController {
     func didPickDocuments(_ urls: [URL]) {
         self.filesSelected?(urls)
     }
-}
-
-// MARK: - AppTabBarController
-extension ACMediaViewController: UIDocumentPickerDelegate {
-    
-    public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        self.didPickDocuments(urls)
-    }
-    
-    public func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {}
 }

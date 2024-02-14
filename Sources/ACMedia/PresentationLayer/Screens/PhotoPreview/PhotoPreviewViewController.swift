@@ -10,7 +10,7 @@ import UIKit
 
 public final class PhotoPreviewViewController: UIViewController {
     
-    var viewModel = PhotoPreviewViewModel(asset: nil)
+    var viewModel: PhotoPreviewViewModel
     
     // MARK: - Components
     private lazy var scrollView: UIScrollView = {
@@ -27,10 +27,19 @@ public final class PhotoPreviewViewController: UIViewController {
         return imageView
     }()
     
+    public required init(viewModel: PhotoPreviewViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Methods
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = ACMediaConfiguration.shared.appearance.backgroundColor
+        view.backgroundColor = viewModel.configuration.appearance.backgroundColor
         
         viewModel.onSetImage = { [weak self] image in
             self?.setupImage(image)
@@ -91,9 +100,9 @@ private extension PhotoPreviewViewController {
         }
         button.setTitle(ACAppLocale.back.locale, for: .normal)
         button.sizeToFit()
-        button.setTitleColor(ACMediaConfiguration.shared.appearance.tintColor, for: [])
-        button.titleLabel?.font = ACMediaConfiguration.shared.appearance.navBarTitleFont
-        button.tintColor = ACMediaConfiguration.shared.appearance.tintColor
+        button.setTitleColor(viewModel.configuration.appearance.tintColor, for: [])
+        button.titleLabel?.font = viewModel.configuration.appearance.navBarTitleFont
+        button.tintColor = viewModel.configuration.appearance.tintColor
         button.addTarget(self, action: #selector(self.backButtonPressed), for: .touchUpInside)
         
         navigationItem.setLeftBarButton(UIBarButtonItem(customView: button), animated: true)
