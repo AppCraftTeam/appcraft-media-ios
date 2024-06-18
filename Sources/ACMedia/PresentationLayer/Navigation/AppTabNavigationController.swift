@@ -34,8 +34,9 @@ enum AppTabBarItem {
 
 open class AppTabBarController: UITabBarController {
     
-    private let adapter: AppTabBarControllerAdapter
+    private var acMediaService: ACMediaViewController
     public var configuration: ACMediaConfiguration
+    private let adapter: AppTabBarControllerAdapter
 
     private(set) lazy var photoController: MainNavigationController = {
         let vc = MainNavigationController(configuration: configuration, acMediaService: nil)
@@ -44,7 +45,11 @@ open class AppTabBarController: UITabBarController {
     }()
     
     private(set) lazy var documentsViewController: UIViewController = {
-        let vc = UIViewController()
+        let vc = ACDocumentPickerViewController.create(types: [.zip], configuration: configuration)
+        vc.didPickDocuments = { [weak self] urls in
+            print("parentVC - \(self?.acMediaService)")
+            self?.acMediaService.didPickDocuments(urls)
+        }
         vc.tabBarItem = AppTabBarItem.file.item
         
         return vc
@@ -57,7 +62,8 @@ open class AppTabBarController: UITabBarController {
         return appearance
     }
     
-    public required init(configuration: ACMediaConfiguration) {
+    public required init(acMediaService: ACMediaViewController, configuration: ACMediaConfiguration) {
+        self.acMediaService = acMediaService
         self.configuration = configuration
         self.adapter = AppTabBarControllerAdapter(configuration: configuration, types: [], parentVC: nil)
         super.init(nibName: nil, bundle: nil)
@@ -80,9 +86,7 @@ open class AppTabBarController: UITabBarController {
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
     }
-    
-    public var acMediaService: ACMediaViewController?
-    
+        
     open func showPicker(in parent: UIViewController, acMediaService: ACMediaViewController) {
         self.photoController.acMediaService = acMediaService
         self.acMediaService = acMediaService
@@ -90,6 +94,8 @@ open class AppTabBarController: UITabBarController {
         self.adapter.parentVC = self
         
         parent.present(self, animated: true)
+        
+        //self.adapter.tabBarController(self, shouldSelect: self.documentsViewController)
     }
 }
 
@@ -107,6 +113,13 @@ private extension AppTabBarController {
         tabBar.tintColor = configuration.appearance.tintColor
         tabBar.barStyle = .default
         tabBar.isTranslucent = true
+        
+        switch acMediaService.fileType {
+        case .gallery, .files:
+            tabBar.isHidden = true
+        case .galleryAndFiles:
+            tabBar.isHidden = false
+        }
         self.delegate = adapter
         
         let items = tabBar.items ?? []
@@ -117,21 +130,21 @@ private extension AppTabBarController {
         })
     }
     
-    func makeNavControllers() -> [UINavigationController] {
-        [
-            photoController,
-            UINavigationController(rootViewController: documentsViewController)
-        ]
+    func makeNavControllers() -> [UIViewController] {
+        switch acMediaService.fileType {
+        case .gallery:
+            return [
+                photoController
+            ]
+        case .files:
+            return [
+                documentsViewController
+            ]
+        case .galleryAndFiles:
+            return [
+                photoController,
+                documentsViewController
+            ]
+        }
     }
-}
-
-// MARK: - AppTabBarController
-extension AppTabBarController: UIDocumentPickerDelegate {
-    
-    public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        self.acMediaService?.didPickDocuments(urls)
-        self.dismiss(animated: true)
-    }
-    
-    public func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {}
 }

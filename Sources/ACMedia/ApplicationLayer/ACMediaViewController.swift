@@ -31,25 +31,14 @@ public class ACMediaViewController {
     /// Present picker controller
     /// - Parameter parentVC: parent view controller
     public func show(in parentVC: UIViewController) {
-        let tabbarController = AppTabBarController(configuration: configuration)
+        let tabbarController = AppTabBarController(acMediaService: self, configuration: configuration)
         
         switch fileType {
         case .gallery:
             let vc = MainNavigationController(configuration: configuration, acMediaService: self)
             parentVC.present(vc, animated: true)
-        case .files:
-            let vc = ACDocumentPickerViewController()
-            vc.didPickDocuments = { [weak self] urls in
-                print("vvvv - \(urls), didPickDocuments - \(self?.didPickDocuments == nil), self \(self)")
-                self?.didPickDocuments(urls)
-                self?.filesSelected?(urls)
-                vc.dismiss(animated: true)
-            }
-            parentVC.present(vc, animated: true)
-            
-            let pickerService = DocumentsPickerService(configuration: configuration, parentVC: vc)
-            pickerService.showPicker(types: configuration.documentsConfig.fileFormats)
-        case .galleryAndFiles:
+        case .files, .galleryAndFiles:
+            #warning("todo + gallery")
             tabbarController.showPicker(in: parentVC, acMediaService: self)
         }
     }

@@ -51,7 +51,10 @@ open class MainNavigationController: UINavigationController {
         let imageGridController = PhotoGridViewController(
             viewModel: PhotosViewModel(
                 configuration: configuration
-            )
+            ), didPickAssets: { selectedAssetsModel in
+                print("selectedAssetsModel - \(selectedAssetsModel)")
+                self.acMediaService?.didPickAssets(selectedAssetsModel)
+            }
         )
         viewControllers = [imageGridController]
     }

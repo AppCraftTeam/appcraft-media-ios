@@ -9,9 +9,12 @@ import DPUIKit
 import PhotosUI
 import UIKit
 
+public typealias PhotosViewControllerCallback = ((_ model: ACPickerCallbackModel) -> Void)
+
 public final class PhotoGridViewController: UIViewController {
     
     private var viewModel: PhotosViewModel
+    private var didPickAssets: PhotosViewControllerCallback?
     // Session for camera preview
     private let captureSession = AVCaptureSession()
     
@@ -122,8 +125,9 @@ public final class PhotoGridViewController: UIViewController {
         return UIMenu(title: "", image: nil, identifier: nil, options: [], children: menuItems)
     }
     
-    public required init(viewModel: PhotosViewModel) {
+    public required init(viewModel: PhotosViewModel, didPickAssets: PhotosViewControllerCallback?) {
         self.viewModel = viewModel
+        self.didPickAssets = didPickAssets
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -446,7 +450,8 @@ extension PhotoGridViewController: UIImagePickerControllerDelegate {
             return
         }
         // Return to the parent app user photo captured in the camera
-        ((self.navigationController as? MainNavigationController)?.acMediaService)?.didPickAssets(ACPickerCallbackModel(images: [image], videoUrls: []))
+        let callbackModel = ACPickerCallbackModel(images: [image], videoUrls: [])
+        self.didPickAssets?(callbackModel)
         dismiss(animated: true, completion: nil)
     }
 }
@@ -533,8 +538,8 @@ extension PhotoGridViewController {
             manager.fetchHighResImages(for: assets) { images in
                 // Get paths for selecting videos
                 manager.fetchVideoURL(for: assets) { videoUrls in
-                    let model = ACPickerCallbackModel(images: images, videoUrls: videoUrls)
-                    ((self.navigationController as? MainNavigationController)?.acMediaService)?.didPickAssets(model)
+                    let callbackModel = ACPickerCallbackModel(images: images, videoUrls: videoUrls)
+                    self.didPickAssets?(callbackModel)
                 }
             }
             
