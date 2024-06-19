@@ -9,7 +9,7 @@ import Foundation
 import Photos
 import UIKit
 
-public class PhotoPreviewViewModel {
+open class PhotoPreviewViewModel {
         
     // MARK: - Properties
     var configuration: ACMediaConfiguration

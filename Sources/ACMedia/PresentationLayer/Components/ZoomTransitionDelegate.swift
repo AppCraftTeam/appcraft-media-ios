@@ -11,12 +11,12 @@ public protocol ZoomTransitionViewController {
     func getZoomingImageView(for transition: ZoomTransitionDelegate) -> UIImageView?
 }
 
-public enum ScreenTransitionState {
+fileprivate enum ScreenTransitionState {
     case initial
     case final
 }
 
-public final class ZoomTransitionDelegate: NSObject {
+open class ZoomTransitionDelegate: NSObject {
     
     var configuration: ACMediaConfiguration
     var durationOfTransition: TimeInterval = 0.6
@@ -70,7 +70,7 @@ public final class ZoomTransitionDelegate: NSObject {
 
 extension ZoomTransitionDelegate: UINavigationControllerDelegate {
     
-    public func navigationController(
+    open func navigationController(
         _ navigationController: UINavigationController,
         animationControllerFor operation: UINavigationController.Operation,
         from fromVC: UIViewController,
@@ -87,11 +87,11 @@ extension ZoomTransitionDelegate: UINavigationControllerDelegate {
 
 extension ZoomTransitionDelegate: UIViewControllerAnimatedTransitioning {
     
-    public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+    open func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         durationOfTransition
     }
     
-    public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    open func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let duration = transitionDuration(using: transitionContext)
         
         guard let originController = transitionContext.viewController(forKey: .from),

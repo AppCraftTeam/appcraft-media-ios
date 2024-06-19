@@ -11,7 +11,7 @@ import UIKit
 
 public typealias PhotosViewControllerCallback = ((_ model: ACPickerCallbackModel) -> Void)
 
-public final class PhotoGridViewController: UIViewController {
+open class PhotoGridViewController: UIViewController {
     
     private var viewModel: PhotosViewModel
     private var didPickAssets: PhotosViewControllerCallback?
@@ -136,7 +136,7 @@ public final class PhotoGridViewController: UIViewController {
     }
     
     // MARK: - Methods
-    public override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         PHPhotoLibrary.shared().register(self)
         
@@ -186,11 +186,11 @@ public final class PhotoGridViewController: UIViewController {
         reloadData()
     }
 
-    public override func viewWillAppear(_ animated: Bool) {
+    open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
     
-    public override func viewDidLayoutSubviews() {
+    open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionView.collectionViewLayout.invalidateLayout()
     }
@@ -443,7 +443,7 @@ private extension PhotoGridViewController {
 // MARK: - UIImagePickerControllerDelegate
 extension PhotoGridViewController: UIImagePickerControllerDelegate {
     
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+    open func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         picker.dismiss(animated: true)
         
         guard let image = info[.editedImage] as? UIImage else {
@@ -462,7 +462,7 @@ extension PhotoGridViewController: UINavigationControllerDelegate {}
 // MARK: - UICollectionViewDataSourcePrefetching
 extension PhotoGridViewController: UICollectionViewDataSourcePrefetching {
     
-    public func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+    open func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
             guard isNotCameraCell(on: indexPath) else {
                 return
@@ -480,7 +480,7 @@ extension PhotoGridViewController: UICollectionViewDataSourcePrefetching {
         }
     }
     
-    public func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+    open func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
             guard isNotCameraCell(on: indexPath),
                   let dataLoader = viewModel.loadingOperations[indexPath] else {
@@ -504,7 +504,7 @@ extension PhotoGridViewController: UICollectionViewDataSourcePrefetching {
 // MARK: - PHPhotoLibraryChangeObserver
 extension PhotoGridViewController: PHPhotoLibraryChangeObserver {
     
-    public func photoLibraryDidChange(_ changeInstance: PHChange) {
+    open func photoLibraryDidChange(_ changeInstance: PHChange) {
         DispatchQueue.main.async { [unowned self] in
             viewModel.authorize()
         }
@@ -577,7 +577,7 @@ extension PhotoGridViewController {
 // MARK: - ZoomingViewController
 extension PhotoGridViewController: ZoomTransitionViewController {
     
-    public func getZoomingImageView(for transition: ZoomTransitionDelegate) -> UIImageView? {
+    open func getZoomingImageView(for transition: ZoomTransitionDelegate) -> UIImageView? {
         if let indexPath = viewModel.selectedIndexPath,
            let cell = collectionView.cellForItem(at: indexPath) as? PhotoCell {
             // For previewing photo screen animation

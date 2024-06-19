@@ -8,7 +8,7 @@
 import PhotosUI
 import UIKit
 
-public class AsyncImageLoader: Operation {
+open class AsyncImageLoader: Operation {
     
     var img: UIImage?
     var onFinishLoadingImage: ((_ image: UIImage?) -> Void)?
@@ -16,7 +16,7 @@ public class AsyncImageLoader: Operation {
     private var photoAsset: PHAsset
     private var imageSize: CGSize
     
-    public override var isAsynchronous: Bool {
+    open override var isAsynchronous: Bool {
         true
     }
     
@@ -26,7 +26,7 @@ public class AsyncImageLoader: Operation {
     }
     
     /// Performs the receiver’s non-concurrent task - fetch asset preview
-    public override func main() {
+    open override func main() {
         if isCancelled {
             return
         }

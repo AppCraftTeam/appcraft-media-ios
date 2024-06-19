@@ -9,16 +9,16 @@ import UIKit
 import MobileCoreServices
 import UniformTypeIdentifiers
 
-public class ACDocumentPickerViewController: UIDocumentPickerViewController, UIDocumentPickerDelegate {
+open class ACDocumentPickerViewController: UIDocumentPickerViewController, UIDocumentPickerDelegate {
     
-    public var didPickDocuments: (([URL]) -> Void)?
+    open var didPickDocuments: (([URL]) -> Void)?
     
-    public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+    open func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         self.didPickDocuments?(urls)
         self.dismiss(animated: true)
     }
     
-    public func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+    open func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
         print("vvvv 1111")
         self.dismiss(animated: true)
     }

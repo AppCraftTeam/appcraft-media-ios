@@ -9,7 +9,7 @@ import DPUIKit
 import PhotosUI
 import UIKit
 
-public final class PhotoCell: DPCollectionItemCell {
+open class PhotoCell: DPCollectionItemCell {
     
     // MARK: - Props
     var model: PhotoCellModel? {
@@ -50,7 +50,7 @@ public final class PhotoCell: DPCollectionItemCell {
     }()
     
     // MARK: - Methods
-    public override func setupComponents() {
+    open override func setupComponents() {
         super.setupComponents()
         
         contentView.addSubview(previewImageView)
@@ -81,7 +81,7 @@ public final class PhotoCell: DPCollectionItemCell {
         ])
     }
     
-    public override func updateComponents() {
+    open override func updateComponents() {
         super.updateComponents()
         
         var image: UIImage? {
@@ -128,15 +128,15 @@ private extension PhotoCell {
     }
 }
 
-public extension PhotoCell {
+extension PhotoCell {
     
-    func updateThumbImage(_ image: UIImage?) {
+    public func updateThumbImage(_ image: UIImage?) {
         DispatchQueue.main.async {
             self.previewImageView.image = image
         }
     }
     
-    func getPreviewImageView() -> UIImageView? {
+    public func getPreviewImageView() -> UIImageView? {
         previewImageView
     }
 }

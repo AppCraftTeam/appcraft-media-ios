@@ -9,7 +9,7 @@ import Foundation
 import PhotosUI
 
 /// A stack that contains assets selected by the user for their further transfer to the application
-public class SelectedImagesStack {
+open class SelectedImagesStack {
     
     private var selectedImageAssets: [PHAsset] = [] {
         didSet {
@@ -21,35 +21,35 @@ public class SelectedImagesStack {
     
     private init() {}
     
-    public var selectedCount: Int {
+    open var selectedCount: Int {
         selectedImageAssets.count
     }
     
-    public func contains(_ asset: PHAsset) -> Bool {
+    open func contains(_ asset: PHAsset) -> Bool {
         selectedImageAssets.contains(asset)
     }
     
-    public func delete(_ asset: PHAsset) {
+    open func delete(_ asset: PHAsset) {
         if let index = selectedImageAssets.firstIndex(where: { $0 == asset }) {
             selectedImageAssets.remove(at: index)
         }
     }
     
-    public func deleteAll() {
+    open func deleteAll() {
         selectedImageAssets.removeAll()
     }
     
-    public func fetchAssets() -> [PHAsset] {
+    open func fetchAssets() -> [PHAsset] {
         Array(selectedImageAssets)
     }
     
-    public func add(_ asset: PHAsset) {
+    open func add(_ asset: PHAsset) {
         if !selectedImageAssets.contains(asset) {
             selectedImageAssets += [asset]
         }
     }
     
-    public func fetchFirstAdded() -> PHAsset? {
+    open func fetchFirstAdded() -> PHAsset? {
         selectedImageAssets.removeFirst()
     }
 }

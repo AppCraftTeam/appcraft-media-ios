@@ -19,8 +19,8 @@ open class MainNavigationController: UINavigationController {
     }()
     
     // MARK: - Params
-    public var acMediaService: ACMediaViewController?
-    public var configuration: ACMediaConfiguration
+    open var acMediaService: ACMediaViewController?
+    open var configuration: ACMediaConfiguration
     private let navigationTransition: ZoomTransitionDelegate
     
     public required init(configuration: ACMediaConfiguration, acMediaService: ACMediaViewController?) {

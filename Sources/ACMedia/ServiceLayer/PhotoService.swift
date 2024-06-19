@@ -8,20 +8,20 @@
 import PhotosUI
 import UIKit
 
-public final class PhotoService: NSObject {
+open class PhotoService: NSObject {
     
     /// Types of files from the gallery that will be displayed in the picker
-    public var fileTypes: [PhotoPickerFilesType] = PhotoPickerFilesType.allCases
+    open var fileTypes: [PhotoPickerFilesType] = PhotoPickerFilesType.allCases
     
     /// Request permission to access your camera roll
     /// - Parameter completion: Auth status
-    public func authorize(completion: @escaping (PHAuthorizationStatus) -> Void) {
+    open func authorize(completion: @escaping (PHAuthorizationStatus) -> Void) {
         PHPhotoLibrary.requestAuthorization(completion)
     }
     
     /// Get the "recent photos" album
     /// - Returns: Album info model
-    public func fetchRecentAlbum() -> AlbumModel? {
+    open func fetchRecentAlbum() -> AlbumModel? {
         let options = PHFetchOptions()
         
         let smartCollections = PHAssetCollection.fetchAssetCollections(
@@ -41,7 +41,7 @@ public final class PhotoService: NSObject {
     
     /// Get a list of all albums from camera roll
     /// - Returns: Album info models
-    public func fetchAllAlbums() -> [AlbumModel] {
+    open func fetchAllAlbums() -> [AlbumModel] {
         let options = PHFetchOptions()
         
         let userAlbums = PHAssetCollection.fetchAssetCollections(
@@ -72,7 +72,7 @@ public final class PhotoService: NSObject {
     /// - Parameters:
     ///   - albums: Album info models without preview
     ///   - completion: Album info models wuth preview
-    public func fetchPreviewsFor(albums: [AlbumModel], completion: @escaping ([AlbumModel]) -> Void) {
+    open func fetchPreviewsFor(albums: [AlbumModel], completion: @escaping ([AlbumModel]) -> Void) {
         var albumData = albums
         var completionFlags: [Bool] = []
         
@@ -128,7 +128,7 @@ public final class PhotoService: NSObject {
     ///   - asset: Image asset
     ///   - size: Required preview size
     ///   - completion: Image preview object
-    public func fetchThumbnail(for asset: PHAsset, size: CGSize, completion: @escaping (UIImage?) -> Void) {
+    open func fetchThumbnail(for asset: PHAsset, size: CGSize, completion: @escaping (UIImage?) -> Void) {
         let imageOptions = PHImageRequestOptions()
         imageOptions.resizeMode = .none
         imageOptions.deliveryMode = .highQualityFormat
@@ -147,7 +147,7 @@ public final class PhotoService: NSObject {
     ///   - asset: Image asset
     ///   - size: Image size, if necessary
     ///   - completion: Full image
-    public func fetchOriginalImage(for asset: PHAsset, size: CGSize? = nil, completion: @escaping (UIImage?) -> Void) {
+    open func fetchOriginalImage(for asset: PHAsset, size: CGSize? = nil, completion: @escaping (UIImage?) -> Void) {
         let imageOptions = PHImageRequestOptions()
         imageOptions.deliveryMode = .highQualityFormat
         PHImageManager.default().requestImage(
@@ -164,7 +164,7 @@ public final class PhotoService: NSObject {
     /// - Parameters:
     ///   - assets: Image (video) assets
     ///   - completionHandler: Original images
-    public func fetchHighResImages(for assets: [PHAsset], completionHandler: @escaping ([UIImage]) -> Void) {
+    open func fetchHighResImages(for assets: [PHAsset], completionHandler: @escaping ([UIImage]) -> Void) {
         var images: [UIImage] = []
         let group = DispatchGroup()
         
@@ -196,7 +196,7 @@ public final class PhotoService: NSObject {
     /// - Parameters:
     ///   - assets: Video assets
     ///   - completionHandler: video urls
-    public func fetchVideoURL(for assets: [PHAsset], completionHandler: @escaping ([URL]) -> Void) {
+    open func fetchVideoURL(for assets: [PHAsset], completionHandler: @escaping ([URL]) -> Void) {
         var urls: [URL] = []
         let group = DispatchGroup()
         let options = PHVideoRequestOptions()

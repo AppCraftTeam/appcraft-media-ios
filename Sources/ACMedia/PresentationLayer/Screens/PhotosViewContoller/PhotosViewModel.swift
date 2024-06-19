@@ -10,9 +10,9 @@ import DPUIKit
 import Photos
 import UIKit
 
-public class PhotosViewModel {
+open class PhotosViewModel {
     
-    public var albumModel: AlbumModel?
+    open var albumModel: AlbumModel?
     private(set) var sections: [Section] = []
 
     // MARK: - Properties

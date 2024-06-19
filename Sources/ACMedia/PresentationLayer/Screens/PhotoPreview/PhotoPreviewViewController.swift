@@ -8,7 +8,7 @@
 import PhotosUI
 import UIKit
 
-public final class PhotoPreviewViewController: UIViewController {
+open class PhotoPreviewViewController: UIViewController {
     
     var viewModel: PhotoPreviewViewModel
     
@@ -37,7 +37,7 @@ public final class PhotoPreviewViewController: UIViewController {
     }
     
     // MARK: - Methods
-    public override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = viewModel.configuration.appearance.backgroundColor
         
@@ -164,7 +164,7 @@ private extension PhotoPreviewViewController {
 // MARK: - UIScrollViewDelegate
 extension PhotoPreviewViewController: UIScrollViewDelegate {
     
-    public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+    open func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         imageView
     }
 }

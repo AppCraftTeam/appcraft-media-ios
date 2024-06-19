@@ -35,7 +35,7 @@ enum AppTabBarItem {
 open class AppTabBarController: UITabBarController {
     
     private var acMediaService: ACMediaViewController
-    public var configuration: ACMediaConfiguration
+    open var configuration: ACMediaConfiguration
     private let adapter: AppTabBarControllerAdapter
 
     private(set) lazy var photoController: MainNavigationController = {

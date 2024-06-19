@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-public class PhotoCellModel {
+open class PhotoCellModel {
     
     var image: UIImage?
     var index: Int

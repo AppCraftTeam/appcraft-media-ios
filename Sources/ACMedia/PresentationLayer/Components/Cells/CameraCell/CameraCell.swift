@@ -9,7 +9,7 @@ import AVFoundation
 import DPUIKit
 import UIKit
 
-public final class CameraCell: DPCollectionItemCell {
+open class CameraCell: DPCollectionItemCell {
     
     // MARK: - Props
     var model: CameraCellModel? {
@@ -66,29 +66,29 @@ public final class CameraCell: DPCollectionItemCell {
         ])
     }
     
-    public override func updateComponents() {
+    open override func updateComponents() {
         super.updateComponents()
     }
     
-    public override func prepareForReuse() {
+    open override func prepareForReuse() {
         super.prepareForReuse()
         previewLayer = nil
     }
     
-    public override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         self.contentView.backgroundColor = .clear
         self.containerView.layer.cornerRadius = model?.configuration.appearance.previewCardCornerRadius ?? 0.0
     }
     
-    public func addCameraLayer(_ previewLayer: AVCaptureVideoPreviewLayer) {
+    open func addCameraLayer(_ previewLayer: AVCaptureVideoPreviewLayer) {
         previewLayer.frame = self.bounds
         self.previewLayer = previewLayer
         self.previewLayer?.removeFromSuperlayer()
         self.containerView.layer.insertSublayer(previewLayer, at: 0)
     }
     
-    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         guard let event, event.type == .touches else {
             return
