@@ -12,6 +12,9 @@ public class ACMediaViewController {
     
     public var configuration: ACMediaConfiguration
     public var fileType: ACPickerFilesType
+    
+    public var selectedAssetsStack: ACSelectedImagesStack
+    
     // Callbacks
     public var assetsSelected: ((ACPickerCallbackModel) -> Void)?
     public var filesSelected: (([URL]) -> Void)?
@@ -20,6 +23,7 @@ public class ACMediaViewController {
     public init(configuration: ACMediaConfiguration, fileType: ACPickerFilesType, assetsSelected: ((ACPickerCallbackModel) -> Void)? = nil, filesSelected: (([URL]) -> Void)? = nil) {
         self.configuration = configuration
         self.fileType = fileType
+        self.selectedAssetsStack = ACSelectedImagesStack()
         self.assetsSelected = assetsSelected
         self.filesSelected = filesSelected
     }

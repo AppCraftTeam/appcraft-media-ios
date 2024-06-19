@@ -14,7 +14,7 @@ public typealias ACPhotosViewControllerCallback = ((_ model: ACPickerCallbackMod
 open class ACPhotoGridViewController: UIViewController {
     
     private var viewModel: ACPhotosViewModel
-    private var didPickAssets: ACPhotosViewControllerCallback?
+    
     // Session for camera preview
     private let captureSession = AVCaptureSession()
     
@@ -125,12 +125,11 @@ open class ACPhotoGridViewController: UIViewController {
         return UIMenu(title: "", image: nil, identifier: nil, options: [], children: menuItems)
     }
     
-    public required init(viewModel: ACPhotosViewModel, didPickAssets: ACPhotosViewControllerCallback?) {
+    public required init(viewModel: ACPhotosViewModel) {
         self.viewModel = viewModel
-        self.didPickAssets = didPickAssets
         super.init(nibName: nil, bundle: nil)
     }
-
+    
     public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -185,7 +184,7 @@ open class ACPhotoGridViewController: UIViewController {
         }
         reloadData()
     }
-
+    
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
@@ -270,7 +269,7 @@ private extension ACPhotoGridViewController {
         let settingsTitle = ACAppLocale.assetsPermissionOpenSettings.locale
         let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { [weak self] _ in
             self?.dismiss(animated: true, completion: nil)
-            ((self?.navigationController as? ACMainNavigationController)?.acMediaService)?.didOpenSettings?()
+            self?.viewModel.didOpenSettings?()
         }
         
         let cancelTitle = ACAppLocale.cancel.locale
@@ -391,14 +390,15 @@ private extension ACPhotoGridViewController {
     
     /// Changing the availability of the confirmation button depending on the number of selected assets
     func checkDoneButtonCondition() {
+        let selectedCount = viewModel.selectedAssetsStack.selectedCount
         let min = viewModel.configuration.photoConfig.minimimSelection
         let max = viewModel.configuration.photoConfig.maximumSelection
         
         var isEnabled: Bool {
             if let max = max {
-                return ACSelectedImagesStack.shared.selectedCount <= max && ACSelectedImagesStack.shared.selectedCount >= min
+                return selectedCount <= max && selectedCount >= min
             } else {
-                return ACSelectedImagesStack.shared.selectedCount >= min
+                return selectedCount >= min
             }
         }
         
@@ -451,7 +451,7 @@ extension ACPhotoGridViewController: UIImagePickerControllerDelegate {
         }
         // Return to the parent app user photo captured in the camera
         let callbackModel = ACPickerCallbackModel(images: [image], videoUrls: [])
-        self.didPickAssets?(callbackModel)
+        viewModel.didPickAssets?(callbackModel)
         dismiss(animated: true, completion: nil)
     }
 }
@@ -516,20 +516,19 @@ extension ACPhotoGridViewController {
     
     @objc
     private func cancelAction() {
-        ACSelectedImagesStack.shared.deleteAll()
+        viewModel.selectedAssetsStack.deleteAll()
         self.dismiss(animated: true, completion: nil)
     }
-    
     @objc
     private func doneAction() {
-        guard ACSelectedImagesStack.shared.selectedCount > 0 else {
+        guard viewModel.selectedAssetsStack.selectedCount > 0 else {
             cancelAction()
             return
         }
         
         DispatchQueue.main.async { [unowned self] in
-            let assets = ACSelectedImagesStack.shared.fetchAssets()
-            ACSelectedImagesStack.shared.deleteAll()
+            let assets = viewModel.selectedAssetsStack.fetchAssets()
+            viewModel.selectedAssetsStack.deleteAll()
             
             let manager = ACPhotoService()
             manager.fileTypes = viewModel.configuration.photoConfig.types
@@ -539,7 +538,7 @@ extension ACPhotoGridViewController {
                 // Get paths for selecting videos
                 manager.fetchVideoURL(for: assets) { videoUrls in
                     let callbackModel = ACPickerCallbackModel(images: images, videoUrls: videoUrls)
-                    self.didPickAssets?(callbackModel)
+                    self.viewModel.didPickAssets?(callbackModel)
                 }
             }
             
@@ -577,7 +576,7 @@ extension ACPhotoGridViewController {
 // MARK: - ZoomingViewController
 extension ACPhotoGridViewController: ACZoomTransitionViewController {
     
-    open func getZoomingImageView(for transition: ACZoomTransitionDelegate) -> UIImageView? {
+    public func getZoomingImageView(for transition: ACZoomTransitionDelegate) -> UIImageView? {
         if let indexPath = viewModel.selectedIndexPath,
            let cell = collectionView.cellForItem(at: indexPath) as? ACPhotoCell {
             // For previewing photo screen animation

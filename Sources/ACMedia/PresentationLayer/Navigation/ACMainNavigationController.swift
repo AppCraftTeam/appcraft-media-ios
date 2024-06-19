@@ -36,6 +36,9 @@ open class ACMainNavigationController: UINavigationController {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
+        guard let acMediaService = self.acMediaService else {
+            return
+        }
         self.delegate = navigationTransition
         
         setupToolbar()
@@ -50,11 +53,15 @@ open class ACMainNavigationController: UINavigationController {
         
         let imageGridController = ACPhotoGridViewController(
             viewModel: ACPhotosViewModel(
-                configuration: configuration
-            ), didPickAssets: { selectedAssetsModel in
-                print("selectedAssetsModel - \(selectedAssetsModel)")
-                self.acMediaService?.didPickAssets(selectedAssetsModel)
-            }
+                configuration: configuration,
+                selectedAssetsStack: acMediaService.selectedAssetsStack,
+                didPickAssets: { selectedAssetsModel in
+                    print("selectedAssetsModel - \(selectedAssetsModel)")
+                    self.acMediaService?.didPickAssets(selectedAssetsModel)
+                }, didOpenSettings: {
+                    self.acMediaService?.didOpenSettings?()
+                }
+            )
         )
         viewControllers = [imageGridController]
     }
@@ -99,7 +106,9 @@ private extension ACMainNavigationController {
     
     /// Update the text in the toolbar to show the current number of selected assets
     func updateToolbarText() {
-        let totalImages = ACSelectedImagesStack.shared.selectedCount
+        guard let totalImages = self.acMediaService?.selectedAssetsStack.selectedCount else {
+            return
+        }
         let selectedStr = String(format: ACAppLocale.selectedCount.locale, totalImages)
         var displayedText: String {
             guard configuration.photoConfig.displayMinMaxRestrictions else {

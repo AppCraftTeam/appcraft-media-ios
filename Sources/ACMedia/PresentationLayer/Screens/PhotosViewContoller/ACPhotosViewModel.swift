@@ -17,6 +17,7 @@ open class ACPhotosViewModel {
 
     // MARK: - Properties
     var configuration: ACMediaConfiguration
+    var selectedAssetsStack: ACSelectedImagesStack
     var selectedIndexPath: IndexPath?
     var imagesData = PHFetchResult<PHAsset>()
     var photoService = ACPhotoService()
@@ -33,6 +34,10 @@ open class ACPhotosViewModel {
     var onShowImageOnFullScreen: ((_ asset: PHAsset) -> Void)?
     var onShowCamera: (() -> Void)?
     
+    // MARK: - Callbacks
+    var didPickAssets: ACPhotosViewControllerCallback?
+    var didOpenSettings: (() -> Void)?
+    
     lazy var loadingQueue = OperationQueue()
     lazy var loadingOperations: [IndexPath: ACAsyncImageLoader] = [:]
     
@@ -40,8 +45,11 @@ open class ACPhotosViewModel {
         authorize()
     }
     
-    init(configuration: ACMediaConfiguration) {
+    init(configuration: ACMediaConfiguration, selectedAssetsStack: ACSelectedImagesStack, didPickAssets: ACPhotosViewControllerCallback?, didOpenSettings: (() -> Void)?) {
         self.configuration = configuration
+        self.selectedAssetsStack = selectedAssetsStack
+        self.didPickAssets = didPickAssets
+        self.didOpenSettings = didOpenSettings
     }
 }
 
@@ -100,7 +108,7 @@ extension ACPhotosViewModel {
                 ACPhotoCellModel(
                     image: image,
                     index: index,
-                    isSelected: ACSelectedImagesStack.shared.contains(asset),
+                    isSelected: self.selectedAssetsStack.contains(asset),
                     configuration: self.configuration,
                     viewTapped: {
                         // Open photo in full screen preview
@@ -168,15 +176,15 @@ extension ACPhotosViewModel {
     ///   - asset: Selected asset
     ///   - indexPath: Asset position in collection view
     private func handleMaximumSelection(_ maxSelection: Int, _ asset: PHAsset, _ indexPath: IndexPath) {
-        if ACSelectedImagesStack.shared.contains(asset) {
-            ACSelectedImagesStack.shared.delete(asset)
+        if selectedAssetsStack.contains(asset) {
+            selectedAssetsStack.delete(asset)
         } else {
-            guard ACSelectedImagesStack.shared.selectedCount < maxSelection else {                
-                if let oldAsset = ACSelectedImagesStack.shared.fetchFirstAdded() {
+            guard selectedAssetsStack.selectedCount < maxSelection else {
+                if let oldAsset = selectedAssetsStack.fetchFirstAdded() {
                     // Unselect the first selected asset
                     let oldIndex = imagesData.index(of: oldAsset)
                     let oldIndexPath = IndexPath(item: oldIndex + 1, section: 0)
-                    ACSelectedImagesStack.shared.add(asset)
+                    selectedAssetsStack.add(asset)
                     
                     self.makeSections()
                     self.onReloadCells?([oldIndexPath, indexPath])
@@ -185,7 +193,7 @@ extension ACPhotosViewModel {
                 return
             }
             // Add asset in stack
-            ACSelectedImagesStack.shared.add(asset)
+            selectedAssetsStack.add(asset)
         }
         
         self.makeSections()

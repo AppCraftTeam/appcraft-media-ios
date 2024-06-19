@@ -8,19 +8,16 @@
 import Foundation
 import PhotosUI
 
-#warning("without singltone")
 /// A stack that contains assets selected by the user for their further transfer to the application
 open class ACSelectedImagesStack {
+    
+    public init() {}
     
     private var selectedImageAssets: [PHAsset] = [] {
         didSet {
             NotificationCenter.default.post(name: .onSelectedImagesChanged, object: nil)
         }
     }
-    
-    public static let shared = ACSelectedImagesStack()
-    
-    private init() {}
     
     open var selectedCount: Int {
         selectedImageAssets.count
