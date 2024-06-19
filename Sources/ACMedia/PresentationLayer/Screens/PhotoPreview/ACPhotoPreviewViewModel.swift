@@ -1,5 +1,5 @@
 //
-//  PhotoPreviewViewModel.swift
+//  ACPhotoPreviewViewModel.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -9,13 +9,13 @@ import Foundation
 import Photos
 import UIKit
 
-open class PhotoPreviewViewModel {
+open class ACPhotoPreviewViewModel {
         
     // MARK: - Properties
     var configuration: ACMediaConfiguration
     var image: UIImage?
     private var asset: PHAsset?
-    private var photoService = PhotoService()
+    private var photoService = ACPhotoService()
     
     // MARK: - Actions
     var onSetImage: ((_ image: UIImage) -> Void)?

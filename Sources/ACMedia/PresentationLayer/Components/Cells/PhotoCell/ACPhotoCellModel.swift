@@ -1,5 +1,5 @@
 //
-//  PhotoCellModel.swift
+//  ACPhotoCellModel.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-open class PhotoCellModel {
+open class ACPhotoCellModel {
     
     var image: UIImage?
     var index: Int

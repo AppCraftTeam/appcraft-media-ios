@@ -1,5 +1,5 @@
 //
-//  CameraCellModel.swift
+//  ACCameraCellModel.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-open class CameraCellModel {
+open class ACCameraCellModel {
     
     var configuration: ACMediaConfiguration
     

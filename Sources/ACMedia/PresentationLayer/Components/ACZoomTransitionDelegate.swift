@@ -1,5 +1,5 @@
 //
-//  ZoomTransitionDelegate.swift
+//  ACZoomTransitionDelegate.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -7,8 +7,8 @@
 
 import UIKit
 
-public protocol ZoomTransitionViewController {
-    func getZoomingImageView(for transition: ZoomTransitionDelegate) -> UIImageView?
+public protocol ACZoomTransitionViewController {
+    func getZoomingImageView(for transition: ACZoomTransitionDelegate) -> UIImageView?
 }
 
 fileprivate enum ScreenTransitionState {
@@ -16,7 +16,7 @@ fileprivate enum ScreenTransitionState {
     case final
 }
 
-open class ZoomTransitionDelegate: NSObject {
+open class ACZoomTransitionDelegate: NSObject {
     
     var configuration: ACMediaConfiguration
     var durationOfTransition: TimeInterval = 0.6
@@ -68,7 +68,7 @@ open class ZoomTransitionDelegate: NSObject {
     }
 }
 
-extension ZoomTransitionDelegate: UINavigationControllerDelegate {
+extension ACZoomTransitionDelegate: UINavigationControllerDelegate {
     
     open func navigationController(
         _ navigationController: UINavigationController,
@@ -76,7 +76,7 @@ extension ZoomTransitionDelegate: UINavigationControllerDelegate {
         from fromVC: UIViewController,
         to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
             
-            if fromVC is ZoomTransitionViewController && toVC is ZoomTransitionViewController {
+            if fromVC is ACZoomTransitionViewController && toVC is ACZoomTransitionViewController {
                 self.navOperation = operation
                 return self
             } else {
@@ -85,7 +85,7 @@ extension ZoomTransitionDelegate: UINavigationControllerDelegate {
         }
 }
 
-extension ZoomTransitionDelegate: UIViewControllerAnimatedTransitioning {
+extension ACZoomTransitionDelegate: UIViewControllerAnimatedTransitioning {
     
     open func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         durationOfTransition
@@ -111,9 +111,9 @@ extension ZoomTransitionDelegate: UIViewControllerAnimatedTransitioning {
         }
         
         let maybeBgImageView =
-        (backgroundColorController as? ZoomTransitionViewController)?.getZoomingImageView(for: self)
+        (backgroundColorController as? ACZoomTransitionViewController)?.getZoomingImageView(for: self)
         let maybeFgImageView =
-        (foregroundColorController as? ZoomTransitionViewController)?.getZoomingImageView(for: self)
+        (foregroundColorController as? ACZoomTransitionViewController)?.getZoomingImageView(for: self)
         
         guard let bgImageView = maybeBgImageView,
               let fgImageView = maybeFgImageView

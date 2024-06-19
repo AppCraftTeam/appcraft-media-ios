@@ -1,5 +1,5 @@
 //
-//  SelectedImagesStack.swift
+//  ACSelectedImagesStack.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -8,8 +8,9 @@
 import Foundation
 import PhotosUI
 
+#warning("without singltone")
 /// A stack that contains assets selected by the user for their further transfer to the application
-open class SelectedImagesStack {
+open class ACSelectedImagesStack {
     
     private var selectedImageAssets: [PHAsset] = [] {
         didSet {
@@ -17,7 +18,7 @@ open class SelectedImagesStack {
         }
     }
     
-    public static let shared = SelectedImagesStack()
+    public static let shared = ACSelectedImagesStack()
     
     private init() {}
     

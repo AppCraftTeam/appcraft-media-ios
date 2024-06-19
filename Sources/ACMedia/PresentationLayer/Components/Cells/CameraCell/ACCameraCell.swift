@@ -1,5 +1,5 @@
 //
-//  CameraCell.swift
+//  ACCameraCell.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -9,11 +9,11 @@ import AVFoundation
 import DPUIKit
 import UIKit
 
-open class CameraCell: DPCollectionItemCell {
+open class ACCameraCell: DPCollectionItemCell {
     
     // MARK: - Props
-    var model: CameraCellModel? {
-        get { self._model as? CameraCellModel }
+    var model: ACCameraCellModel? {
+        get { self._model as? ACCameraCellModel }
         set { self._model = newValue }
     }
     
@@ -98,6 +98,6 @@ open class CameraCell: DPCollectionItemCell {
 }
 
 // MARK: - Types
-extension CameraCell {
-    typealias Adapter = DPCollectionItemAdapter<CameraCell, CameraCellModel>
+extension ACCameraCell {
+    typealias Adapter = DPCollectionItemAdapter<ACCameraCell, ACCameraCellModel>
 }

@@ -1,5 +1,5 @@
 //
-//  AsyncImageLoader.swift
+//  ACAsyncImageLoader.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -8,7 +8,7 @@
 import PhotosUI
 import UIKit
 
-open class AsyncImageLoader: Operation {
+open class ACAsyncImageLoader: Operation {
     
     var img: UIImage?
     var onFinishLoadingImage: ((_ image: UIImage?) -> Void)?
@@ -31,7 +31,7 @@ open class AsyncImageLoader: Operation {
             return
         }
         
-        let photoManager = PhotoService()
+        let photoManager = ACPhotoService()
         
         photoManager.fetchThumbnail(for: photoAsset, size: imageSize) { img in
             DispatchQueue.main.async { [weak self] in
@@ -51,7 +51,7 @@ open class AsyncImageLoader: Operation {
     ///   - asset: Asset
     ///   - size: Image size
     /// - Returns: asynced operation
-    public static func fetchImage(from asset: PHAsset, withSize size: CGSize) -> AsyncImageLoader? {
-        AsyncImageLoader(asset: asset, imageSize: size)
+    public static func fetchImage(from asset: PHAsset, withSize size: CGSize) -> ACAsyncImageLoader? {
+        ACAsyncImageLoader(asset: asset, imageSize: size)
     }
 }

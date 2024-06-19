@@ -7,7 +7,7 @@
 
 import UIKit
 
-open class MainNavigationController: UINavigationController {
+open class ACMainNavigationController: UINavigationController {
     
     // MARK: - Components
     private lazy var selectedCounterLabel: UIBarButtonItem = {
@@ -21,12 +21,12 @@ open class MainNavigationController: UINavigationController {
     // MARK: - Params
     open var acMediaService: ACMediaViewController?
     open var configuration: ACMediaConfiguration
-    private let navigationTransition: ZoomTransitionDelegate
+    private let navigationTransition: ACZoomTransitionDelegate
     
     public required init(configuration: ACMediaConfiguration, acMediaService: ACMediaViewController?) {
         self.acMediaService = acMediaService
         self.configuration = configuration
-        self.navigationTransition = ZoomTransitionDelegate(configuration: configuration)
+        self.navigationTransition = ACZoomTransitionDelegate(configuration: configuration)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -48,8 +48,8 @@ open class MainNavigationController: UINavigationController {
             name: .onSelectedImagesChanged,
             object: nil)
         
-        let imageGridController = PhotoGridViewController(
-            viewModel: PhotosViewModel(
+        let imageGridController = ACPhotoGridViewController(
+            viewModel: ACPhotosViewModel(
                 configuration: configuration
             ), didPickAssets: { selectedAssetsModel in
                 print("selectedAssetsModel - \(selectedAssetsModel)")
@@ -60,7 +60,7 @@ open class MainNavigationController: UINavigationController {
     }
 }
 
-private extension MainNavigationController {
+private extension ACMainNavigationController {
     
     func setupNavigationBar() {
         navigationBar.tintColor = configuration.appearance.tintColor
@@ -99,7 +99,7 @@ private extension MainNavigationController {
     
     /// Update the text in the toolbar to show the current number of selected assets
     func updateToolbarText() {
-        let totalImages = SelectedImagesStack.shared.selectedCount
+        let totalImages = ACSelectedImagesStack.shared.selectedCount
         let selectedStr = String(format: ACAppLocale.selectedCount.locale, totalImages)
         var displayedText: String {
             guard configuration.photoConfig.displayMinMaxRestrictions else {

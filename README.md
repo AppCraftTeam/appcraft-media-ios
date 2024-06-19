@@ -129,7 +129,7 @@ Config for photo picker.
 Selecting the file type for the gallery picker.
 
 ```swift
- enum PhotoPickerFilesType: CaseIterable {
+ enum ACPhotoPickerFilesType: CaseIterable {
      case photo
      case video
  }

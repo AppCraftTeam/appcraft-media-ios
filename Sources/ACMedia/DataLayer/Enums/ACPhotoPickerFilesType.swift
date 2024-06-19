@@ -1,5 +1,5 @@
 //
-//  PhotoPickerFilesType.swift
+//  ACPhotoPickerFilesType.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -7,7 +7,7 @@
 
 import Photos
 
-public enum PhotoPickerFilesType: CaseIterable {
+public enum ACPhotoPickerFilesType: CaseIterable {
     case photo
     case video
     

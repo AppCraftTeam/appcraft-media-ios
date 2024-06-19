@@ -1,5 +1,5 @@
 //
-//  PhotoPreviewViewController.swift
+//  ACPhotoPreviewViewController.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -8,9 +8,9 @@
 import PhotosUI
 import UIKit
 
-open class PhotoPreviewViewController: UIViewController {
+open class ACPhotoPreviewViewController: UIViewController {
     
-    var viewModel: PhotoPreviewViewModel
+    var viewModel: ACPhotoPreviewViewModel
     
     // MARK: - Components
     private lazy var scrollView: UIScrollView = {
@@ -27,7 +27,7 @@ open class PhotoPreviewViewController: UIViewController {
         return imageView
     }()
     
-    public required init(viewModel: PhotoPreviewViewModel) {
+    public required init(viewModel: ACPhotoPreviewViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -55,7 +55,7 @@ open class PhotoPreviewViewController: UIViewController {
 }
 
 // MARK: - Setup
-private extension PhotoPreviewViewController {
+private extension ACPhotoPreviewViewController {
     
     func setupComponents() {
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap))
@@ -115,7 +115,7 @@ private extension PhotoPreviewViewController {
 }
 
 // MARK: - Zoom
-private extension PhotoPreviewViewController {
+private extension ACPhotoPreviewViewController {
     
     func setZoomScale() {
         let imageViewSize = imageView.bounds.size
@@ -162,7 +162,7 @@ private extension PhotoPreviewViewController {
 }
 
 // MARK: - UIScrollViewDelegate
-extension PhotoPreviewViewController: UIScrollViewDelegate {
+extension ACPhotoPreviewViewController: UIScrollViewDelegate {
     
     open func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         imageView
@@ -170,7 +170,7 @@ extension PhotoPreviewViewController: UIScrollViewDelegate {
 }
 
 // MARK: - Actions
-private extension PhotoPreviewViewController {
+private extension ACPhotoPreviewViewController {
     
     @objc
     private func backButtonPressed() {

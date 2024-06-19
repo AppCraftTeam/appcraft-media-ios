@@ -1,5 +1,5 @@
 //
-//  PhotoService.swift
+//  ACPhotoService.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -8,10 +8,10 @@
 import PhotosUI
 import UIKit
 
-open class PhotoService: NSObject {
+open class ACPhotoService: NSObject {
     
     /// Types of files from the gallery that will be displayed in the picker
-    open var fileTypes: [PhotoPickerFilesType] = PhotoPickerFilesType.allCases
+    open var fileTypes: [ACPhotoPickerFilesType] = ACPhotoPickerFilesType.allCases
     
     /// Request permission to access your camera roll
     /// - Parameter completion: Auth status
@@ -21,7 +21,7 @@ open class PhotoService: NSObject {
     
     /// Get the "recent photos" album
     /// - Returns: Album info model
-    open func fetchRecentAlbum() -> AlbumModel? {
+    open func fetchRecentAlbum() -> ACAlbumModel? {
         let options = PHFetchOptions()
         
         let smartCollections = PHAssetCollection.fetchAssetCollections(
@@ -30,10 +30,10 @@ open class PhotoService: NSObject {
             options: options)
         
         let recentCollections = smartCollections.object(at: 0)
-        var albumData: AlbumModel?
+        var albumData: ACAlbumModel?
         if let name = recentCollections.localizedTitle {
             let assetsCollection = pullAssets(fromCollection: recentCollections)
-            albumData = AlbumModel(title: name, assets: assetsCollection)
+            albumData = ACAlbumModel(title: name, assets: assetsCollection)
         }
         
         return albumData
@@ -41,7 +41,7 @@ open class PhotoService: NSObject {
     
     /// Get a list of all albums from camera roll
     /// - Returns: Album info models
-    open func fetchAllAlbums() -> [AlbumModel] {
+    open func fetchAllAlbums() -> [ACAlbumModel] {
         let options = PHFetchOptions()
         
         let userAlbums = PHAssetCollection.fetchAssetCollections(
@@ -55,13 +55,13 @@ open class PhotoService: NSObject {
             options: options
         )
         let allCollections = [smartCollections, userAlbums]
-        var albums: [AlbumModel] = []
+        var albums: [ACAlbumModel] = []
         
         for album in allCollections {
             album.enumerateObjects { [unowned self] (collection, _, _) in
                 if let name = collection.localizedTitle {
                     let assetCollection = pullAssets(fromCollection: collection)
-                    albums.append(AlbumModel(title: name, assets: assetCollection))
+                    albums.append(ACAlbumModel(title: name, assets: assetCollection))
                 }
             }
         }
@@ -72,7 +72,7 @@ open class PhotoService: NSObject {
     /// - Parameters:
     ///   - albums: Album info models without preview
     ///   - completion: Album info models wuth preview
-    open func fetchPreviewsFor(albums: [AlbumModel], completion: @escaping ([AlbumModel]) -> Void) {
+    open func fetchPreviewsFor(albums: [ACAlbumModel], completion: @escaping ([ACAlbumModel]) -> Void) {
         var albumData = albums
         var completionFlags: [Bool] = []
         
@@ -109,7 +109,7 @@ open class PhotoService: NSObject {
         ]
         
         var predicates: NSPredicate {
-            if self.fileTypes.count == PhotoPickerFilesType.allCases.count {
+            if self.fileTypes.count == ACPhotoPickerFilesType.allCases.count {
                 let videoPred = NSPredicate(format: "mediaType = %d", PHAssetMediaType.video.rawValue) // video
                 let imagePred = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue) // photo
                 let compoundPred = NSCompoundPredicate(orPredicateWithSubpredicates: [videoPred, imagePred])

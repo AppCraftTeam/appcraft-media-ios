@@ -1,5 +1,5 @@
 //
-//  PhotoCell.swift
+//  ACPhotoCell.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -9,11 +9,11 @@ import DPUIKit
 import PhotosUI
 import UIKit
 
-open class PhotoCell: DPCollectionItemCell {
+open class ACPhotoCell: DPCollectionItemCell {
     
     // MARK: - Props
-    var model: PhotoCellModel? {
-        get { self._model as? PhotoCellModel }
+    var model: ACPhotoCellModel? {
+        get { self._model as? ACPhotoCellModel }
         set { self._model = newValue }
     }
     
@@ -118,7 +118,7 @@ open class PhotoCell: DPCollectionItemCell {
 }
 
 // MARK: - Actions
-private extension PhotoCell {
+private extension ACPhotoCell {
     
     @objc
     private func checkButtonTapped() {
@@ -128,7 +128,7 @@ private extension PhotoCell {
     }
 }
 
-extension PhotoCell {
+extension ACPhotoCell {
     
     public func updateThumbImage(_ image: UIImage?) {
         DispatchQueue.main.async {
@@ -142,6 +142,6 @@ extension PhotoCell {
 }
 
 // MARK: - Types
-extension PhotoCell {
-    typealias Adapter = DPCollectionItemAdapter<PhotoCell, PhotoCellModel>
+extension ACPhotoCell {
+    typealias Adapter = DPCollectionItemAdapter<ACPhotoCell, ACPhotoCellModel>
 }

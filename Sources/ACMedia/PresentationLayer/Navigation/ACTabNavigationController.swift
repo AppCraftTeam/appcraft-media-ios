@@ -1,5 +1,5 @@
 //
-//  AppTabNavigationController.swift
+//  ACTabNavigationController.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum AppTabBarItem {
+private enum AppTabBarItem {
     case gallery, file
     
     var item: UITabBarItem {
@@ -32,14 +32,14 @@ enum AppTabBarItem {
     }
 }
 
-open class AppTabBarController: UITabBarController {
+open class ACTabBarController: UITabBarController {
     
     private var acMediaService: ACMediaViewController
     open var configuration: ACMediaConfiguration
     private let adapter: AppTabBarControllerAdapter
 
-    private(set) lazy var photoController: MainNavigationController = {
-        let vc = MainNavigationController(configuration: configuration, acMediaService: nil)
+    private(set) lazy var photoController: ACMainNavigationController = {
+        let vc = ACMainNavigationController(configuration: configuration, acMediaService: nil)
         vc.tabBarItem = AppTabBarItem.gallery.item
         return vc
     }()
@@ -100,7 +100,7 @@ open class AppTabBarController: UITabBarController {
 }
 
 // MARK: - Private
-private extension AppTabBarController {
+private extension ACTabBarController {
     
     func setAttributes() {}
     
