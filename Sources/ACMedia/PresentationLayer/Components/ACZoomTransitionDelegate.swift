@@ -1,5 +1,5 @@
 //
-//  ZoomTransitionDelegate.swift
+//  ACZoomTransitionDelegate.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -7,21 +7,27 @@
 
 import UIKit
 
-public protocol ZoomTransitionViewController {
-    func getZoomingImageView(for transition: ZoomTransitionDelegate) -> UIImageView?
+public protocol ACZoomTransitionViewController {
+    func getZoomingImageView(for transition: ACZoomTransitionDelegate) -> UIImageView?
 }
 
-public enum ScreenTransitionState {
+fileprivate enum ScreenTransitionState {
     case initial
     case final
 }
 
-public final class ZoomTransitionDelegate: NSObject {
+open class ACZoomTransitionDelegate: NSObject {
+    
+    var configuration: ACMediaConfiguration
     var durationOfTransition: TimeInterval = 0.6
     var navOperation: UINavigationController.Operation = .none
     
     private let scalingFactor: CGFloat = 15
     private let shrinkFactor: CGFloat = 0.75
+    
+    public init(configuration: ACMediaConfiguration) {
+        self.configuration = configuration
+    }
     
     /// Setting the frame for the container
     /// - Parameters:
@@ -62,15 +68,15 @@ public final class ZoomTransitionDelegate: NSObject {
     }
 }
 
-extension ZoomTransitionDelegate: UINavigationControllerDelegate {
+extension ACZoomTransitionDelegate: UINavigationControllerDelegate {
     
-    public func navigationController(
+    open func navigationController(
         _ navigationController: UINavigationController,
         animationControllerFor operation: UINavigationController.Operation,
         from fromVC: UIViewController,
         to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
             
-            if fromVC is ZoomTransitionViewController && toVC is ZoomTransitionViewController {
+            if fromVC is ACZoomTransitionViewController && toVC is ACZoomTransitionViewController {
                 self.navOperation = operation
                 return self
             } else {
@@ -79,13 +85,13 @@ extension ZoomTransitionDelegate: UINavigationControllerDelegate {
         }
 }
 
-extension ZoomTransitionDelegate: UIViewControllerAnimatedTransitioning {
+extension ACZoomTransitionDelegate: UIViewControllerAnimatedTransitioning {
     
-    public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+    open func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         durationOfTransition
     }
     
-    public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    open func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let duration = transitionDuration(using: transitionContext)
         
         guard let originController = transitionContext.viewController(forKey: .from),
@@ -105,9 +111,9 @@ extension ZoomTransitionDelegate: UIViewControllerAnimatedTransitioning {
         }
         
         let maybeBgImageView =
-        (backgroundColorController as? ZoomTransitionViewController)?.getZoomingImageView(for: self)
+        (backgroundColorController as? ACZoomTransitionViewController)?.getZoomingImageView(for: self)
         let maybeFgImageView =
-        (foregroundColorController as? ZoomTransitionViewController)?.getZoomingImageView(for: self)
+        (foregroundColorController as? ACZoomTransitionViewController)?.getZoomingImageView(for: self)
         
         guard let bgImageView = maybeBgImageView,
               let fgImageView = maybeFgImageView
@@ -125,7 +131,7 @@ extension ZoomTransitionDelegate: UIViewControllerAnimatedTransitioning {
         let originalControllerBackgroundColor = foregroundColorController.view.backgroundColor
         foregroundColorController.view.backgroundColor = UIColor.clear
         
-        container.backgroundColor = ACMediaConfiguration.shared.appearance.backgroundColor
+        container.backgroundColor = configuration.appearance.colors.backgroundColor
         container.addSubview(backgroundColorController.view)
         container.addSubview(foregroundColorController.view)
         container.addSubview(snapshotView)

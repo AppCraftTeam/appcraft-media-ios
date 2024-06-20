@@ -1,5 +1,5 @@
 //
-//  PhotoService.swift
+//  ACPhotoService.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -8,20 +8,20 @@
 import PhotosUI
 import UIKit
 
-public final class PhotoService: NSObject {
+open class ACPhotoService: NSObject {
     
     /// Types of files from the gallery that will be displayed in the picker
-    public var fileTypes: [PhotoPickerFilesType] = PhotoPickerFilesType.allCases
+    open var fileTypes: [ACPhotoPickerFilesType] = ACPhotoPickerFilesType.allCases
     
     /// Request permission to access your camera roll
     /// - Parameter completion: Auth status
-    public func authorize(completion: @escaping (PHAuthorizationStatus) -> Void) {
+    open func authorize(completion: @escaping (PHAuthorizationStatus) -> Void) {
         PHPhotoLibrary.requestAuthorization(completion)
     }
     
     /// Get the "recent photos" album
     /// - Returns: Album info model
-    public func fetchRecentAlbum() -> AlbumModel? {
+    open func fetchRecentAlbum() -> ACAlbumModel? {
         let options = PHFetchOptions()
         
         let smartCollections = PHAssetCollection.fetchAssetCollections(
@@ -30,10 +30,10 @@ public final class PhotoService: NSObject {
             options: options)
         
         let recentCollections = smartCollections.object(at: 0)
-        var albumData: AlbumModel?
+        var albumData: ACAlbumModel?
         if let name = recentCollections.localizedTitle {
             let assetsCollection = pullAssets(fromCollection: recentCollections)
-            albumData = AlbumModel(title: name, assets: assetsCollection)
+            albumData = ACAlbumModel(title: name, assets: assetsCollection)
         }
         
         return albumData
@@ -41,7 +41,7 @@ public final class PhotoService: NSObject {
     
     /// Get a list of all albums from camera roll
     /// - Returns: Album info models
-    public func fetchAllAlbums() -> [AlbumModel] {
+    open func fetchAllAlbums() -> [ACAlbumModel] {
         let options = PHFetchOptions()
         
         let userAlbums = PHAssetCollection.fetchAssetCollections(
@@ -55,13 +55,13 @@ public final class PhotoService: NSObject {
             options: options
         )
         let allCollections = [smartCollections, userAlbums]
-        var albums: [AlbumModel] = []
+        var albums: [ACAlbumModel] = []
         
         for album in allCollections {
             album.enumerateObjects { [unowned self] (collection, _, _) in
                 if let name = collection.localizedTitle {
                     let assetCollection = pullAssets(fromCollection: collection)
-                    albums.append(AlbumModel(title: name, assets: assetCollection))
+                    albums.append(ACAlbumModel(title: name, assets: assetCollection))
                 }
             }
         }
@@ -72,7 +72,7 @@ public final class PhotoService: NSObject {
     /// - Parameters:
     ///   - albums: Album info models without preview
     ///   - completion: Album info models wuth preview
-    public func fetchPreviewsFor(albums: [AlbumModel], completion: @escaping ([AlbumModel]) -> Void) {
+    open func fetchPreviewsFor(albums: [ACAlbumModel], completion: @escaping ([ACAlbumModel]) -> Void) {
         var albumData = albums
         var completionFlags: [Bool] = []
         
@@ -109,7 +109,7 @@ public final class PhotoService: NSObject {
         ]
         
         var predicates: NSPredicate {
-            if self.fileTypes.count == PhotoPickerFilesType.allCases.count {
+            if self.fileTypes.count == ACPhotoPickerFilesType.allCases.count {
                 let videoPred = NSPredicate(format: "mediaType = %d", PHAssetMediaType.video.rawValue) // video
                 let imagePred = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue) // photo
                 let compoundPred = NSCompoundPredicate(orPredicateWithSubpredicates: [videoPred, imagePred])
@@ -128,7 +128,7 @@ public final class PhotoService: NSObject {
     ///   - asset: Image asset
     ///   - size: Required preview size
     ///   - completion: Image preview object
-    public func fetchThumbnail(for asset: PHAsset, size: CGSize, completion: @escaping (UIImage?) -> Void) {
+    open func fetchThumbnail(for asset: PHAsset, size: CGSize, completion: @escaping (UIImage?) -> Void) {
         let imageOptions = PHImageRequestOptions()
         imageOptions.resizeMode = .none
         imageOptions.deliveryMode = .highQualityFormat
@@ -147,7 +147,7 @@ public final class PhotoService: NSObject {
     ///   - asset: Image asset
     ///   - size: Image size, if necessary
     ///   - completion: Full image
-    public func fetchOriginalImage(for asset: PHAsset, size: CGSize? = nil, completion: @escaping (UIImage?) -> Void) {
+    open func fetchOriginalImage(for asset: PHAsset, size: CGSize? = nil, completion: @escaping (UIImage?) -> Void) {
         let imageOptions = PHImageRequestOptions()
         imageOptions.deliveryMode = .highQualityFormat
         PHImageManager.default().requestImage(
@@ -164,7 +164,7 @@ public final class PhotoService: NSObject {
     /// - Parameters:
     ///   - assets: Image (video) assets
     ///   - completionHandler: Original images
-    public func fetchHighResImages(for assets: [PHAsset], completionHandler: @escaping ([UIImage]) -> Void) {
+    open func fetchHighResImages(for assets: [PHAsset], completionHandler: @escaping ([UIImage]) -> Void) {
         var images: [UIImage] = []
         let group = DispatchGroup()
         
@@ -196,7 +196,7 @@ public final class PhotoService: NSObject {
     /// - Parameters:
     ///   - assets: Video assets
     ///   - completionHandler: video urls
-    public func fetchVideoURL(for assets: [PHAsset], completionHandler: @escaping ([URL]) -> Void) {
+    open func fetchVideoURL(for assets: [PHAsset], completionHandler: @escaping ([URL]) -> Void) {
         var urls: [URL] = []
         let group = DispatchGroup()
         let options = PHVideoRequestOptions()

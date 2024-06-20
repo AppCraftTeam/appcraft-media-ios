@@ -51,7 +51,7 @@ acMedia.didOpenSettings = {
     }
 }
 
-ACMediaConfiguration.shared.photoConfig = ACMediaPhotoPickerConfig(
+configuration.photoConfig = ACMediaPhotoPickerConfig(
     types: [.photo],
     limiter: .onlyOne
 )
@@ -70,7 +70,7 @@ let acMedia = ACMediaViewController(
     }
 )
 
-ACMediaConfiguration.shared.documentsConfig = ACMediaPhotoDocConfig(
+configuration.documentsConfig = ACMediaPhotoDocConfig(
     fileFormats: [.zip],
     allowsMultipleSelection: true, 
     shouldShowFileExtensions: true
@@ -94,10 +94,10 @@ Of course, you can configure it so that the user can select both files and image
   ```
 
 ## Appearance config
-The interface can be configured by `ACMediaConfiguration.shared.appearance`, specifying the values you want to change.
+The interface can be configured by `configuration.appearance`, specifying the values you want to change.
 
 ```swift
- ACMediaConfiguration.shared.appearance = ACMediaAppearance(
+ configuration.appearance = ACMediaAppearance(
      tintColor: <UIColor>,
      backgroundColor: <UIColor>,
      foregroundColor: <UIColor>,
@@ -118,7 +118,7 @@ The interface can be configured by `ACMediaConfiguration.shared.appearance`, spe
 Config for photo picker.
 
 ```swift
-  ACMediaConfiguration.shared.photoConfig = ACMediaPhotoPickerConfig(
+  configuration.photoConfig = ACMediaPhotoPickerConfig(
      fileType: <PhotoPickerFilesType>,
      limiter: <ACMediaPhotoRestrictions>,
      allowCamera: <Bool>,
@@ -129,7 +129,7 @@ Config for photo picker.
 Selecting the file type for the gallery picker.
 
 ```swift
- enum PhotoPickerFilesType: CaseIterable {
+ enum ACPhotoPickerFilesType: CaseIterable {
      case photo
      case video
  }
@@ -149,7 +149,7 @@ enum ACMediaPhotoRestrictions {
 For the file picker, you can configure the file type, allow to select multiple files, and display the extension.
 
 ```swift
- ACMediaConfiguration.shared.documentsConfig = ACMediaPhotoDocConfig(
+ configuration.documentsConfig = ACMediaPhotoDocConfig(
      fileFormats: <ACMediaDocFileType]>,
      allowsMultipleSelection: <#Bool>,
      shouldShowFileExtensions: <Bool>

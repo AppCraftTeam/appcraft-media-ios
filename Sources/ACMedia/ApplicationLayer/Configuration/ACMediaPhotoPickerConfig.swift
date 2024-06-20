@@ -13,7 +13,7 @@ public enum ACMediaPhotoRestrictions {
 }
 
 public struct ACMediaPhotoPickerConfig {
-    var types: [PhotoPickerFilesType]
+    var types: [ACPhotoPickerFilesType]
     
     public var minimimSelection: Int = 1 {
         didSet {
@@ -35,7 +35,7 @@ public struct ACMediaPhotoPickerConfig {
     public var displayMinMaxRestrictions: Bool
     
     public init(
-        types: [PhotoPickerFilesType] = PhotoPickerFilesType.allCases,
+        types: [ACPhotoPickerFilesType] = ACPhotoPickerFilesType.allCases,
         limiter: ACMediaPhotoRestrictions = .onlyOne,
         allowCamera: Bool = true,
         displayMinMaxRestrictions: Bool = false

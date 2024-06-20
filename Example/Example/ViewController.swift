@@ -78,7 +78,7 @@ class ViewController: UIViewController {
     }()
     
     // MARK: - View-Lifecycle
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
@@ -101,7 +101,14 @@ private extension ViewController {
     
     @objc
     func openSingleImagePicker() {
-        let acMedia = ACMediaViewController(
+        var configuration = ACMediaConfiguration()
+        configuration.appearance = ACMediaAppearance(
+            colors: ACMediaColors(tintColor: .red)
+        )
+        configuration.photoConfig = ACMediaPhotoPickerConfig(types: [.photo], limiter: .onlyOne)
+        
+        let acMedia = ACMediaService(
+            configuration: configuration,
             fileType: .gallery,
             assetsSelected: { [weak self] assets in
                 self?.didPickImages(assets.images)
@@ -118,15 +125,20 @@ private extension ViewController {
             }
         }
         
-        ACMediaConfiguration.shared.appearance = ACMediaAppearance(tintColor: .red)
-        ACMediaConfiguration.shared.photoConfig = ACMediaPhotoPickerConfig(types: [.photo], limiter: .onlyOne)
-        
         acMedia.show(in: self)
     }
     
     @objc
     func openImageAndFilesPicker() {
-        let acMedia = ACMediaViewController(
+        var configuration = ACMediaConfiguration()
+        configuration.appearance = ACMediaAppearance(
+            colors: ACMediaColors(tintColor: .orange)
+        )
+        configuration.photoConfig = ACMediaPhotoPickerConfig(types: [.photo, .video], limiter: .limit(min: 2, max: 4))
+        configuration.documentsConfig = ACMediaPhotoDocConfig(fileFormats: [.zip])
+        
+        let acMedia = ACMediaService(
+            configuration: configuration,
             fileType: .galleryAndFiles,
             assetsSelected: { [weak self] assets in
                 self?.didPickImages(assets.images)
@@ -137,24 +149,24 @@ private extension ViewController {
             }
         )
         
-        ACMediaConfiguration.shared.appearance = ACMediaAppearance(tintColor: .orange)
-        ACMediaConfiguration.shared.photoConfig = ACMediaPhotoPickerConfig(types: [.photo, .video], limiter: .limit(min: 2, max: 4))
-        ACMediaConfiguration.shared.documentsConfig = ACMediaPhotoDocConfig(fileFormats: [.zip])
-        
         acMedia.show(in: self)
     }
     
     @objc
     func openFilesPicker() {
-        let acMedia = ACMediaViewController(
+        var configuration = ACMediaConfiguration()
+        configuration.appearance = ACMediaAppearance(
+            colors: ACMediaColors(tintColor: .purple)
+        )
+        configuration.documentsConfig = ACMediaPhotoDocConfig(fileFormats: [.zip])
+        
+        let acMedia = ACMediaService(
+            configuration: configuration,
             fileType: .files,
             filesSelected: { [weak self] fileUrls in
                 self?.didPickDocuments(fileUrls)
             }
         )
-        
-        ACMediaConfiguration.shared.appearance = ACMediaAppearance(tintColor: .purple)
-        ACMediaConfiguration.shared.documentsConfig = ACMediaPhotoDocConfig(fileFormats: [.zip])
         
         acMedia.show(in: self)
     }

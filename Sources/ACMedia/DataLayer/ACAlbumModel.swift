@@ -1,5 +1,5 @@
 //
-//  AlbumModel.swift
+//  ACAlbumModel.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -9,7 +9,7 @@ import Foundation
 import PhotosUI
 import UIKit
 
-public struct AlbumModel {
+public struct ACAlbumModel {
     let title: String
     let count: Int
     let assets: PHFetchResult<PHAsset>

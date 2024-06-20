@@ -1,5 +1,5 @@
 //
-//  PhotoGridViewController.swift
+//  ACPhotoGridViewController.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -9,30 +9,33 @@ import DPUIKit
 import PhotosUI
 import UIKit
 
-public final class PhotoGridViewController: UIViewController {
+public typealias ACPhotosViewControllerCallback = ((_ model: ACPickerCallbackModel) -> Void)
+
+open class ACPhotoGridViewController: UIViewController {
     
-    private var viewModel = PhotosViewModel()
+    private var viewModel: ACPhotosViewModel
+    
     // Session for camera preview
     private let captureSession = AVCaptureSession()
     
     // MARK: - Components
     private lazy var doneButton: UIBarButtonItem = {
         let done = UIBarButtonItem(
-            title: AppLocale.done.locale,
+            title: ACAppLocale.done.locale,
             style: .done,
             target: self,
             action: #selector(doneAction))
-        done.tintColor = ACMediaConfiguration.shared.appearance.tintColor
+        done.tintColor = viewModel.configuration.appearance.colors.tintColor
         return done
     }()
     
     private lazy var cancelButton: UIBarButtonItem = {
         let done = UIBarButtonItem(
-            title: AppLocale.cancel.locale,
+            title: ACAppLocale.cancel.locale,
             style: .plain,
             target: self,
             action: #selector(cancelAction))
-        done.tintColor = ACMediaConfiguration.shared.appearance.tintColor
+        done.tintColor = viewModel.configuration.appearance.colors.tintColor
         return done
     }()
     
@@ -53,13 +56,13 @@ public final class PhotoGridViewController: UIViewController {
         
         result.adapter = DPCollectionAdapter(
             itemAdapters: [
-                PhotoCell.Adapter(
+                ACPhotoCell.Adapter(
                     onSizeForItem: { [weak self] ctx in
                         guard let self else { return nil }
                         return CGSize(width: self.cellWidth, height: self.cellWidth)
                     }
                 ),
-                CameraCell.Adapter(
+                ACCameraCell.Adapter(
                     onSizeForItem: { [weak self] ctx in
                         guard let self else { return nil }
                         return CGSize(width: self.cellWidth, height: self.cellWidth)
@@ -86,11 +89,11 @@ public final class PhotoGridViewController: UIViewController {
     private var leftSpacing: CGFloat = 5
     private var rightSpacing: CGFloat = 5
     private var interSpacing: CGFloat {
-        ACMediaConfig.appearance.gridSpacing
+        viewModel.configuration.appearance.layout.gridSpacing
     }
     
     private var cellWidth: CGFloat {
-        let itemsInRow = CGFloat(ACMediaConfig.appearance.cellsInRow)
+        let itemsInRow = CGFloat(viewModel.configuration.appearance.layout.cellsInRow)
         
         let spacing: CGFloat = leftSpacing + rightSpacing + 2 * interSpacing
         let cellWidth = (self.view.frame.width - spacing) / itemsInRow
@@ -122,12 +125,21 @@ public final class PhotoGridViewController: UIViewController {
         return UIMenu(title: "", image: nil, identifier: nil, options: [], children: menuItems)
     }
     
+    public required init(viewModel: ACPhotosViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Methods
-    public override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         PHPhotoLibrary.shared().register(self)
         
-        view.backgroundColor = ACMediaConfiguration.shared.appearance.backgroundColor
+        view.backgroundColor = viewModel.configuration.appearance.colors.backgroundColor
         configureToolbar()
         configureCollectionView()
         
@@ -172,19 +184,19 @@ public final class PhotoGridViewController: UIViewController {
         }
         reloadData()
     }
-
-    public override func viewWillAppear(_ animated: Bool) {
+    
+    open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
     
-    public override func viewDidLayoutSubviews() {
+    open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionView.collectionViewLayout.invalidateLayout()
     }
 }
 
 // MARK: - Module methods
-private extension PhotoGridViewController {
+private extension ACPhotoGridViewController {
     
     func reloadData() {
         if let model = viewModel.albumModel {
@@ -206,8 +218,12 @@ private extension PhotoGridViewController {
     /// - Parameter asset: Photo asset
     func presentImageDetailsViewController(with asset: PHAsset) {
         viewModel.photoService.fetchThumbnail(for: asset, size: CGSize()) { [unowned self] _ in
-            let vc = PhotoPreviewViewController()
-            vc.viewModel = PhotoPreviewViewModel(asset: asset)
+            let vc = ACPhotoPreviewViewController(
+                viewModel: ACPhotoPreviewViewModel(
+                    configuration: viewModel.configuration,
+                    asset: asset
+                )
+            )
             
             let nav = UINavigationController(rootViewController: vc)
             nav.modalPresentationStyle = .fullScreen
@@ -224,9 +240,9 @@ private extension PhotoGridViewController {
         collectionView.isHidden = true
         
         let label = UILabel()
-        label.text = AppLocale.emptyAlbum.locale
-        label.textColor = ACMediaConfig.appearance.foregroundColor
-        label.font = ACMediaConfig.appearance.emptyAlbumFont
+        label.text = ACAppLocale.emptyAlbum.locale
+        label.textColor = viewModel.configuration.appearance.colors.foregroundColor
+        label.font = viewModel.configuration.appearance.fonts.emptyAlbumFont
         
         view.subviews.filter { $0 is UILabel }.forEach { $0.removeFromSuperview() }
         
@@ -246,17 +262,17 @@ private extension PhotoGridViewController {
     
     /// Show an alert asking to allow photo access in the settings
     func showPermissionAlert() {
-        let title = AppLocale.assetsPermissionTitle.locale
-        let message = AppLocale.assetsPermissionMessage.locale
+        let title = ACAppLocale.assetsPermissionTitle.locale
+        let message = ACAppLocale.assetsPermissionMessage.locale
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
-        let settingsTitle = AppLocale.assetsPermissionOpenSettings.locale
+        let settingsTitle = ACAppLocale.assetsPermissionOpenSettings.locale
         let settingsAction = UIAlertAction(title: settingsTitle, style: .default) { [weak self] _ in
             self?.dismiss(animated: true, completion: nil)
-            ((self?.navigationController as? MainNavigationController)?.acMediaService)?.didOpenSettings?()
+            self?.viewModel.didOpenSettings?()
         }
         
-        let cancelTitle = AppLocale.cancel.locale
+        let cancelTitle = ACAppLocale.cancel.locale
         let cancelAction = UIAlertAction(title: cancelTitle, style: .cancel) { [weak self] _ in
             self?.dismiss(animated: true, completion: nil)
         }
@@ -296,7 +312,7 @@ private extension PhotoGridViewController {
     
     /// Setup camera preview
     func setupCamera() {
-        guard ACMediaConfiguration.shared.photoConfig.allowCamera else {
+        guard viewModel.configuration.photoConfig.allowCamera else {
             return
         }
         
@@ -332,18 +348,18 @@ private extension PhotoGridViewController {
     /// Handling of the event of cell display begining with assertion
     /// - Parameter data: Collection cell data
     func handleWillDispayCellEvent(data: DPCollectionAdapter.ItemContext) {
-        guard let cell = data.cell as? PhotoCell else { return }
+        guard let cell = data.cell as? ACPhotoCell else { return }
         let indexPath = data.indexPath
         let rowIndexPath = indexPath.row
         let updateCellClosure: (UIImage?) -> Void = { [unowned self] image in
-            (self.viewModel.sections[safeIndex: 0]?.items[rowIndexPath] as? PhotoCellModel)?.image = image
+            (self.viewModel.sections[safeIndex: 0]?.items[rowIndexPath] as? ACPhotoCellModel)?.image = image
             cell.updateThumbImage(image)
             self.viewModel.loadingOperations.removeValue(forKey: indexPath)
         }
         // Trying to get a preview of the asset
         if let dataLoader = viewModel.loadingOperations[indexPath] {
             if let image = dataLoader.img {
-                (self.viewModel.sections[safeIndex: 0]?.items[rowIndexPath] as? PhotoCellModel)?.image = image
+                (self.viewModel.sections[safeIndex: 0]?.items[rowIndexPath] as? ACPhotoCellModel)?.image = image
                 cell.updateThumbImage(image)
                 viewModel.loadingOperations.removeValue(forKey: indexPath)
             } else {
@@ -352,7 +368,7 @@ private extension PhotoGridViewController {
         } else {
             let model = viewModel.imagesData[rowIndexPath]
             let size = CGSize(width: cellWidth, height: cellWidth)
-            if let dataLoader = AsyncImageLoader.fetchImage(from: model, withSize: size) {
+            if let dataLoader = ACAsyncImageLoader.fetchImage(from: model, withSize: size) {
                 dataLoader.onFinishLoadingImage = updateCellClosure
                 viewModel.loadingQueue.addOperation(dataLoader)
                 viewModel.loadingOperations[indexPath] = dataLoader
@@ -363,7 +379,7 @@ private extension PhotoGridViewController {
     /// Handling of the event of cell display finishing with assertion
     /// - Parameter data: Collection cell data
     func handleDidEndDisplayingCellEvent(data: DPCollectionAdapter.ItemContext) {
-        guard data.cell as? PhotoCell != nil,
+        guard data.cell as? ACPhotoCell != nil,
               let dataLoader = viewModel.loadingOperations[data.indexPath]
         else {
             return
@@ -374,14 +390,15 @@ private extension PhotoGridViewController {
     
     /// Changing the availability of the confirmation button depending on the number of selected assets
     func checkDoneButtonCondition() {
-        let min = ACMediaConfiguration.shared.photoConfig.minimimSelection
-        let max = ACMediaConfiguration.shared.photoConfig.maximumSelection
+        let selectedCount = viewModel.selectedAssetsStack.selectedCount
+        let min = viewModel.configuration.photoConfig.minimimSelection
+        let max = viewModel.configuration.photoConfig.maximumSelection
         
         var isEnabled: Bool {
             if let max = max {
-                return SelectedImagesStack.shared.selectedCount <= max && SelectedImagesStack.shared.selectedCount >= min
+                return selectedCount <= max && selectedCount >= min
             } else {
-                return SelectedImagesStack.shared.selectedCount >= min
+                return selectedCount >= min
             }
         }
         
@@ -391,7 +408,7 @@ private extension PhotoGridViewController {
     /// Setup controller navigation bar
     func setupNavbar() {
         let button = UIButton(type: .system)
-        var icon = AppAssets.Icon.downArrow.image?.withRenderingMode(.alwaysTemplate)
+        var icon = ACAppAssets.Icon.downArrow.image?.withRenderingMode(.alwaysTemplate)
         
         let targetSize = CGSize(width: 17, height: 17)
         UIGraphicsBeginImageContextWithOptions(targetSize, false, 0.0)
@@ -405,10 +422,10 @@ private extension PhotoGridViewController {
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0)
         button.sizeToFit()
         
-        button.setTitleColor(ACMediaConfiguration.shared.appearance.foregroundColor, for: [])
-        button.titleLabel?.textColor = ACMediaConfiguration.shared.appearance.foregroundColor
+        button.setTitleColor(viewModel.configuration.appearance.colors.foregroundColor, for: [])
+        button.titleLabel?.textColor = viewModel.configuration.appearance.colors.foregroundColor
         button.titleLabel?.font = .boldSystemFont(ofSize: 17.0)
-        button.tintColor = ACMediaConfiguration.shared.appearance.foregroundColor
+        button.tintColor = viewModel.configuration.appearance.colors.foregroundColor
         
         if #available(iOS 14.0, *) {
             button.menu = albumsListMenu
@@ -424,45 +441,46 @@ private extension PhotoGridViewController {
 }
 
 // MARK: - UIImagePickerControllerDelegate
-extension PhotoGridViewController: UIImagePickerControllerDelegate {
+extension ACPhotoGridViewController: UIImagePickerControllerDelegate {
     
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+    open func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         picker.dismiss(animated: true)
         
         guard let image = info[.editedImage] as? UIImage else {
             return
         }
         // Return to the parent app user photo captured in the camera
-        ((self.navigationController as? MainNavigationController)?.acMediaService)?.didPickAssets(PhotoPickerCallbackModel(images: [image], videoUrls: []))
+        let callbackModel = ACPickerCallbackModel(images: [image], videoUrls: [])
+        viewModel.didPickAssets?(callbackModel)
         dismiss(animated: true, completion: nil)
     }
 }
 
 // MARK: - UINavigationControllerDelegate
-extension PhotoGridViewController: UINavigationControllerDelegate {}
+extension ACPhotoGridViewController: UINavigationControllerDelegate {}
 
 // MARK: - UICollectionViewDataSourcePrefetching
-extension PhotoGridViewController: UICollectionViewDataSourcePrefetching {
+extension ACPhotoGridViewController: UICollectionViewDataSourcePrefetching {
     
-    public func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+    open func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
             guard isNotCameraCell(on: indexPath) else {
                 return
             }
-            let rowIndexPath = ACMediaConfiguration.shared.photoConfig.allowCamera ? indexPath.row - 1 : indexPath.row
+            let rowIndexPath = viewModel.configuration.photoConfig.allowCamera ? indexPath.row - 1 : indexPath.row
             if viewModel.loadingOperations[indexPath] != nil { return }
             
             let model = viewModel.imagesData[rowIndexPath]
             let size = CGSize(width: cellWidth, height: cellWidth)
             // Set fetching image preview operation
-            if let dataLoader = AsyncImageLoader.fetchImage(from: model, withSize: size) {
+            if let dataLoader = ACAsyncImageLoader.fetchImage(from: model, withSize: size) {
                 viewModel.loadingQueue.addOperation(dataLoader)
                 viewModel.loadingOperations[indexPath] = dataLoader
             }
         }
     }
     
-    public func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+    open func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
             guard isNotCameraCell(on: indexPath),
                   let dataLoader = viewModel.loadingOperations[indexPath] else {
@@ -476,7 +494,7 @@ extension PhotoGridViewController: UICollectionViewDataSourcePrefetching {
     
     // To make sure it's an asset and not a preview camera.
     private func isNotCameraCell(on indexPath: IndexPath) -> Bool {
-        if ACMediaConfiguration.shared.photoConfig.allowCamera {
+        if viewModel.configuration.photoConfig.allowCamera {
             return indexPath.row != 0
         }
         return true
@@ -484,9 +502,9 @@ extension PhotoGridViewController: UICollectionViewDataSourcePrefetching {
 }
 
 // MARK: - PHPhotoLibraryChangeObserver
-extension PhotoGridViewController: PHPhotoLibraryChangeObserver {
+extension ACPhotoGridViewController: PHPhotoLibraryChangeObserver {
     
-    public func photoLibraryDidChange(_ changeInstance: PHChange) {
+    open func photoLibraryDidChange(_ changeInstance: PHChange) {
         DispatchQueue.main.async { [unowned self] in
             viewModel.authorize()
         }
@@ -494,34 +512,33 @@ extension PhotoGridViewController: PHPhotoLibraryChangeObserver {
 }
 
 // MARK: - Actions
-extension PhotoGridViewController {
+extension ACPhotoGridViewController {
     
     @objc
     private func cancelAction() {
-        SelectedImagesStack.shared.deleteAll()
+        viewModel.selectedAssetsStack.deleteAll()
         self.dismiss(animated: true, completion: nil)
     }
-    
     @objc
     private func doneAction() {
-        guard SelectedImagesStack.shared.selectedCount > 0 else {
+        guard viewModel.selectedAssetsStack.selectedCount > 0 else {
             cancelAction()
             return
         }
         
         DispatchQueue.main.async { [unowned self] in
-            let assets = SelectedImagesStack.shared.fetchAssets()
-            SelectedImagesStack.shared.deleteAll()
+            let assets = viewModel.selectedAssetsStack.fetchAssets()
+            viewModel.selectedAssetsStack.deleteAll()
             
-            let manager = PhotoService()
-            manager.fileTypes = ACMediaConfiguration.shared.photoConfig.types
+            let manager = ACPhotoService()
+            manager.fileTypes = viewModel.configuration.photoConfig.types
             
             // Get originals for selecting photos
             manager.fetchHighResImages(for: assets) { images in
                 // Get paths for selecting videos
                 manager.fetchVideoURL(for: assets) { videoUrls in
-                    let model = PhotoPickerCallbackModel(images: images, videoUrls: videoUrls)
-                    ((self.navigationController as? MainNavigationController)?.acMediaService)?.didPickAssets(model)
+                    let callbackModel = ACPickerCallbackModel(images: images, videoUrls: videoUrls)
+                    self.viewModel.didPickAssets?(callbackModel)
                 }
             }
             
@@ -532,7 +549,7 @@ extension PhotoGridViewController {
     @objc
     private func showPhotoAlbumsAlert() {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let cancel = UIAlertAction(title: AppLocale.cancel.locale, style: .cancel)
+        let cancel = UIAlertAction(title: ACAppLocale.cancel.locale, style: .cancel)
         
         self.viewModel.albumsData.forEach({ albumModel in
             alert.addAction(
@@ -557,11 +574,11 @@ extension PhotoGridViewController {
 }
 
 // MARK: - ZoomingViewController
-extension PhotoGridViewController: ZoomTransitionViewController {
+extension ACPhotoGridViewController: ACZoomTransitionViewController {
     
-    public func getZoomingImageView(for transition: ZoomTransitionDelegate) -> UIImageView? {
+    public func getZoomingImageView(for transition: ACZoomTransitionDelegate) -> UIImageView? {
         if let indexPath = viewModel.selectedIndexPath,
-           let cell = collectionView.cellForItem(at: indexPath) as? PhotoCell {
+           let cell = collectionView.cellForItem(at: indexPath) as? ACPhotoCell {
             // For previewing photo screen animation
             return cell.getPreviewImageView()
         } else {

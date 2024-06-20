@@ -1,5 +1,5 @@
 //
-//  PhotosViewModel.swift
+//  ACPhotosViewModel.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -10,16 +10,18 @@ import DPUIKit
 import Photos
 import UIKit
 
-class PhotosViewModel {
+open class ACPhotosViewModel {
     
-    public var albumModel: AlbumModel?
+    open var albumModel: ACAlbumModel?
     private(set) var sections: [Section] = []
 
     // MARK: - Properties
+    var configuration: ACMediaConfiguration
+    var selectedAssetsStack: ACSelectedImagesStack
     var selectedIndexPath: IndexPath?
     var imagesData = PHFetchResult<PHAsset>()
-    var photoService = PhotoService()
-    var albumsData: [AlbumModel] = []
+    var photoService = ACPhotoService()
+    var albumsData: [ACAlbumModel] = []
     
     // MARK: - Actions
     var onReloadCollection: ((_ sections: [Section]) -> Void)?
@@ -32,15 +34,26 @@ class PhotosViewModel {
     var onShowImageOnFullScreen: ((_ asset: PHAsset) -> Void)?
     var onShowCamera: (() -> Void)?
     
+    // MARK: - Callbacks
+    var didPickAssets: ACPhotosViewControllerCallback?
+    var didOpenSettings: (() -> Void)?
+    
     lazy var loadingQueue = OperationQueue()
-    lazy var loadingOperations: [IndexPath: AsyncImageLoader] = [:]
+    lazy var loadingOperations: [IndexPath: ACAsyncImageLoader] = [:]
     
     func reloadData() {
         authorize()
     }
+    
+    init(configuration: ACMediaConfiguration, selectedAssetsStack: ACSelectedImagesStack, didPickAssets: ACPhotosViewControllerCallback?, didOpenSettings: (() -> Void)?) {
+        self.configuration = configuration
+        self.selectedAssetsStack = selectedAssetsStack
+        self.didPickAssets = didPickAssets
+        self.didOpenSettings = didOpenSettings
+    }
 }
 
-extension PhotosViewModel {
+extension ACPhotosViewModel {
     
     /// Request access to a user's gallery
     func authorize() {
@@ -80,22 +93,23 @@ extension PhotosViewModel {
             return
         }
         
-        var photosViewModels: [PhotoCellModel] = []
-        var cameraModel: CameraCellModel?
+        var photosViewModels: [ACPhotoCellModel] = []
+        var cameraModel: ACCameraCellModel?
         
         model.assets.enumerateObjects { asset, index, _ in
             var image: UIImage? {
                 guard self.sections.first?.items.count ?? -1 >= index else {
                     return nil
                 }
-                return (self.sections[safeIndex: 0]?.items[safeIndex: index] as? PhotoCellModel)?.image
+                return (self.sections[safeIndex: 0]?.items[safeIndex: index] as? ACPhotoCellModel)?.image
             }
             
             photosViewModels += [
-                PhotoCellModel(
+                ACPhotoCellModel(
                     image: image,
                     index: index,
-                    isSelected: SelectedImagesStack.shared.contains(asset),
+                    isSelected: self.selectedAssetsStack.contains(asset),
+                    configuration: self.configuration,
                     viewTapped: {
                         // Open photo in full screen preview
                         self.selectedIndexPath = IndexPath(row: index + 1, section: 0)
@@ -112,10 +126,13 @@ extension PhotosViewModel {
         }
         
         // Try add camera cell
-        if ACMediaConfiguration.shared.photoConfig.allowCamera {
-            cameraModel = CameraCellModel(viewTapped: { [weak self] in
-                self?.onShowCamera?()
-            })
+        if configuration.photoConfig.allowCamera {
+            cameraModel = ACCameraCellModel(
+                configuration: self.configuration,
+                viewTapped: { [weak self] in
+                    self?.onShowCamera?()
+                }
+            )
         }
         
         self.sections.removeAll()
@@ -145,8 +162,8 @@ extension PhotosViewModel {
     
     /// Processing asset selection
     /// - Parameter model: Selection photo cell model
-    func handleImageSelection(model: PhotoCellModel) {
-        let maxSelection = ACMediaConfig.photoConfig.maximumSelection ?? Int.max
+    func handleImageSelection(model: ACPhotoCellModel) {
+        let maxSelection = configuration.photoConfig.maximumSelection ?? Int.max
         let asset = imagesData[model.index]
         let indexPath = IndexPath(row: model.index + 1, section: 0)
 
@@ -159,15 +176,15 @@ extension PhotosViewModel {
     ///   - asset: Selected asset
     ///   - indexPath: Asset position in collection view
     private func handleMaximumSelection(_ maxSelection: Int, _ asset: PHAsset, _ indexPath: IndexPath) {
-        if SelectedImagesStack.shared.contains(asset) {
-            SelectedImagesStack.shared.delete(asset)
+        if selectedAssetsStack.contains(asset) {
+            selectedAssetsStack.delete(asset)
         } else {
-            guard SelectedImagesStack.shared.selectedCount < maxSelection else {                
-                if let oldAsset = SelectedImagesStack.shared.fetchFirstAdded() {
+            guard selectedAssetsStack.selectedCount < maxSelection else {
+                if let oldAsset = selectedAssetsStack.fetchFirstAdded() {
                     // Unselect the first selected asset
                     let oldIndex = imagesData.index(of: oldAsset)
                     let oldIndexPath = IndexPath(item: oldIndex + 1, section: 0)
-                    SelectedImagesStack.shared.add(asset)
+                    selectedAssetsStack.add(asset)
                     
                     self.makeSections()
                     self.onReloadCells?([oldIndexPath, indexPath])
@@ -176,7 +193,7 @@ extension PhotosViewModel {
                 return
             }
             // Add asset in stack
-            SelectedImagesStack.shared.add(asset)
+            selectedAssetsStack.add(asset)
         }
         
         self.makeSections()
@@ -186,12 +203,12 @@ extension PhotosViewModel {
 }
 
 // MARK: - Section
-extension PhotosViewModel {
+extension ACPhotosViewModel {
     
     struct Section: DPCollectionSectionType, Identifiable {
         
         // MARK: - Init
-        init(photos: [PhotoCellModel], camera: CameraCellModel?) {
+        init(photos: [ACPhotoCellModel], camera: ACCameraCellModel?) {
             self.items = photos
             if let camera = camera {
                 self.items.append(camera)

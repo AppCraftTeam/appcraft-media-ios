@@ -1,5 +1,5 @@
 //
-//  PhotoPreviewViewController.swift
+//  ACPhotoPreviewViewController.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -8,9 +8,9 @@
 import PhotosUI
 import UIKit
 
-public final class PhotoPreviewViewController: UIViewController {
+open class ACPhotoPreviewViewController: UIViewController {
     
-    var viewModel = PhotoPreviewViewModel(asset: nil)
+    var viewModel: ACPhotoPreviewViewModel
     
     // MARK: - Components
     private lazy var scrollView: UIScrollView = {
@@ -27,10 +27,19 @@ public final class PhotoPreviewViewController: UIViewController {
         return imageView
     }()
     
+    public required init(viewModel: ACPhotoPreviewViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Methods
-    public override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = ACMediaConfiguration.shared.appearance.backgroundColor
+        view.backgroundColor = viewModel.configuration.appearance.colors.backgroundColor
         
         viewModel.onSetImage = { [weak self] image in
             self?.setupImage(image)
@@ -46,7 +55,7 @@ public final class PhotoPreviewViewController: UIViewController {
 }
 
 // MARK: - Setup
-private extension PhotoPreviewViewController {
+private extension ACPhotoPreviewViewController {
     
     func setupComponents() {
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap))
@@ -89,11 +98,11 @@ private extension PhotoPreviewViewController {
         } else {
             button.setImage(UIImage(named: "back")?.withRenderingMode(.alwaysTemplate), for: .normal)
         }
-        button.setTitle(AppLocale.back.locale, for: .normal)
+        button.setTitle(ACAppLocale.back.locale, for: .normal)
         button.sizeToFit()
-        button.setTitleColor(ACMediaConfiguration.shared.appearance.tintColor, for: [])
-        button.titleLabel?.font = ACMediaConfiguration.shared.appearance.navBarTitleFont
-        button.tintColor = ACMediaConfiguration.shared.appearance.tintColor
+        button.setTitleColor(viewModel.configuration.appearance.colors.tintColor, for: [])
+        button.titleLabel?.font = viewModel.configuration.appearance.fonts.navBarTitleFont
+        button.tintColor = viewModel.configuration.appearance.colors.tintColor
         button.addTarget(self, action: #selector(self.backButtonPressed), for: .touchUpInside)
         
         navigationItem.setLeftBarButton(UIBarButtonItem(customView: button), animated: true)
@@ -106,7 +115,7 @@ private extension PhotoPreviewViewController {
 }
 
 // MARK: - Zoom
-private extension PhotoPreviewViewController {
+private extension ACPhotoPreviewViewController {
     
     func setZoomScale() {
         let imageViewSize = imageView.bounds.size
@@ -153,15 +162,15 @@ private extension PhotoPreviewViewController {
 }
 
 // MARK: - UIScrollViewDelegate
-extension PhotoPreviewViewController: UIScrollViewDelegate {
+extension ACPhotoPreviewViewController: UIScrollViewDelegate {
     
-    public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+    open func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         imageView
     }
 }
 
 // MARK: - Actions
-private extension PhotoPreviewViewController {
+private extension ACPhotoPreviewViewController {
     
     @objc
     private func backButtonPressed() {

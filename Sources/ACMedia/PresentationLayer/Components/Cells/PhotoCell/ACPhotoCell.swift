@@ -1,5 +1,5 @@
 //
-//  PhotoCell.swift
+//  ACPhotoCell.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -9,11 +9,11 @@ import DPUIKit
 import PhotosUI
 import UIKit
 
-public final class PhotoCell: DPCollectionItemCell {
+open class ACPhotoCell: DPCollectionItemCell {
     
     // MARK: - Props
-    var model: PhotoCellModel? {
-        get { self._model as? PhotoCellModel }
+    var model: ACPhotoCellModel? {
+        get { self._model as? ACPhotoCellModel }
         set { self._model = newValue }
     }
     
@@ -50,7 +50,7 @@ public final class PhotoCell: DPCollectionItemCell {
     }()
     
     // MARK: - Methods
-    public override func setupComponents() {
+    open override func setupComponents() {
         super.setupComponents()
         
         contentView.addSubview(previewImageView)
@@ -81,14 +81,14 @@ public final class PhotoCell: DPCollectionItemCell {
         ])
     }
     
-    public override func updateComponents() {
+    open override func updateComponents() {
         super.updateComponents()
         
         var image: UIImage? {
             guard let model = self.model else {
                 return nil
             }
-            let icon = model.isSelected ? AppAssets.Icon.checkmarkFilled.image : AppAssets.Icon.checkmarkEmpty.image
+            let icon = model.isSelected ? ACAppAssets.Icon.checkmarkFilled.image : ACAppAssets.Icon.checkmarkEmpty.image
             return icon?.withRenderingMode(.alwaysTemplate)
         }
         
@@ -105,7 +105,7 @@ public final class PhotoCell: DPCollectionItemCell {
     public override func layoutSubviews() {
         super.layoutSubviews()
         self.contentView.backgroundColor = .clear
-        self.previewImageView.layer.cornerRadius = ACMediaConfiguration.shared.appearance.previewCardCornerRadius
+        self.previewImageView.layer.cornerRadius = model?.configuration.appearance.layout.previewCardCornerRadius ?? 0.0
     }
     
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -118,7 +118,7 @@ public final class PhotoCell: DPCollectionItemCell {
 }
 
 // MARK: - Actions
-private extension PhotoCell {
+private extension ACPhotoCell {
     
     @objc
     private func checkButtonTapped() {
@@ -128,20 +128,20 @@ private extension PhotoCell {
     }
 }
 
-public extension PhotoCell {
+extension ACPhotoCell {
     
-    func updateThumbImage(_ image: UIImage?) {
+    public func updateThumbImage(_ image: UIImage?) {
         DispatchQueue.main.async {
             self.previewImageView.image = image
         }
     }
     
-    func getPreviewImageView() -> UIImageView? {
+    public func getPreviewImageView() -> UIImageView? {
         previewImageView
     }
 }
 
 // MARK: - Types
-extension PhotoCell {
-    typealias Adapter = DPCollectionItemAdapter<PhotoCell, PhotoCellModel>
+extension ACPhotoCell {
+    typealias Adapter = DPCollectionItemAdapter<ACPhotoCell, ACPhotoCellModel>
 }

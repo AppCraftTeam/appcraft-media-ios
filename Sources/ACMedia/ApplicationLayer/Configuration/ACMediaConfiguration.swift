@@ -7,13 +7,13 @@
 
 import Foundation
 
-public var ACMediaConfig: ACMediaConfiguration {
-    ACMediaConfiguration.shared
-}
-
 public struct ACMediaConfiguration {
     
-    internal init(
+    public var appearance: ACMediaAppearance
+    public var photoConfig: ACMediaPhotoPickerConfig
+    public var documentsConfig: ACMediaPhotoDocConfig
+    
+    public init(
         appearance: ACMediaAppearance = ACMediaAppearance(),
         photoConfig: ACMediaPhotoPickerConfig = ACMediaPhotoPickerConfig(),
         documentsConfig: ACMediaPhotoDocConfig = ACMediaPhotoDocConfig()
@@ -22,12 +22,4 @@ public struct ACMediaConfiguration {
         self.photoConfig = photoConfig
         self.documentsConfig = documentsConfig
     }
-    
-    public static var shared: ACMediaConfiguration = ACMediaConfiguration()
-    
-    public init() {}
-    
-    public var appearance = ACMediaAppearance()
-    public var photoConfig = ACMediaPhotoPickerConfig()
-    public var documentsConfig = ACMediaPhotoDocConfig()
 }

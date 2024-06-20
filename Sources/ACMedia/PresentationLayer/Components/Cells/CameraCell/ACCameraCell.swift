@@ -1,5 +1,5 @@
 //
-//  CameraCell.swift
+//  ACCameraCell.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -9,11 +9,11 @@ import AVFoundation
 import DPUIKit
 import UIKit
 
-public final class CameraCell: DPCollectionItemCell {
+open class ACCameraCell: DPCollectionItemCell {
     
     // MARK: - Props
-    var model: CameraCellModel? {
-        get { self._model as? CameraCellModel }
+    var model: ACCameraCellModel? {
+        get { self._model as? ACCameraCellModel }
         set { self._model = newValue }
     }
     
@@ -23,7 +23,7 @@ public final class CameraCell: DPCollectionItemCell {
     // MARK: - Components
     private(set) lazy var containerView: UIView = {
         let view = UIView()
-        view.backgroundColor = ACMediaConfiguration.shared.appearance.backgroundColor
+        view.backgroundColor = model?.configuration.appearance.colors.backgroundColor
         
         return view
     }()
@@ -53,7 +53,7 @@ public final class CameraCell: DPCollectionItemCell {
             containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
         
-        self.cameraIconImageView.image = AppAssets.Icon.camera.image?.withRenderingMode(.alwaysTemplate)
+        self.cameraIconImageView.image = ACAppAssets.Icon.camera.image?.withRenderingMode(.alwaysTemplate)
         self.cameraIconImageView.tintColor = .white
         containerView.addSubview(cameraIconImageView)
         
@@ -66,29 +66,29 @@ public final class CameraCell: DPCollectionItemCell {
         ])
     }
     
-    public override func updateComponents() {
+    open override func updateComponents() {
         super.updateComponents()
     }
     
-    public override func prepareForReuse() {
+    open override func prepareForReuse() {
         super.prepareForReuse()
         previewLayer = nil
     }
     
-    public override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         self.contentView.backgroundColor = .clear
-        self.containerView.layer.cornerRadius = ACMediaConfiguration.shared.appearance.previewCardCornerRadius
+        self.containerView.layer.cornerRadius = model?.configuration.appearance.layout.previewCardCornerRadius ?? 0.0
     }
     
-    public func addCameraLayer(_ previewLayer: AVCaptureVideoPreviewLayer) {
+    open func addCameraLayer(_ previewLayer: AVCaptureVideoPreviewLayer) {
         previewLayer.frame = self.bounds
         self.previewLayer = previewLayer
         self.previewLayer?.removeFromSuperlayer()
         self.containerView.layer.insertSublayer(previewLayer, at: 0)
     }
     
-    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         guard let event, event.type == .touches else {
             return
@@ -98,6 +98,6 @@ public final class CameraCell: DPCollectionItemCell {
 }
 
 // MARK: - Types
-extension CameraCell {
-    typealias Adapter = DPCollectionItemAdapter<CameraCell, CameraCellModel>
+extension ACCameraCell {
+    typealias Adapter = DPCollectionItemAdapter<ACCameraCell, ACCameraCellModel>
 }
