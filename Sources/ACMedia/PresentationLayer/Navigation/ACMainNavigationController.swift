@@ -56,7 +56,6 @@ open class ACMainNavigationController: UINavigationController {
                 configuration: configuration,
                 selectedAssetsStack: acMediaService.selectedAssetsStack,
                 didPickAssets: { selectedAssetsModel in
-                    print("selectedAssetsModel - \(selectedAssetsModel)")
                     self.acMediaService?.didPickAssets(selectedAssetsModel)
                 }, didOpenSettings: {
                     self.acMediaService?.didOpenSettings?()

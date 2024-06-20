@@ -37,9 +37,9 @@ open class ACTabBarController: UITabBarController {
     private var acMediaService: ACMediaViewController
     open var configuration: ACMediaConfiguration
     private let adapter: AppTabBarControllerAdapter
-
+    
     private(set) lazy var photoController: ACMainNavigationController = {
-        let vc = ACMainNavigationController(configuration: configuration, acMediaService: nil)
+        let vc = ACMainNavigationController(configuration: configuration, acMediaService: acMediaService)
         vc.tabBarItem = AppTabBarItem.gallery.item
         return vc
     }()
@@ -47,7 +47,6 @@ open class ACTabBarController: UITabBarController {
     private(set) lazy var documentsViewController: UIViewController = {
         let vc = ACDocumentPickerViewController.create(types: [.zip], configuration: configuration)
         vc.didPickDocuments = { [weak self] urls in
-            print("parentVC - \(self?.acMediaService)")
             self?.acMediaService.didPickDocuments(urls)
         }
         vc.tabBarItem = AppTabBarItem.file.item
@@ -68,7 +67,7 @@ open class ACTabBarController: UITabBarController {
         self.adapter = AppTabBarControllerAdapter(configuration: configuration, types: [], parentVC: nil)
         super.init(nibName: nil, bundle: nil)
     }
-
+    
     public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -86,7 +85,7 @@ open class ACTabBarController: UITabBarController {
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
     }
-        
+    
     open func showPicker(in parent: UIViewController, acMediaService: ACMediaViewController) {
         self.photoController.acMediaService = acMediaService
         self.acMediaService = acMediaService
@@ -117,9 +116,15 @@ private extension ACTabBarController {
         switch acMediaService.fileType {
         case .gallery, .files:
             tabBar.isHidden = true
+            tabBar.removeFromSuperview()
+            
+            edgesForExtendedLayout = []
+            extendedLayoutIncludesOpaqueBars = true
+            view.backgroundColor = .white
         case .galleryAndFiles:
-            tabBar.isHidden = false
+            break
         }
+        
         self.delegate = adapter
         
         let items = tabBar.items ?? []

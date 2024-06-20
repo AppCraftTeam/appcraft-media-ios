@@ -55,7 +55,7 @@ public struct ACMediaAppearance {
         emptyAlbumFont: UIFont = .systemFont(ofSize: 22, weight: .bold),
         cancelTitleFont: UIFont = .systemFont(ofSize: 17.0, weight: .regular),
         doneTitleFont: UIFont = .systemFont(ofSize: 17.0, weight: .semibold),
-        toolbarFont: UIFont = .systemFont(ofSize: 17.0, weight: .regular),
+        toolbarFont: UIFont = .systemFont(ofSize: 17.0, weight: .semibold),
         allowsPhotoPreviewZoom: Bool = true
     ) {
         self.tintColor = tintColor

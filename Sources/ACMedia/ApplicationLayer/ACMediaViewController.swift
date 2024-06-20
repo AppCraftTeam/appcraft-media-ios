@@ -36,15 +36,7 @@ public class ACMediaViewController {
     /// - Parameter parentVC: parent view controller
     public func show(in parentVC: UIViewController) {
         let tabbarController = ACTabBarController(acMediaService: self, configuration: configuration)
-        
-        switch fileType {
-        case .gallery:
-            let vc = ACMainNavigationController(configuration: configuration, acMediaService: self)
-            parentVC.present(vc, animated: true)
-        case .files, .galleryAndFiles:
-            #warning("todo + gallery")
-            tabbarController.showPicker(in: parentVC, acMediaService: self)
-        }
+        tabbarController.showPicker(in: parentVC, acMediaService: self)
     }
 }
 
