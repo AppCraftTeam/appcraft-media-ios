@@ -105,7 +105,7 @@ open class ACPhotoCell: DPCollectionItemCell {
     public override func layoutSubviews() {
         super.layoutSubviews()
         self.contentView.backgroundColor = .clear
-        self.previewImageView.layer.cornerRadius = model?.configuration.appearance.previewCardCornerRadius ?? 0.0
+        self.previewImageView.layer.cornerRadius = model?.configuration.appearance.layout.previewCardCornerRadius ?? 0.0
     }
     
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {

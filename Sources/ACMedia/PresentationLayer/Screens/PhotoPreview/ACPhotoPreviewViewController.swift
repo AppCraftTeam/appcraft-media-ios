@@ -39,7 +39,7 @@ open class ACPhotoPreviewViewController: UIViewController {
     // MARK: - Methods
     open override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = viewModel.configuration.appearance.backgroundColor
+        view.backgroundColor = viewModel.configuration.appearance.colors.backgroundColor
         
         viewModel.onSetImage = { [weak self] image in
             self?.setupImage(image)
@@ -100,9 +100,9 @@ private extension ACPhotoPreviewViewController {
         }
         button.setTitle(ACAppLocale.back.locale, for: .normal)
         button.sizeToFit()
-        button.setTitleColor(viewModel.configuration.appearance.tintColor, for: [])
-        button.titleLabel?.font = viewModel.configuration.appearance.navBarTitleFont
-        button.tintColor = viewModel.configuration.appearance.tintColor
+        button.setTitleColor(viewModel.configuration.appearance.colors.tintColor, for: [])
+        button.titleLabel?.font = viewModel.configuration.appearance.fonts.navBarTitleFont
+        button.tintColor = viewModel.configuration.appearance.colors.tintColor
         button.addTarget(self, action: #selector(self.backButtonPressed), for: .touchUpInside)
         
         navigationItem.setLeftBarButton(UIBarButtonItem(customView: button), animated: true)

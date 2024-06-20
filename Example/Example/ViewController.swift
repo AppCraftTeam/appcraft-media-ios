@@ -102,7 +102,9 @@ private extension ViewController {
     @objc
     func openSingleImagePicker() {
         var configuration = ACMediaConfiguration()
-        configuration.appearance = ACMediaAppearance(tintColor: .red)
+        configuration.appearance = ACMediaAppearance(
+            colors: ACMediaColors(tintColor: .red)
+        )
         configuration.photoConfig = ACMediaPhotoPickerConfig(types: [.photo], limiter: .onlyOne)
         
         let acMedia = ACMediaViewController(
@@ -129,7 +131,9 @@ private extension ViewController {
     @objc
     func openImageAndFilesPicker() {
         var configuration = ACMediaConfiguration()
-        configuration.appearance = ACMediaAppearance(tintColor: .orange)
+        configuration.appearance = ACMediaAppearance(
+            colors: ACMediaColors(tintColor: .orange)
+        )
         configuration.photoConfig = ACMediaPhotoPickerConfig(types: [.photo, .video], limiter: .limit(min: 2, max: 4))
         configuration.documentsConfig = ACMediaPhotoDocConfig(fileFormats: [.zip])
         
@@ -151,7 +155,9 @@ private extension ViewController {
     @objc
     func openFilesPicker() {
         var configuration = ACMediaConfiguration()
-        configuration.appearance = ACMediaAppearance(tintColor: .purple)
+        configuration.appearance = ACMediaAppearance(
+            colors: ACMediaColors(tintColor: .purple)
+        )
         configuration.documentsConfig = ACMediaPhotoDocConfig(fileFormats: [.zip])
         
         let acMedia = ACMediaViewController(

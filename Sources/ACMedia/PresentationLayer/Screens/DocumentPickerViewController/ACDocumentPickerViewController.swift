@@ -30,14 +30,14 @@ open class ACDocumentPickerViewController: UIDocumentPickerViewController, UIDoc
             pickerViewController.delegate = pickerViewController
             pickerViewController.allowsMultipleSelection = configuration.documentsConfig.allowsMultipleSelection
             pickerViewController.shouldShowFileExtensions = configuration.documentsConfig.shouldShowFileExtensions
-            pickerViewController.view.tintColor = configuration.appearance.tintColor
+            pickerViewController.view.tintColor = configuration.appearance.colors.tintColor
 
             return pickerViewController
         } else {
             let pickerViewController = ACDocumentPickerViewController(documentTypes: types.map({ $0.kutType as String }), in: .import)
             pickerViewController.delegate = pickerViewController
             pickerViewController.allowsMultipleSelection = configuration.documentsConfig.allowsMultipleSelection
-            pickerViewController.view.tintColor = configuration.appearance.tintColor
+            pickerViewController.view.tintColor = configuration.appearance.colors.tintColor
 
             return pickerViewController
         }

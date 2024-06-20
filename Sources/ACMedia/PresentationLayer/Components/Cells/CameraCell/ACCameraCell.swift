@@ -23,7 +23,7 @@ open class ACCameraCell: DPCollectionItemCell {
     // MARK: - Components
     private(set) lazy var containerView: UIView = {
         let view = UIView()
-        view.backgroundColor = model?.configuration.appearance.backgroundColor
+        view.backgroundColor = model?.configuration.appearance.colors.backgroundColor
         
         return view
     }()
@@ -78,7 +78,7 @@ open class ACCameraCell: DPCollectionItemCell {
     open override func layoutSubviews() {
         super.layoutSubviews()
         self.contentView.backgroundColor = .clear
-        self.containerView.layer.cornerRadius = model?.configuration.appearance.previewCardCornerRadius ?? 0.0
+        self.containerView.layer.cornerRadius = model?.configuration.appearance.layout.previewCardCornerRadius ?? 0.0
     }
     
     open func addCameraLayer(_ previewLayer: AVCaptureVideoPreviewLayer) {

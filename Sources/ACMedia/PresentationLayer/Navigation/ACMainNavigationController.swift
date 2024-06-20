@@ -12,8 +12,8 @@ open class ACMainNavigationController: UINavigationController {
     // MARK: - Components
     private lazy var selectedCounterLabel: UIBarButtonItem = {
         let item = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        item.tintColor = configuration.appearance.foregroundColor
-        item.setTitleTextAttributes([.font: configuration.appearance.toolbarFont], for: [])
+        item.tintColor = configuration.appearance.colors.foregroundColor
+        item.setTitleTextAttributes([.font: configuration.appearance.fonts.toolbarFont], for: [])
         
         return item
     }()
@@ -69,12 +69,12 @@ open class ACMainNavigationController: UINavigationController {
 private extension ACMainNavigationController {
     
     func setupNavigationBar() {
-        navigationBar.tintColor = configuration.appearance.tintColor
+        navigationBar.tintColor = configuration.appearance.colors.tintColor
         
         if #available(iOS 13.0, *) {
             let style = UINavigationBarAppearance()
-            style.buttonAppearance.normal.titleTextAttributes = [.font: configuration.appearance.cancelTitleFont]
-            style.doneButtonAppearance.normal.titleTextAttributes = [.font: configuration.appearance.doneTitleFont]
+            style.buttonAppearance.normal.titleTextAttributes = [.font: configuration.appearance.fonts.cancelTitleFont]
+            style.doneButtonAppearance.normal.titleTextAttributes = [.font: configuration.appearance.fonts.doneTitleFont]
             
             navigationBar.standardAppearance = style
             navigationBar.scrollEdgeAppearance = style
@@ -90,10 +90,10 @@ private extension ACMainNavigationController {
         ]
         
         self.toolbarItems = barItems
-        self.toolbar.tintColor = configuration.appearance.tintColor
+        self.toolbar.tintColor = configuration.appearance.colors.tintColor
         self.toolbar.barStyle = .default
         self.toolbar.isTranslucent = true
-        self.toolbar.backgroundColor = configuration.appearance.backgroundColor
+        self.toolbar.backgroundColor = configuration.appearance.colors.backgroundColor
         self.toolbar.isUserInteractionEnabled = false
         refreshToolbar()
     }

@@ -109,7 +109,7 @@ private extension ACTabBarController {
     }
     
     func configureTabBar() {
-        tabBar.tintColor = configuration.appearance.tintColor
+        tabBar.tintColor = configuration.appearance.colors.tintColor
         tabBar.barStyle = .default
         tabBar.isTranslucent = true
         

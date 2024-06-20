@@ -25,7 +25,7 @@ open class ACPhotoGridViewController: UIViewController {
             style: .done,
             target: self,
             action: #selector(doneAction))
-        done.tintColor = viewModel.configuration.appearance.tintColor
+        done.tintColor = viewModel.configuration.appearance.colors.tintColor
         return done
     }()
     
@@ -35,7 +35,7 @@ open class ACPhotoGridViewController: UIViewController {
             style: .plain,
             target: self,
             action: #selector(cancelAction))
-        done.tintColor = viewModel.configuration.appearance.tintColor
+        done.tintColor = viewModel.configuration.appearance.colors.tintColor
         return done
     }()
     
@@ -89,11 +89,11 @@ open class ACPhotoGridViewController: UIViewController {
     private var leftSpacing: CGFloat = 5
     private var rightSpacing: CGFloat = 5
     private var interSpacing: CGFloat {
-        viewModel.configuration.appearance.gridSpacing
+        viewModel.configuration.appearance.layout.gridSpacing
     }
     
     private var cellWidth: CGFloat {
-        let itemsInRow = CGFloat(viewModel.configuration.appearance.cellsInRow)
+        let itemsInRow = CGFloat(viewModel.configuration.appearance.layout.cellsInRow)
         
         let spacing: CGFloat = leftSpacing + rightSpacing + 2 * interSpacing
         let cellWidth = (self.view.frame.width - spacing) / itemsInRow
@@ -139,7 +139,7 @@ open class ACPhotoGridViewController: UIViewController {
         super.viewDidLoad()
         PHPhotoLibrary.shared().register(self)
         
-        view.backgroundColor = viewModel.configuration.appearance.backgroundColor
+        view.backgroundColor = viewModel.configuration.appearance.colors.backgroundColor
         configureToolbar()
         configureCollectionView()
         
@@ -241,8 +241,8 @@ private extension ACPhotoGridViewController {
         
         let label = UILabel()
         label.text = ACAppLocale.emptyAlbum.locale
-        label.textColor = viewModel.configuration.appearance.foregroundColor
-        label.font = viewModel.configuration.appearance.emptyAlbumFont
+        label.textColor = viewModel.configuration.appearance.colors.foregroundColor
+        label.font = viewModel.configuration.appearance.fonts.emptyAlbumFont
         
         view.subviews.filter { $0 is UILabel }.forEach { $0.removeFromSuperview() }
         
@@ -422,10 +422,10 @@ private extension ACPhotoGridViewController {
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0)
         button.sizeToFit()
         
-        button.setTitleColor(viewModel.configuration.appearance.foregroundColor, for: [])
-        button.titleLabel?.textColor = viewModel.configuration.appearance.foregroundColor
+        button.setTitleColor(viewModel.configuration.appearance.colors.foregroundColor, for: [])
+        button.titleLabel?.textColor = viewModel.configuration.appearance.colors.foregroundColor
         button.titleLabel?.font = .boldSystemFont(ofSize: 17.0)
-        button.tintColor = viewModel.configuration.appearance.foregroundColor
+        button.tintColor = viewModel.configuration.appearance.colors.foregroundColor
         
         if #available(iOS 14.0, *) {
             button.menu = albumsListMenu
