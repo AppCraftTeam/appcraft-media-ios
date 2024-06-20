@@ -1,5 +1,5 @@
 //
-//  ACMediaViewController.swift
+//  ACMediaService.swift
 //  ACMedia-iOS
 //
 //  Copyright © 2023 AppCraft. All rights reserved.
@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-public class ACMediaViewController {
+public class ACMediaService {
     
     public var configuration: ACMediaConfiguration
     public var fileType: ACPickerFilesType
@@ -40,7 +40,7 @@ public class ACMediaViewController {
     }
 }
 
-public extension ACMediaViewController {
+public extension ACMediaService {
     
     func didPickAssets(_ model: ACPickerCallbackModel) {
         self.assetsSelected?(model)

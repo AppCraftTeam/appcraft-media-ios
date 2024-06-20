@@ -34,7 +34,7 @@ private enum AppTabBarItem {
 
 open class ACTabBarController: UITabBarController {
     
-    private var acMediaService: ACMediaViewController
+    private var acMediaService: ACMediaService
     open var configuration: ACMediaConfiguration
     private let adapter: AppTabBarControllerAdapter
     
@@ -61,7 +61,7 @@ open class ACTabBarController: UITabBarController {
         return appearance
     }
     
-    public required init(acMediaService: ACMediaViewController, configuration: ACMediaConfiguration) {
+    public required init(acMediaService: ACMediaService, configuration: ACMediaConfiguration) {
         self.acMediaService = acMediaService
         self.configuration = configuration
         self.adapter = AppTabBarControllerAdapter(configuration: configuration, types: [], parentVC: nil)
@@ -86,7 +86,7 @@ open class ACTabBarController: UITabBarController {
         super.viewDidLayoutSubviews()
     }
     
-    open func showPicker(in parent: UIViewController, acMediaService: ACMediaViewController) {
+    open func showPicker(in parent: UIViewController, acMediaService: ACMediaService) {
         self.photoController.acMediaService = acMediaService
         self.acMediaService = acMediaService
         self.adapter.types = configuration.documentsConfig.fileFormats

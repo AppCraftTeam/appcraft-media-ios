@@ -19,11 +19,11 @@ open class ACMainNavigationController: UINavigationController {
     }()
     
     // MARK: - Params
-    open var acMediaService: ACMediaViewController?
+    open var acMediaService: ACMediaService?
     open var configuration: ACMediaConfiguration
     private let navigationTransition: ACZoomTransitionDelegate
     
-    public required init(configuration: ACMediaConfiguration, acMediaService: ACMediaViewController?) {
+    public required init(configuration: ACMediaConfiguration, acMediaService: ACMediaService?) {
         self.acMediaService = acMediaService
         self.configuration = configuration
         self.navigationTransition = ACZoomTransitionDelegate(configuration: configuration)

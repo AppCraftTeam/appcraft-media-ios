@@ -107,7 +107,7 @@ private extension ViewController {
         )
         configuration.photoConfig = ACMediaPhotoPickerConfig(types: [.photo], limiter: .onlyOne)
         
-        let acMedia = ACMediaViewController(
+        let acMedia = ACMediaService(
             configuration: configuration,
             fileType: .gallery,
             assetsSelected: { [weak self] assets in
@@ -137,7 +137,7 @@ private extension ViewController {
         configuration.photoConfig = ACMediaPhotoPickerConfig(types: [.photo, .video], limiter: .limit(min: 2, max: 4))
         configuration.documentsConfig = ACMediaPhotoDocConfig(fileFormats: [.zip])
         
-        let acMedia = ACMediaViewController(
+        let acMedia = ACMediaService(
             configuration: configuration,
             fileType: .galleryAndFiles,
             assetsSelected: { [weak self] assets in
@@ -160,7 +160,7 @@ private extension ViewController {
         )
         configuration.documentsConfig = ACMediaPhotoDocConfig(fileFormats: [.zip])
         
-        let acMedia = ACMediaViewController(
+        let acMedia = ACMediaService(
             configuration: configuration,
             fileType: .files,
             filesSelected: { [weak self] fileUrls in
