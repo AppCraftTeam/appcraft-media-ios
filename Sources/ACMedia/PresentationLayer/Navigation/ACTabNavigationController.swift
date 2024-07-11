@@ -11,7 +11,6 @@ open class ACTabBarController: UITabBarController {
     
     private var acMediaService: ACMediaService
     open var configuration: ACMediaConfiguration
-    private let adapter: AppTabBarControllerAdapter
     
     private(set) lazy var photoController: ACMainNavigationController = {
         let vc = ACMainNavigationController(configuration: configuration, acMediaService: acMediaService)
@@ -39,7 +38,6 @@ open class ACTabBarController: UITabBarController {
     public required init(acMediaService: ACMediaService, configuration: ACMediaConfiguration) {
         self.acMediaService = acMediaService
         self.configuration = configuration
-        self.adapter = AppTabBarControllerAdapter(configuration: configuration, types: [], parentVC: nil)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -64,12 +62,8 @@ open class ACTabBarController: UITabBarController {
     open func showPicker(in parent: UIViewController, acMediaService: ACMediaService) {
         self.photoController.acMediaService = acMediaService
         self.acMediaService = acMediaService
-        self.adapter.types = configuration.documentsConfig.fileFormats
-        self.adapter.parentVC = self
-        
+
         parent.present(self, animated: true)
-        
-        //self.adapter.tabBarController(self, shouldSelect: self.documentsViewController)
     }
 }
 
@@ -99,9 +93,7 @@ private extension ACTabBarController {
         case .galleryAndFiles:
             break
         }
-        
-        self.delegate = adapter
-        
+                
         let items = tabBar.items ?? []
         items.forEach({ item in
             if #available(iOS 13.0, *) {
