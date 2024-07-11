@@ -158,7 +158,7 @@ private extension ViewController {
         configuration.appearance = ACMediaAppearance(
             colors: ACMediaColors(tintColor: .purple)
         )
-        configuration.documentsConfig = ACMediaPhotoDocConfig(fileFormats: [.zip])
+        configuration.documentsConfig = ACMediaPhotoDocConfig(fileFormats: [.pdf])
         
         let acMedia = ACMediaService(
             configuration: configuration,

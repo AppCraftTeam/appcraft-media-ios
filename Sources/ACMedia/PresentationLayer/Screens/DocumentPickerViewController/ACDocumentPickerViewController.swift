@@ -24,7 +24,8 @@ open class ACDocumentPickerViewController: UIDocumentPickerViewController, UIDoc
     
     /// Show picker for selecting documents
     /// - Parameter types: File types
-    static func create(types: [ACMediaDocFileType], configuration: ACMediaConfiguration) -> ACDocumentPickerViewController {
+    static func create(configuration: ACMediaConfiguration) -> ACDocumentPickerViewController {
+        let types = configuration.documentsConfig.fileFormats
         if #available(iOS 14.0, *) {
             let pickerViewController = ACDocumentPickerViewController(forOpeningContentTypes: types.map({ $0.utType }), asCopy: true)
             pickerViewController.delegate = pickerViewController

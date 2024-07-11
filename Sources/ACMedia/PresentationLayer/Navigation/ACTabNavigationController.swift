@@ -45,7 +45,7 @@ open class ACTabBarController: UITabBarController {
     }()
     
     private(set) lazy var documentsViewController: UIViewController = {
-        let vc = ACDocumentPickerViewController.create(types: [.zip], configuration: configuration)
+        let vc = ACDocumentPickerViewController.create(configuration: configuration)
         vc.didPickDocuments = { [weak self] urls in
             self?.acMediaService.didPickDocuments(urls)
         }
