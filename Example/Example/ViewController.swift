@@ -94,6 +94,15 @@ class ViewController: UIViewController {
         filesStack.addArrangedSubview(urlsLabel)
         self.containerStack.addArrangedSubview(UIView())
     }
+    
+    private func openSystemSettings() {
+        guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
+        if UIApplication.shared.canOpenURL(settingsURL) {
+            UIApplication.shared.open(settingsURL)
+        }
+    }
 }
 
 // MARK: - Module methods
@@ -105,27 +114,19 @@ private extension ViewController {
         configuration.appearance = ACMediaAppearance(
             colors: ACMediaColors(tintColor: .red)
         )
-        configuration.photoConfig = ACMediaPhotoPickerConfig(types: [.photo], limiter: .onlyOne)
         
-        let acMedia = ACMediaService(
+        let tabbarController = ACTabBarController(
             configuration: configuration,
             fileType: .gallery,
             assetsSelected: { [weak self] assets in
                 self?.didPickImages(assets.images)
                 self?.didPickDocuments(assets.videoUrls)
+            },
+            didOpenSettings: { [weak self] in
+                self?.openSystemSettings()
             }
         )
-        
-        acMedia.didOpenSettings = {
-            guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else {
-                return
-            }
-            if UIApplication.shared.canOpenURL(settingsURL) {
-                UIApplication.shared.open(settingsURL)
-            }
-        }
-        
-        acMedia.show(in: self)
+        self.present(tabbarController, animated: true)
     }
     
     @objc
@@ -137,7 +138,7 @@ private extension ViewController {
         configuration.photoConfig = ACMediaPhotoPickerConfig(types: [.photo, .video], limiter: .limit(min: 2, max: 4))
         configuration.documentsConfig = ACMediaPhotoDocConfig(fileFormats: [.zip])
         
-        let acMedia = ACMediaService(
+        let tabbarController = ACTabBarController(
             configuration: configuration,
             fileType: .galleryAndFiles,
             assetsSelected: { [weak self] assets in
@@ -146,10 +147,13 @@ private extension ViewController {
             },
             filesSelected: { [weak self] fileUrls in
                 self?.didPickDocuments(fileUrls)
+            },
+            didOpenSettings: { [weak self] in
+                self?.openSystemSettings()
             }
         )
         
-        acMedia.show(in: self)
+        self.present(tabbarController, animated: true)
     }
     
     @objc
@@ -160,15 +164,18 @@ private extension ViewController {
         )
         configuration.documentsConfig = ACMediaPhotoDocConfig(fileFormats: [.pdf])
         
-        let acMedia = ACMediaService(
+        let tabbarController = ACTabBarController(
             configuration: configuration,
             fileType: .files,
             filesSelected: { [weak self] fileUrls in
                 self?.didPickDocuments(fileUrls)
+            },
+            didOpenSettings: { [weak self] in
+                self?.openSystemSettings()
             }
         )
         
-        acMedia.show(in: self)
+        self.present(tabbarController, animated: true)
     }
 }
 

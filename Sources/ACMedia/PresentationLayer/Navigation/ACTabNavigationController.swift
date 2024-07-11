@@ -7,26 +7,50 @@
 
 import UIKit
 
+public protocol ACDocumentPickerViewControllerInterface: UIViewController {
+    var didPickDocuments: (([URL]) -> Void)? { get set }
+}
+
 open class ACTabBarController: UITabBarController {
     
-    private var acMediaService: ACMediaService
+    public var fileType: ACPickerFilesType
+    public var selectedAssetsStack: ACSelectedImagesStack
+    
+    // Callbacks
+    public var assetsSelected: ((ACPickerCallbackModel) -> Void)?
+    public var filesSelected: (([URL]) -> Void)?
+    public var didOpenSettings: (() -> Void)?
+    
     open var configuration: ACMediaConfiguration
     
     private(set) lazy var photoController: ACMainNavigationController = {
-        let vc = ACMainNavigationController(configuration: configuration, acMediaService: acMediaService)
+        let vc = ACMainNavigationController(
+            configuration: configuration,
+            selectedAssetsStack: selectedAssetsStack,
+            didPickAssets: { assets in
+                self.assetsSelected?(assets)
+            },
+            didOpenSettings: {
+                self.didOpenSettings?()
+            }
+        )
         vc.tabBarItem = ACTabBarItem.gallery.item
         return vc
     }()
     
-    private(set) lazy var documentsViewController: UIViewController = {
+    open var documentsViewController: ACDocumentPickerViewControllerInterface {
+        defaultDocumentsViewController
+    }
+    
+    private var defaultDocumentsViewController: ACDocumentPickerViewControllerInterface {
         let vc = ACDocumentPickerViewController.create(configuration: configuration)
         vc.didPickDocuments = { [weak self] urls in
-            self?.acMediaService.didPickDocuments(urls)
+            self?.filesSelected?(urls)
         }
         vc.tabBarItem = ACTabBarItem.file.item
         
         return vc
-    }()
+    }
     
     @available(iOS 13.0, *)
     var tabBarAppearance: UITabBarAppearance {
@@ -35,9 +59,20 @@ open class ACTabBarController: UITabBarController {
         return appearance
     }
     
-    public required init(acMediaService: ACMediaService, configuration: ACMediaConfiguration) {
-        self.acMediaService = acMediaService
+    public required init(
+        configuration: ACMediaConfiguration,
+        fileType: ACPickerFilesType,
+        assetsSelected: ((ACPickerCallbackModel) -> Void)? = nil,
+        filesSelected: (([URL]) -> Void)? = nil,
+        didOpenSettings: (() -> Void)? = nil
+    ) {
         self.configuration = configuration
+        self.fileType = fileType
+        self.selectedAssetsStack = ACSelectedImagesStack()
+        self.assetsSelected = assetsSelected
+        self.filesSelected = filesSelected
+        self.didOpenSettings = didOpenSettings
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -50,7 +85,6 @@ open class ACTabBarController: UITabBarController {
         navigationController?.setNavigationBarHidden(true, animated: false)
         setupViewControllers()
         configureTabBar()
-        setAttributes()
         selectedIndex = 0
         tabBar.setNeedsDisplay()
     }
@@ -58,19 +92,10 @@ open class ACTabBarController: UITabBarController {
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
     }
-    
-    open func showPicker(in parent: UIViewController, acMediaService: ACMediaService) {
-        self.photoController.acMediaService = acMediaService
-        self.acMediaService = acMediaService
-
-        parent.present(self, animated: true)
-    }
 }
 
 // MARK: - Private
 private extension ACTabBarController {
-    
-    func setAttributes() {}
     
     func setupViewControllers() {
         let navControllers = makeNavControllers()
@@ -82,7 +107,7 @@ private extension ACTabBarController {
         tabBar.barStyle = .default
         tabBar.isTranslucent = true
         
-        switch acMediaService.fileType {
+        switch fileType {
         case .gallery, .files:
             tabBar.isHidden = true
             tabBar.removeFromSuperview()
@@ -93,7 +118,7 @@ private extension ACTabBarController {
         case .galleryAndFiles:
             break
         }
-                
+        
         let items = tabBar.items ?? []
         items.forEach({ item in
             if #available(iOS 13.0, *) {
@@ -103,7 +128,7 @@ private extension ACTabBarController {
     }
     
     func makeNavControllers() -> [UIViewController] {
-        switch acMediaService.fileType {
+        switch fileType {
         case .gallery:
             return [
                 photoController

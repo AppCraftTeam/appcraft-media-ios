@@ -19,13 +19,23 @@ open class ACMainNavigationController: UINavigationController {
     }()
     
     // MARK: - Params
-    open var acMediaService: ACMediaService?
+    public var didPickAssets: ((ACPickerCallbackModel) -> Void)?
+    public var didOpenSettings: (() -> Void)?
+    
     open var configuration: ACMediaConfiguration
+    public var selectedAssetsStack: ACSelectedImagesStack
     private let navigationTransition: ACZoomTransitionDelegate
     
-    public required init(configuration: ACMediaConfiguration, acMediaService: ACMediaService?) {
-        self.acMediaService = acMediaService
+    public required init(
+        configuration: ACMediaConfiguration,
+        selectedAssetsStack: ACSelectedImagesStack,
+        didPickAssets: ((ACPickerCallbackModel) -> Void)?,
+        didOpenSettings: (() -> Void)?
+    ) {
         self.configuration = configuration
+        self.selectedAssetsStack = selectedAssetsStack
+        self.didPickAssets = didPickAssets
+        self.didOpenSettings = didOpenSettings
         self.navigationTransition = ACZoomTransitionDelegate(configuration: configuration)
         super.init(nibName: nil, bundle: nil)
     }
@@ -36,9 +46,6 @@ open class ACMainNavigationController: UINavigationController {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-        guard let acMediaService = self.acMediaService else {
-            return
-        }
         self.delegate = navigationTransition
         
         setupToolbar()
@@ -54,11 +61,11 @@ open class ACMainNavigationController: UINavigationController {
         let imageGridController = ACPhotoGridViewController(
             viewModel: ACPhotosViewModel(
                 configuration: configuration,
-                selectedAssetsStack: acMediaService.selectedAssetsStack,
+                selectedAssetsStack: selectedAssetsStack,
                 didPickAssets: { selectedAssetsModel in
-                    self.acMediaService?.didPickAssets(selectedAssetsModel)
+                    self.didPickAssets?(selectedAssetsModel)
                 }, didOpenSettings: {
-                    self.acMediaService?.didOpenSettings?()
+                    self.didOpenSettings?()
                 }
             )
         )
@@ -105,9 +112,7 @@ private extension ACMainNavigationController {
     
     /// Update the text in the toolbar to show the current number of selected assets
     func updateToolbarText() {
-        guard let totalImages = self.acMediaService?.selectedAssetsStack.selectedCount else {
-            return
-        }
+        var totalImages = selectedAssetsStack.selectedCount
         let selectedStr = String(format: ACAppLocale.selectedCount.locale, totalImages)
         var displayedText: String {
             guard configuration.photoConfig.displayMinMaxRestrictions else {

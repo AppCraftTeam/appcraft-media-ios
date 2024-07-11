@@ -9,7 +9,7 @@ import UIKit
 import MobileCoreServices
 import UniformTypeIdentifiers
 
-open class ACDocumentPickerViewController: UIDocumentPickerViewController, UIDocumentPickerDelegate {
+open class ACDocumentPickerViewController: UIDocumentPickerViewController, ACDocumentPickerViewControllerInterface, UIDocumentPickerDelegate {
     
     open var didPickDocuments: (([URL]) -> Void)?
     
