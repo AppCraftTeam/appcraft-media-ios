@@ -7,7 +7,7 @@
 
 import UIKit
 
-open class ACMainNavigationController: UINavigationController {
+open class ACMainNavigationController: UINavigationController, ACPhotoPickerViewControllerInterface {    
     
     // MARK: - Components
     private lazy var selectedCounterLabel: UIBarButtonItem = {
@@ -29,8 +29,8 @@ open class ACMainNavigationController: UINavigationController {
     public required init(
         configuration: ACMediaConfiguration,
         selectedAssetsStack: ACSelectedImagesStack,
-        didPickAssets: ((ACPickerCallbackModel) -> Void)?,
-        didOpenSettings: (() -> Void)?
+        didPickAssets: ((ACPickerCallbackModel) -> Void)? = nil,
+        didOpenSettings: (() -> Void)? = nil
     ) {
         self.configuration = configuration
         self.selectedAssetsStack = selectedAssetsStack
