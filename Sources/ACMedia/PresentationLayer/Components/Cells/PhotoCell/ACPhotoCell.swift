@@ -41,8 +41,13 @@ open class ACPhotoCell: DPCollectionItemCell {
         button.backgroundColor = .clear
         button.tintColor = .white
         button.imageEdgeInsets = .zero
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 2)
+        button.layer.shadowOpacity = 0.5
+        button.layer.shadowRadius = 4
+        
         if #available(iOS 13.0, *) {
-            button.setPreferredSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 48), forImageIn: .normal)
+            button.setPreferredSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 24), forImageIn: .normal)
         }
         
         button.addTarget(self, action: #selector(checkButtonTapped), for: .touchUpInside)
@@ -74,8 +79,8 @@ open class ACPhotoCell: DPCollectionItemCell {
         cellOverlay.addSubview(checkButton)
         checkButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            checkButton.widthAnchor.constraint(equalToConstant: 44),
-            checkButton.heightAnchor.constraint(equalToConstant: 44),
+            checkButton.widthAnchor.constraint(equalToConstant: 24),
+            checkButton.heightAnchor.constraint(equalToConstant: 24),
             checkButton.topAnchor.constraint(equalTo: cellOverlay.topAnchor, constant: 4.0),
             checkButton.trailingAnchor.constraint(equalTo: cellOverlay.trailingAnchor, constant: -4.0)
         ])
