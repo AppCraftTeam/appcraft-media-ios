@@ -73,17 +73,15 @@ extension ACPhotosViewModel {
     /// Request an asset list for the selected album
     func fetchImageData() {
         DispatchQueue.main.async { [weak self] in
-            guard let strongSelf = self else {
-                return
-            }
-            if strongSelf.albumModel == nil {
-                strongSelf.albumModel = strongSelf.photoService.fetchRecentAlbum()
+            guard let self else { return }
+            if self.albumModel == nil {
+                self.albumModel = self.photoService.fetchRecentAlbum()
             }
             
-            if let model = strongSelf.albumModel {
-                strongSelf.imagesData = model.assets
+            if let model = self.albumModel {
+                self.imagesData = model.assets
             }
-            strongSelf.makeSections()
+            self.makeSections()
         }
     }
     
@@ -163,7 +161,7 @@ extension ACPhotosViewModel {
     /// Processing asset selection
     /// - Parameter model: Selection photo cell model
     func handleImageSelection(model: ACPhotoCellModel) {
-        let maxSelection = configuration.photoConfig.maximumSelection ?? Int.max
+        let maxSelection = configuration.photoConfig.limiter.max ?? Int.max
         let asset = imagesData[model.index]
         let indexPath = IndexPath(row: model.index + 1, section: 0)
 

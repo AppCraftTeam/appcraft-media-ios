@@ -135,15 +135,6 @@ Selecting the file type for the gallery picker.
  }
    ```
 
-
-Gallery restrictions - you can specify a minimum and maximum count for selected files.
-
-```swift
-enum ACMediaPhotoRestrictions {
-    case onlyOne, limit(min: Int, max: Int)
-}
-   ```
-
 ## Documents config
 
 For the file picker, you can configure the file type, allow to select multiple files, and display the extension.

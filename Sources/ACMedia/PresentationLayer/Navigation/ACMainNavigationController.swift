@@ -114,11 +114,11 @@ private extension ACMainNavigationController {
                 return selectedStr
             }
             var additionalStr: [String] = []
-            let min = configuration.photoConfig.minimimSelection
+            let min = configuration.photoConfig.limiter.min
             if min > 1 {
                 additionalStr += [String(format: ACAppLocale.selectedMin.locale, min)]
             }
-            if let max = configuration.photoConfig.maximumSelection {
+            if let max = configuration.photoConfig.limiter.max {
                 additionalStr += [String(format: ACAppLocale.selectedMax.locale, max)]
             }
             return selectedStr + ", " + additionalStr.joined(separator: ", ")

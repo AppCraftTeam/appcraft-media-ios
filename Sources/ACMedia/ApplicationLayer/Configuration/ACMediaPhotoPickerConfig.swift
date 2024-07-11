@@ -8,28 +8,10 @@
 
 import Foundation
 
-public enum ACMediaPhotoRestrictions {
-    case onlyOne, limit(min: Int, max: Int)
-}
-
 public struct ACMediaPhotoPickerConfig {
     var types: [ACPhotoPickerFilesType]
     
-    public var minimimSelection: Int = 1 {
-        didSet {
-            if minimimSelection <= 0 {
-                minimimSelection = 1
-            }
-        }
-    }
-    
-    public var maximumSelection: Int? {
-        didSet {
-            if let val = maximumSelection, val <= 0 {
-                maximumSelection = 1
-            }
-        }
-    }
+    public var limiter: ACMediaPhotoRestrictions
     
     public var allowCamera: Bool
     public var displayMinMaxRestrictions: Bool
@@ -42,14 +24,7 @@ public struct ACMediaPhotoPickerConfig {
     ) {
         self.types = types
         self.allowCamera = allowCamera
-        switch limiter {
-        case .onlyOne:
-            self.minimimSelection = 1
-            self.maximumSelection = 1
-        case let .limit(min, max):
-            self.minimimSelection = min
-            self.maximumSelection = max
-        }
+        self.limiter = limiter
         self.displayMinMaxRestrictions = displayMinMaxRestrictions
     }
 }

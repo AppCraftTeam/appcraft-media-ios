@@ -7,31 +7,6 @@
 
 import UIKit
 
-private enum AppTabBarItem {
-    case gallery, file
-    
-    var item: UITabBarItem {
-        switch self {
-        case .gallery:
-            let tabBarItem = UITabBarItem(
-                title: ACAppLocale.gallery.locale,
-                image: ACAppAssets.Navigation.gallery.image?.withRenderingMode(.alwaysTemplate),
-                selectedImage: ACAppAssets.Navigation.gallery.image?.withRenderingMode(.alwaysTemplate)
-            )
-            tabBarItem.tag = 0
-            return tabBarItem
-        case .file:
-            let tabBarItem = UITabBarItem(
-                title: ACAppLocale.file.locale,
-                image: ACAppAssets.Navigation.file.image?.withRenderingMode(.alwaysTemplate),
-                selectedImage: ACAppAssets.Navigation.file.image?.withRenderingMode(.alwaysTemplate)
-            )
-            tabBarItem.tag = 1
-            return tabBarItem
-        }
-    }
-}
-
 open class ACTabBarController: UITabBarController {
     
     private var acMediaService: ACMediaService
@@ -40,7 +15,7 @@ open class ACTabBarController: UITabBarController {
     
     private(set) lazy var photoController: ACMainNavigationController = {
         let vc = ACMainNavigationController(configuration: configuration, acMediaService: acMediaService)
-        vc.tabBarItem = AppTabBarItem.gallery.item
+        vc.tabBarItem = ACTabBarItem.gallery.item
         return vc
     }()
     
@@ -49,7 +24,7 @@ open class ACTabBarController: UITabBarController {
         vc.didPickDocuments = { [weak self] urls in
             self?.acMediaService.didPickDocuments(urls)
         }
-        vc.tabBarItem = AppTabBarItem.file.item
+        vc.tabBarItem = ACTabBarItem.file.item
         
         return vc
     }()

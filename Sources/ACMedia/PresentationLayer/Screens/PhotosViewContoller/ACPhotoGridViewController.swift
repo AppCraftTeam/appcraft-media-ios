@@ -144,14 +144,12 @@ open class ACPhotoGridViewController: UIViewController {
         configureCollectionView()
         
         viewModel.onReloadCollection = { [weak self] sections in
-            guard let strongSelf = self else {
-                return
-            }
-            strongSelf.collectionView.adapter?.reloadData(sections)
+            guard let self else { return }
+            self.collectionView.adapter?.reloadData(sections)
             
             AVCaptureDevice.requestAccess(for: .video) { granted in
                 if granted {
-                    strongSelf.setupCamera()
+                    self.setupCamera()
                 }
             }
         }
@@ -391,8 +389,8 @@ private extension ACPhotoGridViewController {
     /// Changing the availability of the confirmation button depending on the number of selected assets
     func checkDoneButtonCondition() {
         let selectedCount = viewModel.selectedAssetsStack.selectedCount
-        let min = viewModel.configuration.photoConfig.minimimSelection
-        let max = viewModel.configuration.photoConfig.maximumSelection
+        let min = viewModel.configuration.photoConfig.limiter.min
+        let max = viewModel.configuration.photoConfig.limiter.max
         
         var isEnabled: Bool {
             if let max = max {
