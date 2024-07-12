@@ -120,7 +120,9 @@ private extension ExamplesListViewController {
             colors: ACMediaColors(tintColor: model.selectedColor.color)
         )
         configuration.photoConfig = ACMediaPhotoPickerConfig(types: [.photo, .video], limiter: .limit(min: 2, max: 4))
-        configuration.documentsConfig = ACMediaDocumentConfig(fileFormats: [.zip])
+        configuration.documentsConfig = ACMediaDocumentConfig(
+            allowsMultipleSelection: true
+        )
         
         let tabbarController = ACTabBarController(
             configuration: configuration,
@@ -152,7 +154,10 @@ private extension ExamplesListViewController {
         configuration.appearance = ACMediaAppearance(
             colors: ACMediaColors(tintColor: model.selectedColor.color)
         )
-        configuration.documentsConfig = ACMediaDocumentConfig(fileFormats: [.pdf])
+        configuration.documentsConfig = ACMediaDocumentConfig(
+            fileFormats: [.pdf],
+            allowsMultipleSelection: false
+        )
         
         let tabbarController = ACTabBarController(
             configuration: configuration,
@@ -296,5 +301,24 @@ extension ExamplesListViewController: UITableViewDelegate {
         default:
             return UITableView.automaticDimension
         }
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case 1:
+            return model.images.isEmpty ? "" : "Images"
+        case 2:
+            return model.files.isEmpty ? "" : "Files and videos"
+        default:
+            return "Examples"
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        .zero
     }
 }
