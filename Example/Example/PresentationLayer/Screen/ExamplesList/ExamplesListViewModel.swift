@@ -11,6 +11,7 @@ import UIKit
 final class ExamplesListViewModel {
     
     let examples = ExampleType.allCases
+    var selectedColor: AppColors = .blue
     var images: [UIImage] = []
     var files: [URL] = []
 }

@@ -23,22 +23,52 @@ final class ExamplesListViewController: UIViewController {
         return tableView
     }()
     
+    lazy var footerStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+        stackView.alignment = .center
+        
+        return stackView
+    }()
+    
+    lazy var colorSegmentedControl: UISegmentedControl = {
+        let segmentedControl = UISegmentedControl()
+        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        AppColors.allCases.forEach({ color in
+            segmentedControl.insertSegment(withTitle: color.name, at: color.rawValue, animated: true)
+        })
+        segmentedControl.selectedSegmentIndex = model.selectedColor.rawValue
+        segmentedControl.addTarget(self, action: #selector(self.colorSegmentedControlDidChanged(_:)), for: .valueChanged)
+        
+        return segmentedControl
+    }()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = "ACMediaDemo"
+        self.title = "Example"
         self.view.backgroundColor = .systemGroupedBackground
         self.navigationController?.navigationBar.barStyle = .default
         self.navigationController?.navigationBar.backgroundColor = .systemGroupedBackground
         
         self.view.addSubview(tableView)
+        self.view.addSubview(footerStackView)
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            tableView.bottomAnchor.constraint(greaterThanOrEqualTo: self.footerStackView.topAnchor, constant: 8.0),
+            
+            footerStackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16.0),
+            footerStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16.0),
+            footerStackView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
         ])
+        
+        footerStackView.addArrangedSubview(colorSegmentedControl)
         
         tableView.reloadData()
     }
@@ -62,7 +92,7 @@ private extension ExamplesListViewController {
         var configuration = ACMediaConfiguration()
         configuration.photoConfig.allowCamera = false
         configuration.appearance = ACMediaAppearance(
-            colors: ACMediaColors(tintColor: .red)
+            colors: ACMediaColors(tintColor: model.selectedColor.color)
         )
         
         let tabbarController = ACTabBarController(
@@ -87,7 +117,7 @@ private extension ExamplesListViewController {
         var configuration = ACMediaConfiguration()
         configuration.photoConfig.allowCamera = false
         configuration.appearance = ACMediaAppearance(
-            colors: ACMediaColors(tintColor: .orange)
+            colors: ACMediaColors(tintColor: model.selectedColor.color)
         )
         configuration.photoConfig = ACMediaPhotoPickerConfig(types: [.photo, .video], limiter: .limit(min: 2, max: 4))
         configuration.documentsConfig = ACMediaDocumentConfig(fileFormats: [.zip])
@@ -120,7 +150,7 @@ private extension ExamplesListViewController {
     func openFilesPicker() {
         var configuration = ACMediaConfiguration()
         configuration.appearance = ACMediaAppearance(
-            colors: ACMediaColors(tintColor: .purple)
+            colors: ACMediaColors(tintColor: model.selectedColor.color)
         )
         configuration.documentsConfig = ACMediaDocumentConfig(fileFormats: [.pdf])
         
@@ -150,6 +180,16 @@ private extension ExamplesListViewController {
     func resetSelectedAssets() {
         model.images = []
         model.files = []
+    }
+    
+    @objc
+    func colorSegmentedControlDidChanged(_ segmentedControl: UISegmentedControl) {
+        print("segmentedControl - \(segmentedControl.selectedSegmentIndex)")
+        guard let color = AppColors(rawValue: segmentedControl.selectedSegmentIndex) else {
+            return
+        }
+        model.selectedColor = color
+        tableView.reloadData()
     }
 }
 
@@ -190,6 +230,7 @@ extension ExamplesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
         cell.selectionStyle = .none
+        cell.textLabel?.textColor = model.selectedColor.color
         cell.detailTextLabel?.textColor = .gray
         cell.detailTextLabel?.numberOfLines = 0
         
@@ -199,14 +240,14 @@ extension ExamplesListViewController: UITableViewDataSource {
             let imageView = UIImageView(image: image)
             imageView.contentMode = .scaleAspectFill
             imageView.translatesAutoresizingMaskIntoConstraints = false
-
+            
             cell.addSubview(imageView)
-
+            
             imageView.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor).isActive = true
             imageView.centerXAnchor.constraint(equalTo: cell.contentView.centerXAnchor).isActive = true
             imageView.heightAnchor.constraint(equalToConstant: 100.0).isActive = true
             imageView.widthAnchor.constraint(equalToConstant: 100.0).isActive = true
-
+            
             cell.detailTextLabel?.text = nil
             cell.accessoryType = .none
         case 2:
