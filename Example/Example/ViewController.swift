@@ -117,7 +117,7 @@ private extension ViewController {
         
         let tabbarController = ACTabBarController(
             configuration: configuration,
-            photoViewController: ACMainNavigationController(
+            photoViewController: ACPhotoNavigationController(
                 configuration: configuration,
                 didPickAssets: { [weak self] assets in
                     self?.didPickImages(assets.images)
@@ -139,11 +139,11 @@ private extension ViewController {
             colors: ACMediaColors(tintColor: .orange)
         )
         configuration.photoConfig = ACMediaPhotoPickerConfig(types: [.photo, .video], limiter: .limit(min: 2, max: 4))
-        configuration.documentsConfig = ACMediaPhotoDocConfig(fileFormats: [.zip])
+        configuration.documentsConfig = ACMediaDocumentConfig(fileFormats: [.zip])
         
         let tabbarController = ACTabBarController(
             configuration: configuration,
-            photoViewController: ACMainNavigationController(
+            photoViewController: ACPhotoNavigationController(
                 configuration: configuration,
                 didPickAssets: { [weak self] assets in
                     self?.didPickImages(assets.images)
@@ -170,7 +170,7 @@ private extension ViewController {
         configuration.appearance = ACMediaAppearance(
             colors: ACMediaColors(tintColor: .purple)
         )
-        configuration.documentsConfig = ACMediaPhotoDocConfig(fileFormats: [.pdf])
+        configuration.documentsConfig = ACMediaDocumentConfig(fileFormats: [.pdf])
         
         let tabbarController = ACTabBarController(
             configuration: configuration,

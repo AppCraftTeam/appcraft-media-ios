@@ -7,7 +7,7 @@
 
 import UIKit
 
-open class ACMainNavigationController: UINavigationController, ACPhotoPickerViewControllerInterface {    
+open class ACPhotoNavigationController: UINavigationController, ACPhotoPickerViewControllerInterface {    
     
     // MARK: - Components
     private lazy var selectedCounterLabel: UIBarButtonItem = {
@@ -71,7 +71,7 @@ open class ACMainNavigationController: UINavigationController, ACPhotoPickerView
     }
 }
 
-private extension ACMainNavigationController {
+private extension ACPhotoNavigationController {
     
     func setupNavigationBar() {
         navigationBar.tintColor = configuration.appearance.colors.tintColor

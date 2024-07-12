@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct ACMediaPhotoDocConfig {
+public struct ACMediaDocumentConfig {
     public var fileFormats: [ACMediaDocFileType]
     public var allowsMultipleSelection: Bool
     public var shouldShowFileExtensions: Bool
