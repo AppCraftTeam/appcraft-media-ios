@@ -10,12 +10,14 @@ import PhotosUI
 
 /// A stack that contains assets selected by the user for their further transfer to the application
 open class ACSelectedImagesStack {
-    
+        
     public init() {}
     
+    open var didSelectedImagesChanged: (() -> Void)?
+
     private var selectedImageAssets: [PHAsset] = [] {
         didSet {
-            NotificationCenter.default.post(name: .onSelectedImagesChanged, object: nil)
+            didSelectedImagesChanged?()
         }
     }
     

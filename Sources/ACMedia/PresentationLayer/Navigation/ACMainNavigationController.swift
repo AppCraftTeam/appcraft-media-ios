@@ -50,12 +50,10 @@ open class ACMainNavigationController: UINavigationController, ACPhotoPickerView
         setupToolbar()
         setupNavigationBar()
         
-        // Subscribe to notification to track changes in the count of selected assets
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(refreshToolbar),
-            name: .onSelectedImagesChanged,
-            object: nil)
+        // Track changes in the count of selected assets
+        self.selectedAssetsStack.didSelectedImagesChanged = { [weak self] in
+            self?.updateToolbarText()
+        }
         
         let imageGridController = ACPhotoGridViewController(
             viewModel: ACPhotosViewModel(
@@ -68,6 +66,7 @@ open class ACMainNavigationController: UINavigationController, ACPhotoPickerView
                 }
             )
         )
+        
         viewControllers = [imageGridController]
     }
 }
@@ -101,11 +100,6 @@ private extension ACMainNavigationController {
         self.toolbar.isTranslucent = true
         self.toolbar.backgroundColor = configuration.appearance.colors.backgroundColor
         self.toolbar.isUserInteractionEnabled = false
-        refreshToolbar()
-    }
-    
-    @objc
-    func refreshToolbar() {
         updateToolbarText()
     }
     
