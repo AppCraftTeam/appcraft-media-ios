@@ -24,10 +24,11 @@ open class ACDocumentPickerViewController: UIDocumentPickerViewController, ACDoc
     
     /// Show picker for selecting documents
     /// - Parameter types: File types
-    static func create(configuration: ACMediaConfiguration) -> ACDocumentPickerViewController {
+    static public func create(configuration: ACMediaConfiguration, didPickDocuments: (([URL]) -> Void)?) -> ACDocumentPickerViewController {
         let types = configuration.documentsConfig.fileFormats
         if #available(iOS 14.0, *) {
             let pickerViewController = ACDocumentPickerViewController(forOpeningContentTypes: types.map({ $0.utType }), asCopy: true)
+            pickerViewController.didPickDocuments = didPickDocuments
             pickerViewController.delegate = pickerViewController
             pickerViewController.allowsMultipleSelection = configuration.documentsConfig.allowsMultipleSelection
             pickerViewController.shouldShowFileExtensions = configuration.documentsConfig.shouldShowFileExtensions
@@ -36,6 +37,7 @@ open class ACDocumentPickerViewController: UIDocumentPickerViewController, ACDoc
             return pickerViewController
         } else {
             let pickerViewController = ACDocumentPickerViewController(documentTypes: types.map({ $0.kutType as String }), in: .import)
+            pickerViewController.didPickDocuments = didPickDocuments
             pickerViewController.delegate = pickerViewController
             pickerViewController.allowsMultipleSelection = configuration.documentsConfig.allowsMultipleSelection
             pickerViewController.view.tintColor = configuration.appearance.colors.tintColor

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public extension NSNotification.Name {
+extension NSNotification.Name {
     ///Notification to track changes in the number of selected assets
     static var onSelectedImagesChanged = Notification.Name("ACMedia.onSelectedImagesChanged")
 }

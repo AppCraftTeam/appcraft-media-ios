@@ -28,15 +28,14 @@ open class ACMainNavigationController: UINavigationController, ACPhotoPickerView
     
     public required init(
         configuration: ACMediaConfiguration,
-        selectedAssetsStack: ACSelectedImagesStack,
         didPickAssets: ((ACPickerCallbackModel) -> Void)? = nil,
         didOpenSettings: (() -> Void)? = nil
     ) {
         self.configuration = configuration
-        self.selectedAssetsStack = selectedAssetsStack
         self.didPickAssets = didPickAssets
         self.didOpenSettings = didOpenSettings
         self.navigationTransition = ACZoomTransitionDelegate(configuration: configuration)
+        self.selectedAssetsStack = ACSelectedImagesStack()
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -112,7 +111,7 @@ private extension ACMainNavigationController {
     
     /// Update the text in the toolbar to show the current number of selected assets
     func updateToolbarText() {
-        var totalImages = selectedAssetsStack.selectedCount
+        let totalImages = selectedAssetsStack.selectedCount
         let selectedStr = String(format: ACAppLocale.selectedCount.locale, totalImages)
         var displayedText: String {
             guard configuration.photoConfig.displayMinMaxRestrictions else {

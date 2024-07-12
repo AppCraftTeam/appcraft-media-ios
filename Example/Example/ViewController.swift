@@ -117,15 +117,18 @@ private extension ViewController {
         
         let tabbarController = ACTabBarController(
             configuration: configuration,
-            fileType: .gallery,
-            assetsSelected: { [weak self] assets in
-                self?.didPickImages(assets.images)
-                self?.didPickDocuments(assets.videoUrls)
-            },
-            didOpenSettings: { [weak self] in
-                self?.openSystemSettings()
-            }
+            photoViewController: ACMainNavigationController(
+                configuration: configuration,
+                didPickAssets: { [weak self] assets in
+                    self?.didPickImages(assets.images)
+                    self?.didPickDocuments(assets.videoUrls)
+                },
+                didOpenSettings: { [weak self] in
+                    self?.openSystemSettings()
+                }
+            )
         )
+        
         self.present(tabbarController, animated: true)
     }
     
@@ -140,17 +143,22 @@ private extension ViewController {
         
         let tabbarController = ACTabBarController(
             configuration: configuration,
-            fileType: .galleryAndFiles,
-            assetsSelected: { [weak self] assets in
-                self?.didPickImages(assets.images)
-                self?.didPickDocuments(assets.videoUrls)
-            },
-            filesSelected: { [weak self] fileUrls in
-                self?.didPickDocuments(fileUrls)
-            },
-            didOpenSettings: { [weak self] in
-                self?.openSystemSettings()
-            }
+            photoViewController: ACMainNavigationController(
+                configuration: configuration,
+                didPickAssets: { [weak self] assets in
+                    self?.didPickImages(assets.images)
+                    self?.didPickDocuments(assets.videoUrls)
+                },
+                didOpenSettings: { [weak self] in
+                    self?.openSystemSettings()
+                }
+            ),
+            documentsViewController: ACDocumentPickerViewController.create(
+                configuration: configuration,
+                didPickDocuments: { [weak self] fileUrls in
+                    self?.didPickDocuments(fileUrls)
+                }
+            )
         )
         
         self.present(tabbarController, animated: true)
@@ -166,13 +174,12 @@ private extension ViewController {
         
         let tabbarController = ACTabBarController(
             configuration: configuration,
-            fileType: .files,
-            filesSelected: { [weak self] fileUrls in
-                self?.didPickDocuments(fileUrls)
-            },
-            didOpenSettings: { [weak self] in
-                self?.openSystemSettings()
-            }
+            documentsViewController: ACDocumentPickerViewController.create(
+                configuration: configuration,
+                didPickDocuments: { [weak self] fileUrls in
+                    self?.didPickDocuments(fileUrls)
+                }
+            )
         )
         
         self.present(tabbarController, animated: true)

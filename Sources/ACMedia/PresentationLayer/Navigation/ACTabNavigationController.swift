@@ -18,63 +18,46 @@ public protocol ACDocumentPickerViewControllerInterface: UIViewController {
 
 open class ACTabBarController: UITabBarController {
     
-    public var fileType: ACPickerFilesType
-    public var selectedAssetsStack: ACSelectedImagesStack
-    
-    
     open var configuration: ACMediaConfiguration
-    open var photoViewController: ACPhotoPickerViewControllerInterface
-    open var documentsViewController: ACDocumentPickerViewControllerInterface
-    
-    // Callbacks
-    public var assetsSelected: ((ACPickerCallbackModel) -> Void)?
-    public var filesSelected: (([URL]) -> Void)?
-    public var didOpenSettings: (() -> Void)?
-    
+    open var photoViewController: ACPhotoPickerViewControllerInterface?
+    open var documentsViewController: ACDocumentPickerViewControllerInterface?
+
     @available(iOS 13.0, *)
     var tabBarAppearance: UITabBarAppearance {
         let appearance = UITabBarAppearance()
         appearance.configureWithDefaultBackground()
         return appearance
     }
+        
+    public required init(
+        configuration: ACMediaConfiguration,
+        photoViewController: ACPhotoPickerViewControllerInterface?,
+        documentsViewController: ACDocumentPickerViewControllerInterface?
+    ) {
+        self.configuration = configuration
+        self.photoViewController = photoViewController
+        self.documentsViewController = documentsViewController
+        super.init(nibName: nil, bundle: nil)
+    }
     
     public required init(
         configuration: ACMediaConfiguration,
-        fileType: ACPickerFilesType,
-        photoViewController: ACPhotoPickerViewControllerInterface? = nil,
-        documentsViewController: ACDocumentPickerViewControllerInterface? = nil,
-        assetsSelected: ((ACPickerCallbackModel) -> Void)? = nil,
-        filesSelected: (([URL]) -> Void)? = nil,
-        didOpenSettings: (() -> Void)? = nil
+        photoViewController: ACPhotoPickerViewControllerInterface
     ) {
         self.configuration = configuration
-        self.fileType = fileType
-        self.selectedAssetsStack = ACSelectedImagesStack()
-        self.assetsSelected = assetsSelected
-        self.filesSelected = filesSelected
-        self.didOpenSettings = didOpenSettings
-        
-        self.photoViewController = photoViewController ?? ACMainNavigationController(
-            configuration: configuration,
-            selectedAssetsStack: selectedAssetsStack
-        )
-        self.documentsViewController = documentsViewController ?? ACDocumentPickerViewController.create(configuration: configuration)
+        self.photoViewController = photoViewController
+        self.documentsViewController = nil
         super.init(nibName: nil, bundle: nil)
-
-        if photoViewController == nil {
-            self.photoViewController.didPickAssets = { assets in
-                self.assetsSelected?(assets)
-            }
-            self.photoViewController.didOpenSettings = {
-                self.didOpenSettings?()
-            }
-        }
-        
-        if documentsViewController == nil {
-            self.documentsViewController.didPickDocuments = { [weak self] urls in
-                self?.filesSelected?(urls)
-            }
-        }
+    }
+    
+    public required init(
+        configuration: ACMediaConfiguration,
+        documentsViewController: ACDocumentPickerViewControllerInterface
+    ) {
+        self.configuration = configuration
+        self.photoViewController = nil
+        self.documentsViewController = documentsViewController
+        super.init(nibName: nil, bundle: nil)
     }
     
     public required init?(coder aDecoder: NSCoder) {
@@ -99,8 +82,8 @@ open class ACTabBarController: UITabBarController {
 private extension ACTabBarController {
     
     func setupViewControllers() {
-        photoViewController.tabBarItem = ACTabBarItem.gallery.item
-        documentsViewController.tabBarItem = ACTabBarItem.file.item
+        photoViewController?.tabBarItem = ACTabBarItem.gallery.item
+        documentsViewController?.tabBarItem = ACTabBarItem.file.item
         
         let navControllers = makeNavControllers()
         setViewControllers(navControllers, animated: true)
@@ -111,18 +94,15 @@ private extension ACTabBarController {
         tabBar.barStyle = .default
         tabBar.isTranslucent = true
         
-        switch fileType {
-        case .gallery, .files:
+        if (self.viewControllers ?? []).count < 2 {
             tabBar.isHidden = true
             tabBar.removeFromSuperview()
             
             edgesForExtendedLayout = []
             extendedLayoutIncludesOpaqueBars = true
             view.backgroundColor = .white
-        case .galleryAndFiles:
-            break
         }
-        
+
         let items = tabBar.items ?? []
         items.forEach({ item in
             if #available(iOS 13.0, *) {
@@ -132,20 +112,13 @@ private extension ACTabBarController {
     }
     
     func makeNavControllers() -> [UIViewController] {
-        switch fileType {
-        case .gallery:
-            return [
-                photoViewController
-            ]
-        case .files:
-            return [
-                documentsViewController
-            ]
-        case .galleryAndFiles:
-            return [
-                photoViewController,
-                documentsViewController
-            ]
+        var controllers: [UIViewController] = []
+        if let photoViewController = photoViewController {
+            controllers.append(photoViewController)
         }
+        if let documentsViewController = documentsViewController {
+            controllers.append(documentsViewController)
+        }
+        return controllers
     }
 }
