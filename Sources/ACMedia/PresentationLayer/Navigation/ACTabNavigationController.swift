@@ -73,15 +73,6 @@ private extension ACTabBarController {
         tabBar.tintColor = configuration.appearance.colors.tintColor
         tabBar.barStyle = .default
         tabBar.isTranslucent = true
-        
-        if (self.viewControllers ?? []).count < 2 {
-            tabBar.isHidden = true
-            tabBar.removeFromSuperview()
-            
-            edgesForExtendedLayout = []
-            extendedLayoutIncludesOpaqueBars = true
-            view.backgroundColor = .white
-        }
 
         let items = tabBar.items ?? []
         items.forEach({ item in

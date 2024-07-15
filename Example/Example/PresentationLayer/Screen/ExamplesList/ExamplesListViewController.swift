@@ -146,7 +146,7 @@ private extension ExamplesListViewController {
     }
     
     func openFilesPicker() {
-        var configuration = ACMediaConfiguration(
+        let configuration = ACMediaConfiguration(
             appearance: ACMediaAppearance(
                 colors: ACMediaColors(tintColor: model.selectedColor.color)
             ),
