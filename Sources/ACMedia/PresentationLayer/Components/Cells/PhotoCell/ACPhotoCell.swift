@@ -36,7 +36,7 @@ open class ACPhotoCell: DPCollectionItemCell {
     }()
     
     private(set) lazy var checkButton: UIButton = {
-        let button = UIButton()
+        let button = ExpandableTapButton()
         button.setTitle(nil, for: [])
         button.backgroundColor = .clear
         button.tintColor = .white
