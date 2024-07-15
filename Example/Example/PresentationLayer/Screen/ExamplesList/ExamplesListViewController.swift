@@ -95,22 +95,18 @@ private extension ExamplesListViewController {
             colors: ACMediaColors(tintColor: model.selectedColor.color)
         )
         
-        let tabbarController = ACTabBarController(
+        let vc = ACPhotoNavigationController(
             configuration: configuration,
-            photoViewController: ACPhotoNavigationController(
-                configuration: configuration,
-                didPickAssets: { [weak self] assets in
-                    self?.resetSelectedAssets()
-                    self?.didPickImages(assets.images)
-                    self?.didPickDocuments(assets.videoUrls)
-                },
-                didOpenSettings: { [weak self] in
-                    self?.openSystemSettings()
-                }
-            )
+            didPickAssets: { [weak self] assets in
+                self?.resetSelectedAssets()
+                self?.didPickImages(assets.images)
+                self?.didPickDocuments(assets.videoUrls)
+            },
+            didOpenSettings: { [weak self] in
+                self?.openSystemSettings()
+            }
         )
-        
-        self.present(tabbarController, animated: true)
+        self.present(vc, animated: true)
     }
     
     func openImageAndFilesPicker() {
@@ -150,28 +146,25 @@ private extension ExamplesListViewController {
     }
     
     func openFilesPicker() {
-        var configuration = ACMediaConfiguration()
-        configuration.appearance = ACMediaAppearance(
-            colors: ACMediaColors(tintColor: model.selectedColor.color)
-        )
-        configuration.documentsConfig = ACMediaDocumentConfig(
-            fileFormats: [.pdf],
-            allowsMultipleSelection: false
-        )
-        
-        let tabbarController = ACTabBarController(
-            configuration: configuration,
-            documentsViewController: ACDocumentPickerViewController.create(
-                configuration: configuration,
-                didPickDocuments: { [weak self] fileUrls in
-                    self?.didPickDocuments(fileUrls)
-                }
+        var configuration = ACMediaConfiguration(
+            appearance: ACMediaAppearance(
+                colors: ACMediaColors(tintColor: model.selectedColor.color)
+            ),
+            documentsConfig: ACMediaDocumentConfig(
+                fileFormats: [.pdf],
+                allowsMultipleSelection: false
             )
         )
         
-        self.present(tabbarController, animated: true)
+        let vc = ACDocumentPickerViewController.create(
+            configuration: configuration,
+            didPickDocuments: { [weak self] fileUrls in
+                self?.didPickDocuments(fileUrls)
+            }
+        )
+        
+        self.present(vc, animated: true)
     }
-    
     
     func openSystemSettings() {
         guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else {

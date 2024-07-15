@@ -19,8 +19,8 @@ public protocol ACDocumentPickerViewControllerInterface: UIViewController {
 open class ACTabBarController: UITabBarController {
     
     open var configuration: ACMediaConfiguration
-    open var photoViewController: ACPhotoPickerViewControllerInterface?
-    open var documentsViewController: ACDocumentPickerViewControllerInterface?
+    open var photoViewController: ACPhotoPickerViewControllerInterface
+    open var documentsViewController: ACDocumentPickerViewControllerInterface
 
     @available(iOS 13.0, *)
     var tabBarAppearance: UITabBarAppearance {
@@ -31,35 +31,15 @@ open class ACTabBarController: UITabBarController {
         
     public required init(
         configuration: ACMediaConfiguration,
-        photoViewController: ACPhotoPickerViewControllerInterface?,
-        documentsViewController: ACDocumentPickerViewControllerInterface?
-    ) {
-        self.configuration = configuration
-        self.photoViewController = photoViewController
-        self.documentsViewController = documentsViewController
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    public required init(
-        configuration: ACMediaConfiguration,
-        photoViewController: ACPhotoPickerViewControllerInterface
-    ) {
-        self.configuration = configuration
-        self.photoViewController = photoViewController
-        self.documentsViewController = nil
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    public required init(
-        configuration: ACMediaConfiguration,
+        photoViewController: ACPhotoPickerViewControllerInterface,
         documentsViewController: ACDocumentPickerViewControllerInterface
     ) {
         self.configuration = configuration
-        self.photoViewController = nil
+        self.photoViewController = photoViewController
         self.documentsViewController = documentsViewController
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -82,8 +62,8 @@ open class ACTabBarController: UITabBarController {
 private extension ACTabBarController {
     
     func setupViewControllers() {
-        photoViewController?.tabBarItem = ACTabBarItem.gallery.item
-        documentsViewController?.tabBarItem = ACTabBarItem.file.item
+        photoViewController.tabBarItem = ACTabBarItem.gallery.item
+        documentsViewController.tabBarItem = ACTabBarItem.file.item
         
         let navControllers = makeNavControllers()
         setViewControllers(navControllers, animated: true)
@@ -112,13 +92,6 @@ private extension ACTabBarController {
     }
     
     func makeNavControllers() -> [UIViewController] {
-        var controllers: [UIViewController] = []
-        if let photoViewController = photoViewController {
-            controllers.append(photoViewController)
-        }
-        if let documentsViewController = documentsViewController {
-            controllers.append(documentsViewController)
-        }
-        return controllers
+        [photoViewController, documentsViewController]
     }
 }
