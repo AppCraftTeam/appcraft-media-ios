@@ -17,6 +17,8 @@ open class ACPhotoGridViewController: UIViewController {
     
     // Session for camera preview
     private let captureSession = AVCaptureSession()
+    // Attempts to add camera previews to a cell
+    private let maxRetryCount = 4
     
     // MARK: - Components
     private lazy var doneButton: UIBarButtonItem = {
@@ -339,13 +341,48 @@ private extension ACPhotoGridViewController {
             }
             
             self.captureSession.commitConfiguration()
-
-            DispatchQueue.main.async {
-                (self.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) as? ACCameraCell)?.addCameraLayer(previewLayer)
-            }
+            
             // Start running the session on a concurrent queue
             DispatchQueue(label: "ACMedia.CameraThread", qos: .userInitiated).async {
                 self.captureSession.startRunning()
+            }
+            
+            self.addCameraLayerToCell(previewLayer: previewLayer, retryCount: 0)
+        }
+    }
+    
+    /// Remove and clear camera preview
+    func cleanupCamera() {
+        // Stop the capture session
+        if captureSession.isRunning {
+            captureSession.stopRunning()
+        }
+        
+        // Remove all inputs
+        if let inputs = captureSession.inputs as? [AVCaptureDeviceInput] {
+            for input in inputs {
+                captureSession.removeInput(input)
+            }
+        }
+        
+        // Remove all outputs
+        for output in captureSession.outputs {
+            captureSession.removeOutput(output)
+        }
+    }
+    
+    /// Add camera preview to cell
+    /// - Parameters:
+    ///   - previewLayer: Camera preview layer
+    ///   - retryCount: Current attention number
+    func addCameraLayerToCell(previewLayer: AVCaptureVideoPreviewLayer, retryCount: Int) {
+        DispatchQueue.main.async {
+            if let cell = self.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) as? ACCameraCell {
+                cell.addCameraLayer(previewLayer)
+            } else if retryCount < self.maxRetryCount {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.addCameraLayerToCell(previewLayer: previewLayer, retryCount: retryCount + 1)
+                }
             }
         }
     }
@@ -534,6 +571,7 @@ extension ACPhotoGridViewController {
     private func cancelAction() {
         viewModel.selectedAssetsStack.deleteAll()
         self.dismiss(animated: true, completion: nil)
+        self.cleanupCamera()
     }
     @objc
     private func doneAction() {
