@@ -81,12 +81,12 @@ extension ACPhotosViewModel {
             if let model = self.albumModel {
                 self.imagesData = model.assets
             }
-            self.makeSections()
+            self.makeSections(isNeedUpdateView: true)
         }
     }
     
     /// Create models to represent the assets in the collection view
-    func makeSections() {
+    func makeSections(isNeedUpdateView: Bool) {
         guard let model = self.albumModel else {
             return
         }
@@ -135,6 +135,10 @@ extension ACPhotosViewModel {
         
         self.sections.removeAll()
         self.sections = [Section(photos: photosViewModels, camera: cameraModel)]
+        
+        guard isNeedUpdateView else {
+            return
+        }
         
         //Placeholder
         // swiftlint:disable:next empty_count
@@ -186,7 +190,7 @@ extension ACPhotosViewModel {
                     let oldIndexPath = IndexPath(item: oldIndex + 1, section: 0)
                     selectedAssetsStack.add(asset)
                     
-                    self.makeSections()
+                    self.makeSections(isNeedUpdateView: false)
                     self.onReloadCells?([oldIndexPath, indexPath])
                 }
                 
@@ -196,7 +200,7 @@ extension ACPhotosViewModel {
             selectedAssetsStack.add(asset)
         }
         
-        self.makeSections()
+        self.makeSections(isNeedUpdateView: false)
         onReloadCells?([indexPath])
         onSetupDoneButton?()
     }
