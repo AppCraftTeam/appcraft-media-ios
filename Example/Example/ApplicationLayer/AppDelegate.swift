@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     /// The RootViewController
     var rootViewController: UIViewController {
-        UINavigationController(rootViewController: ViewController())
+        UINavigationController(rootViewController: ExamplesListViewController())
     }
 
     /// Application did finish launching with options

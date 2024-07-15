@@ -11,12 +11,12 @@ public struct ACMediaConfiguration {
     
     public var appearance: ACMediaAppearance
     public var photoConfig: ACMediaPhotoPickerConfig
-    public var documentsConfig: ACMediaPhotoDocConfig
+    public var documentsConfig: ACMediaDocumentConfig
     
     public init(
         appearance: ACMediaAppearance = ACMediaAppearance(),
         photoConfig: ACMediaPhotoPickerConfig = ACMediaPhotoPickerConfig(),
-        documentsConfig: ACMediaPhotoDocConfig = ACMediaPhotoDocConfig()
+        documentsConfig: ACMediaDocumentConfig = ACMediaDocumentConfig()
     ) {
         self.appearance = appearance
         self.photoConfig = photoConfig

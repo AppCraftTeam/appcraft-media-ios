@@ -7,7 +7,7 @@
 
 import UIKit
 
-open class ACMainNavigationController: UINavigationController {
+open class ACPhotoNavigationController: UINavigationController, ACPhotoPickerViewControllerInterface {    
     
     // MARK: - Components
     private lazy var selectedCounterLabel: UIBarButtonItem = {
@@ -19,14 +19,23 @@ open class ACMainNavigationController: UINavigationController {
     }()
     
     // MARK: - Params
-    open var acMediaService: ACMediaService?
+    public var didPickAssets: ((ACPickerCallbackModel) -> Void)?
+    public var didOpenSettings: (() -> Void)?
+    
     open var configuration: ACMediaConfiguration
+    public var selectedAssetsStack: ACSelectedImagesStack
     private let navigationTransition: ACZoomTransitionDelegate
     
-    public required init(configuration: ACMediaConfiguration, acMediaService: ACMediaService?) {
-        self.acMediaService = acMediaService
+    public required init(
+        configuration: ACMediaConfiguration,
+        didPickAssets: ((ACPickerCallbackModel) -> Void)? = nil,
+        didOpenSettings: (() -> Void)? = nil
+    ) {
         self.configuration = configuration
+        self.didPickAssets = didPickAssets
+        self.didOpenSettings = didOpenSettings
         self.navigationTransition = ACZoomTransitionDelegate(configuration: configuration)
+        self.selectedAssetsStack = ACSelectedImagesStack()
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -36,37 +45,33 @@ open class ACMainNavigationController: UINavigationController {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-        guard let acMediaService = self.acMediaService else {
-            return
-        }
         self.delegate = navigationTransition
         
         setupToolbar()
         setupNavigationBar()
         
-        // Subscribe to notification to track changes in the count of selected assets
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(refreshToolbar),
-            name: .onSelectedImagesChanged,
-            object: nil)
+        // Track changes in the count of selected assets
+        self.selectedAssetsStack.didSelectedImagesChanged = { [weak self] in
+            self?.updateToolbarText()
+        }
         
         let imageGridController = ACPhotoGridViewController(
             viewModel: ACPhotosViewModel(
                 configuration: configuration,
-                selectedAssetsStack: acMediaService.selectedAssetsStack,
+                selectedAssetsStack: selectedAssetsStack,
                 didPickAssets: { selectedAssetsModel in
-                    self.acMediaService?.didPickAssets(selectedAssetsModel)
+                    self.didPickAssets?(selectedAssetsModel)
                 }, didOpenSettings: {
-                    self.acMediaService?.didOpenSettings?()
+                    self.didOpenSettings?()
                 }
             )
         )
+        
         viewControllers = [imageGridController]
     }
 }
 
-private extension ACMainNavigationController {
+private extension ACPhotoNavigationController {
     
     func setupNavigationBar() {
         navigationBar.tintColor = configuration.appearance.colors.tintColor
@@ -95,30 +100,23 @@ private extension ACMainNavigationController {
         self.toolbar.isTranslucent = true
         self.toolbar.backgroundColor = configuration.appearance.colors.backgroundColor
         self.toolbar.isUserInteractionEnabled = false
-        refreshToolbar()
-    }
-    
-    @objc
-    func refreshToolbar() {
         updateToolbarText()
     }
     
     /// Update the text in the toolbar to show the current number of selected assets
     func updateToolbarText() {
-        guard let totalImages = self.acMediaService?.selectedAssetsStack.selectedCount else {
-            return
-        }
+        let totalImages = selectedAssetsStack.selectedCount
         let selectedStr = String(format: ACAppLocale.selectedCount.locale, totalImages)
         var displayedText: String {
             guard configuration.photoConfig.displayMinMaxRestrictions else {
                 return selectedStr
             }
             var additionalStr: [String] = []
-            let min = configuration.photoConfig.minimimSelection
+            let min = configuration.photoConfig.limiter.min
             if min > 1 {
                 additionalStr += [String(format: ACAppLocale.selectedMin.locale, min)]
             }
-            if let max = configuration.photoConfig.maximumSelection {
+            if let max = configuration.photoConfig.limiter.max {
                 additionalStr += [String(format: ACAppLocale.selectedMax.locale, max)]
             }
             return selectedStr + ", " + additionalStr.joined(separator: ", ")

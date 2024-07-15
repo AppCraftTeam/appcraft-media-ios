@@ -73,22 +73,20 @@ extension ACPhotosViewModel {
     /// Request an asset list for the selected album
     func fetchImageData() {
         DispatchQueue.main.async { [weak self] in
-            guard let strongSelf = self else {
-                return
-            }
-            if strongSelf.albumModel == nil {
-                strongSelf.albumModel = strongSelf.photoService.fetchRecentAlbum()
+            guard let self else { return }
+            if self.albumModel == nil {
+                self.albumModel = self.photoService.fetchRecentAlbum()
             }
             
-            if let model = strongSelf.albumModel {
-                strongSelf.imagesData = model.assets
+            if let model = self.albumModel {
+                self.imagesData = model.assets
             }
-            strongSelf.makeSections()
+            self.makeSections(isNeedUpdateView: true)
         }
     }
     
     /// Create models to represent the assets in the collection view
-    func makeSections() {
+    func makeSections(isNeedUpdateView: Bool) {
         guard let model = self.albumModel else {
             return
         }
@@ -138,6 +136,10 @@ extension ACPhotosViewModel {
         self.sections.removeAll()
         self.sections = [Section(photos: photosViewModels, camera: cameraModel)]
         
+        guard isNeedUpdateView else {
+            return
+        }
+        
         //Placeholder
         // swiftlint:disable:next empty_count
         if self.imagesData.count == 0 {
@@ -163,8 +165,10 @@ extension ACPhotosViewModel {
     /// Processing asset selection
     /// - Parameter model: Selection photo cell model
     func handleImageSelection(model: ACPhotoCellModel) {
-        let maxSelection = configuration.photoConfig.maximumSelection ?? Int.max
-        let asset = imagesData[model.index]
+        let maxSelection = configuration.photoConfig.limiter.max ?? Int.max
+        guard let asset = PHAsset.getSafeElement(fetchResult: imagesData, index: model.index) else {
+            return
+        }
         let indexPath = IndexPath(row: model.index + 1, section: 0)
 
         handleMaximumSelection(maxSelection, asset, indexPath)
@@ -186,7 +190,7 @@ extension ACPhotosViewModel {
                     let oldIndexPath = IndexPath(item: oldIndex + 1, section: 0)
                     selectedAssetsStack.add(asset)
                     
-                    self.makeSections()
+                    self.makeSections(isNeedUpdateView: false)
                     self.onReloadCells?([oldIndexPath, indexPath])
                 }
                 
@@ -196,7 +200,7 @@ extension ACPhotosViewModel {
             selectedAssetsStack.add(asset)
         }
         
-        self.makeSections()
+        self.makeSections(isNeedUpdateView: false)
         onReloadCells?([indexPath])
         onSetupDoneButton?()
     }
@@ -211,7 +215,7 @@ extension ACPhotosViewModel {
         init(photos: [ACPhotoCellModel], camera: ACCameraCellModel?) {
             self.items = photos
             if let camera = camera {
-                self.items.append(camera)
+                self.items.insert(camera, at: 0)
             }
             self.header = nil
             self.footer = nil

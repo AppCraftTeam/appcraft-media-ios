@@ -17,6 +17,8 @@ open class ACPhotoGridViewController: UIViewController {
     
     // Session for camera preview
     private let captureSession = AVCaptureSession()
+    // Attempts to add camera previews to a cell
+    private let maxRetryCount = 4
     
     // MARK: - Components
     private lazy var doneButton: UIBarButtonItem = {
@@ -144,14 +146,12 @@ open class ACPhotoGridViewController: UIViewController {
         configureCollectionView()
         
         viewModel.onReloadCollection = { [weak self] sections in
-            guard let strongSelf = self else {
-                return
-            }
-            strongSelf.collectionView.adapter?.reloadData(sections)
-            
+            guard let self else { return }
+            self.collectionView.adapter?.reloadData(sections)
+
             AVCaptureDevice.requestAccess(for: .video) { granted in
                 if granted {
-                    strongSelf.setupCamera()
+                    self.setupCamera()
                 }
             }
         }
@@ -316,32 +316,74 @@ private extension ACPhotoGridViewController {
             return
         }
         
-        captureSession.beginConfiguration()
+        DispatchQueue.main.async {
+            self.captureSession.beginConfiguration()
+            
+            // Remove existing inputs
+            if let inputs = self.captureSession.inputs as? [AVCaptureDeviceInput] {
+                for input in inputs {
+                    self.captureSession.removeInput(input)
+                }
+            }
+            
+            // Configure preview layer
+            let previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
+            previewLayer.videoGravity = .resizeAspectFill
+            
+            // Add new input
+            if let captureDevice = AVCaptureDevice.default(for: .video) {
+                do {
+                    let input = try AVCaptureDeviceInput(device: captureDevice)
+                    self.captureSession.addInput(input)
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+            
+            self.captureSession.commitConfiguration()
+            
+            // Start running the session on a concurrent queue
+            DispatchQueue(label: "ACMedia.CameraThread", qos: .userInitiated).async {
+                self.captureSession.startRunning()
+            }
+            
+            self.addCameraLayerToCell(previewLayer: previewLayer, retryCount: 0)
+        }
+    }
+    
+    /// Remove and clear camera preview
+    func cleanupCamera() {
+        // Stop the capture session
+        if captureSession.isRunning {
+            captureSession.stopRunning()
+        }
         
+        // Remove all inputs
         if let inputs = captureSession.inputs as? [AVCaptureDeviceInput] {
             for input in inputs {
                 captureSession.removeInput(input)
             }
         }
         
-        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        previewLayer.videoGravity = .resizeAspectFill
-        
-        if let captureDevice = AVCaptureDevice.default(for: .video) {
-            do {
-                let input = try AVCaptureDeviceInput(device: captureDevice)
-                captureSession.addInput(input)
-            } catch {
-                print(error.localizedDescription)
-            }
+        // Remove all outputs
+        for output in captureSession.outputs {
+            captureSession.removeOutput(output)
         }
-        
-        captureSession.commitConfiguration()
-        
-        DispatchQueue(label: "ACMedia.CameraThread", attributes: .concurrent).async {
-            self.captureSession.beginConfiguration()
-            self.captureSession.commitConfiguration()
-            self.captureSession.startRunning()
+    }
+    
+    /// Add camera preview to cell
+    /// - Parameters:
+    ///   - previewLayer: Camera preview layer
+    ///   - retryCount: Current attention number
+    func addCameraLayerToCell(previewLayer: AVCaptureVideoPreviewLayer, retryCount: Int) {
+        DispatchQueue.main.async {
+            if let cell = self.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) as? ACCameraCell {
+                cell.addCameraLayer(previewLayer)
+            } else if retryCount < self.maxRetryCount {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.addCameraLayerToCell(previewLayer: previewLayer, retryCount: retryCount + 1)
+                }
+            }
         }
     }
     
@@ -350,23 +392,23 @@ private extension ACPhotoGridViewController {
     func handleWillDispayCellEvent(data: DPCollectionAdapter.ItemContext) {
         guard let cell = data.cell as? ACPhotoCell else { return }
         let indexPath = data.indexPath
-        let rowIndexPath = indexPath.row
+        let realIndexPath = getRealIndexPath(for: indexPath)
+        let rowIndexPath = realIndexPath.row
         let updateCellClosure: (UIImage?) -> Void = { [unowned self] image in
-            (self.viewModel.sections[safeIndex: 0]?.items[rowIndexPath] as? ACPhotoCellModel)?.image = image
+            (self.viewModel.sections[safeIndex: 0]?.items[safeIndex: rowIndexPath] as? ACPhotoCellModel)?.image = image
             cell.updateThumbImage(image)
             self.viewModel.loadingOperations.removeValue(forKey: indexPath)
         }
         // Trying to get a preview of the asset
         if let dataLoader = viewModel.loadingOperations[indexPath] {
             if let image = dataLoader.img {
-                (self.viewModel.sections[safeIndex: 0]?.items[rowIndexPath] as? ACPhotoCellModel)?.image = image
+                (self.viewModel.sections[safeIndex: 0]?.items[safeIndex: rowIndexPath] as? ACPhotoCellModel)?.image = image
                 cell.updateThumbImage(image)
                 viewModel.loadingOperations.removeValue(forKey: indexPath)
             } else {
                 dataLoader.onFinishLoadingImage = updateCellClosure
             }
-        } else {
-            let model = viewModel.imagesData[rowIndexPath]
+        } else if let model = PHAsset.getSafeElement(fetchResult: viewModel.imagesData, index: rowIndexPath) {
             let size = CGSize(width: cellWidth, height: cellWidth)
             if let dataLoader = ACAsyncImageLoader.fetchImage(from: model, withSize: size) {
                 dataLoader.onFinishLoadingImage = updateCellClosure
@@ -391,8 +433,8 @@ private extension ACPhotoGridViewController {
     /// Changing the availability of the confirmation button depending on the number of selected assets
     func checkDoneButtonCondition() {
         let selectedCount = viewModel.selectedAssetsStack.selectedCount
-        let min = viewModel.configuration.photoConfig.minimimSelection
-        let max = viewModel.configuration.photoConfig.maximumSelection
+        let min = viewModel.configuration.photoConfig.limiter.min
+        let max = viewModel.configuration.photoConfig.limiter.max
         
         var isEnabled: Bool {
             if let max = max {
@@ -438,6 +480,14 @@ private extension ACPhotoGridViewController {
         self.navigationItem.titleView = button
         self.navigationItem.rightBarButtonItem = self.doneButton
     }
+    
+    /// Get IndexPath to work with the array of images, excluding the cell with the camera
+    /// - Parameter indexPath: Original IndexPath
+    /// - Returns: IndexPath for images
+    func getRealIndexPath(for indexPath: IndexPath) -> IndexPath {
+        let row = viewModel.configuration.photoConfig.allowCamera ? indexPath.row - 1 : indexPath.row
+        return IndexPath(row: row, section: indexPath.section)
+    }
 }
 
 // MARK: - UIImagePickerControllerDelegate
@@ -467,10 +517,13 @@ extension ACPhotoGridViewController: UICollectionViewDataSourcePrefetching {
             guard isNotCameraCell(on: indexPath) else {
                 return
             }
-            let rowIndexPath = viewModel.configuration.photoConfig.allowCamera ? indexPath.row - 1 : indexPath.row
+            let realIndexPath = getRealIndexPath(for: indexPath)
+            let rowIndexPath = realIndexPath.row
             if viewModel.loadingOperations[indexPath] != nil { return }
             
-            let model = viewModel.imagesData[rowIndexPath]
+            guard let model = PHAsset.getSafeElement(fetchResult: viewModel.imagesData, index: rowIndexPath) else {
+                return
+            }
             let size = CGSize(width: cellWidth, height: cellWidth)
             // Set fetching image preview operation
             if let dataLoader = ACAsyncImageLoader.fetchImage(from: model, withSize: size) {
@@ -518,6 +571,7 @@ extension ACPhotoGridViewController {
     private func cancelAction() {
         viewModel.selectedAssetsStack.deleteAll()
         self.dismiss(animated: true, completion: nil)
+        self.cleanupCamera()
     }
     @objc
     private func doneAction() {

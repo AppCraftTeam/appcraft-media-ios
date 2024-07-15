@@ -35,13 +35,12 @@ open class ACAsyncImageLoader: Operation {
         
         photoManager.fetchThumbnail(for: photoAsset, size: imageSize) { img in
             DispatchQueue.main.async { [weak self] in
-                guard let strongSelf = self,
-                      !strongSelf.isCancelled
-                else {
+                guard let self,
+                      !self.isCancelled else {
                     return
                 }
-                strongSelf.img = img ?? UIImage()
-                strongSelf.onFinishLoadingImage?(strongSelf.img)
+                self.img = img ?? UIImage()
+                self.onFinishLoadingImage?(self.img)
             }
         }
     }
