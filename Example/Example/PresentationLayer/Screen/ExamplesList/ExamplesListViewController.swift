@@ -182,7 +182,6 @@ private extension ExamplesListViewController {
     
     @objc
     func colorSegmentedControlDidChanged(_ segmentedControl: UISegmentedControl) {
-        print("segmentedControl - \(segmentedControl.selectedSegmentIndex)")
         guard let color = AppColors(rawValue: segmentedControl.selectedSegmentIndex) else {
             return
         }

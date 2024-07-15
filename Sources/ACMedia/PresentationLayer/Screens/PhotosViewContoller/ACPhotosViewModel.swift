@@ -162,7 +162,9 @@ extension ACPhotosViewModel {
     /// - Parameter model: Selection photo cell model
     func handleImageSelection(model: ACPhotoCellModel) {
         let maxSelection = configuration.photoConfig.limiter.max ?? Int.max
-        let asset = imagesData[model.index]
+        guard let asset = PHAsset.getSafeElement(fetchResult: imagesData, index: model.index) else {
+            return
+        }
         let indexPath = IndexPath(row: model.index + 1, section: 0)
 
         handleMaximumSelection(maxSelection, asset, indexPath)
@@ -209,7 +211,7 @@ extension ACPhotosViewModel {
         init(photos: [ACPhotoCellModel], camera: ACCameraCellModel?) {
             self.items = photos
             if let camera = camera {
-                self.items.append(camera)
+                self.items.insert(camera, at: 0)
             }
             self.header = nil
             self.footer = nil

@@ -7,7 +7,7 @@
 
 import UIKit
 
-public extension UIScrollView {
+extension UIScrollView {
     
     func zoomRectForScale(_ scale: CGFloat, center: CGPoint) -> CGRect {
         var zoomRect = CGRect.zero

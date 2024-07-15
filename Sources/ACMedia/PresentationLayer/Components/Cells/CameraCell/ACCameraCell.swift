@@ -59,8 +59,8 @@ open class ACCameraCell: DPCollectionItemCell {
         
         cameraIconImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            cameraIconImageView.widthAnchor.constraint(equalToConstant: 44),
-            cameraIconImageView.heightAnchor.constraint(equalToConstant: 44),
+            cameraIconImageView.widthAnchor.constraint(equalToConstant: 40),
+            cameraIconImageView.heightAnchor.constraint(equalToConstant: 40),
             cameraIconImageView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 4.0),
             cameraIconImageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -4.0)
         ])
