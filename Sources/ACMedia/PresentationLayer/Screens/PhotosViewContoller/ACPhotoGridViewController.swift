@@ -99,6 +99,7 @@ open class ACPhotoGridViewController: UIViewController {
         
         let spacing: CGFloat = leftSpacing + rightSpacing + 2 * interSpacing
         let cellWidth = (self.view.frame.width - spacing) / itemsInRow
+
         return cellWidth
     }
     
@@ -192,6 +193,11 @@ open class ACPhotoGridViewController: UIViewController {
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionView.collectionViewLayout.invalidateLayout()
+    }
+    
+    open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        self.collectionView.reloadData()
     }
 }
 
