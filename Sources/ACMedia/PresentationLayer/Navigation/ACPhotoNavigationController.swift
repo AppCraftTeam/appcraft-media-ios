@@ -7,7 +7,8 @@
 
 import UIKit
 
-open class ACPhotoNavigationController: UINavigationController, ACPhotoPickerViewControllerInterface {    
+/// UINavigation screen with a grid view of the gallery's assets
+open class ACPhotoNavigationController: UINavigationController, ACPhotoPickerViewControllerInterface {
     
     // MARK: - Components
     private lazy var selectedCounterLabel: UIBarButtonItem = {
@@ -19,13 +20,29 @@ open class ACPhotoNavigationController: UINavigationController, ACPhotoPickerVie
     }()
     
     // MARK: - Params
+    
+    /// Passing selected assets from the picker to the application
     public var didPickAssets: ((ACPickerCallbackModel) -> Void)?
+    
+    /// Processing to open system settings
     public var didOpenSettings: (() -> Void)?
     
+    /// The configuration settings for the media picker
     open var configuration: ACMediaConfiguration
+    
+    /// A stack that contains assets selected by the user
     public var selectedAssetsStack: ACSelectedImagesStack
+    
+    /// Animation of transition to full screen photo opening
     private let navigationTransition: ACZoomTransitionDelegate
     
+    /**
+     Initializes a new instance of the photos picker navigation controller.
+     - Parameters:
+     - configuration: The configuration settings for the media picker.
+     - didPickAssets: Passing selected assets from the picker to the application.
+     - didOpenSettings: Processing to open system settings.
+     */
     public required init(
         configuration: ACMediaConfiguration,
         didPickAssets: ((ACPickerCallbackModel) -> Void)? = nil,

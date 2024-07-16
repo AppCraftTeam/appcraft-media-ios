@@ -7,6 +7,7 @@
 
 import Photos
 
+/// Selecting the file type for the gallery picker
 public enum ACPhotoPickerFilesType: CaseIterable {
     case photo
     case video

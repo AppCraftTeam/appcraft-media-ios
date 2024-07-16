@@ -1,12 +1,14 @@
 //
 //  ACMediaFonts.swift
-//  
+//  ACMedia-iOS
 //
 //  Created by Pavel Moslienko on 20.06.2024.
+//  Copyright © 2024 AppCraft. All rights reserved.
 //
 
 import UIKit
 
+/// Font settings for labels displayed in the interface
 public struct ACMediaFonts {
     public var navBarTitleFont: UIFont
     public var emptyAlbumFont: UIFont

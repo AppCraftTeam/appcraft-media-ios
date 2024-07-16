@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Keys for localization of interface elements
 enum ACAppLocale: String {
     
     static private let key = "ACMedia."

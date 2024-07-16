@@ -9,6 +9,7 @@ import Foundation
 import Photos
 import UIKit
 
+/// ViewModel for `ACPhotoPreviewViewController`
 open class ACPhotoPreviewViewModel {
         
     // MARK: - Properties

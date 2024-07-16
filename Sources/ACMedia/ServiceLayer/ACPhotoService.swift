@@ -8,6 +8,7 @@
 import PhotosUI
 import UIKit
 
+/// A service that provides fetching a list of assets for the gallery, uploading thumbnails for photos and videos, fetching originals
 open class ACPhotoService: NSObject {
     
     /// Types of files from the gallery that will be displayed in the picker

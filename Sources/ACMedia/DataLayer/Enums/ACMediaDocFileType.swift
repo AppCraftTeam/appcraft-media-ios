@@ -9,6 +9,7 @@ import UIKit
 import MobileCoreServices
 import UniformTypeIdentifiers
 
+/// File types (extension) to be selected in the document picker
 public enum ACMediaDocFileType: CaseIterable {
     
     case png, jpeg, gif, bmp, text, pdf, zip, docx, xlsx, mp3, mp4, csv, json

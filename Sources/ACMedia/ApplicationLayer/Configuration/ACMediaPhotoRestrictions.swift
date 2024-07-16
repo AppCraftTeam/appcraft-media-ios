@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Setting limits on the number of selected assets
 public struct ACMediaPhotoRestrictions {
     
     public let min: Int

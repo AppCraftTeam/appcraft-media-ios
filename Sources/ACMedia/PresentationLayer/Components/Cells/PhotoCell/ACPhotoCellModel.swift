@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+/// Model for photo cell
 open class ACPhotoCellModel {
     
     var image: UIImage?

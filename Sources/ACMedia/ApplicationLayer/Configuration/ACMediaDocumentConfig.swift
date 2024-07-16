@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Configurations for file picker
 public struct ACMediaDocumentConfig {
     public var fileFormats: [ACMediaDocFileType]
     public var allowsMultipleSelection: Bool

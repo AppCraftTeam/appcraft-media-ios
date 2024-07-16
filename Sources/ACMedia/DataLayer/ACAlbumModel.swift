@@ -9,6 +9,7 @@ import Foundation
 import PhotosUI
 import UIKit
 
+/// Data for the photo album
 public struct ACAlbumModel {
     let title: String
     let count: Int

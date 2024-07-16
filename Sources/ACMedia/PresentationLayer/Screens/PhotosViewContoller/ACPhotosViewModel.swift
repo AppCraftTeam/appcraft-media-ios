@@ -10,6 +10,7 @@ import DPUIKit
 import Photos
 import UIKit
 
+/// ViewModel for `ACPhotoGridViewController`
 open class ACPhotosViewModel {
     
     open var albumModel: ACAlbumModel?

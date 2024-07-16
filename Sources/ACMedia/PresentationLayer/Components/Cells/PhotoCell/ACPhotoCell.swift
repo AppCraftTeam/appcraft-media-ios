@@ -9,6 +9,7 @@ import DPUIKit
 import PhotosUI
 import UIKit
 
+/// Cell with photo preview
 open class ACPhotoCell: DPCollectionItemCell {
     
     // MARK: - Props

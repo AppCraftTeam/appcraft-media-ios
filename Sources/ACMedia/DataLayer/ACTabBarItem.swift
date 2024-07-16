@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// Elements for tab bar picker
 enum ACTabBarItem {
     case gallery, file
     

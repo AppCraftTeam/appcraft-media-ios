@@ -11,6 +11,7 @@ private protocol Asset {
     var image: UIImage? { get }
 }
 
+/// Icons used in the pickers interface
 public enum ACAppAssets {
     
     /// Icons for tabbar

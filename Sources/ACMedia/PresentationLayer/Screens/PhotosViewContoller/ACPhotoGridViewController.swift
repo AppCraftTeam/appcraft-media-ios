@@ -11,6 +11,7 @@ import UIKit
 
 public typealias ACPhotosViewControllerCallback = ((_ model: ACPickerCallbackModel) -> Void)
 
+/// Screen with a grid view of gallery assets (photos and videos)
 open class ACPhotoGridViewController: UIViewController {
     
     private var viewModel: ACPhotosViewModel

@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Basic picker configuration
 public struct ACMediaConfiguration {
     
     public var appearance: ACMediaAppearance

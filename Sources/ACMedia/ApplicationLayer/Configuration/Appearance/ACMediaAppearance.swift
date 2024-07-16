@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// Configurations for setting picker interface styles
 public struct ACMediaAppearance {
     public var colors: ACMediaColors
     public var layout: ACMediaLayout

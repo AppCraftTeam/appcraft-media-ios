@@ -8,6 +8,7 @@
 import PhotosUI
 import UIKit
 
+/// Asynchronous loading of asset thumbnails
 open class ACAsyncImageLoader: Operation {
     
     var img: UIImage?

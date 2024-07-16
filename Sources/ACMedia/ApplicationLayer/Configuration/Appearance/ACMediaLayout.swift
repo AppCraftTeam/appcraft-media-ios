@@ -1,12 +1,14 @@
 //
 //  ACMediaLayout.swift
-//
+//  ACMedia-iOS
 //
 //  Created by Pavel Moslienko on 20.06.2024.
+//  Copyright © 2023 AppCraft. All rights reserved.
 //
 
 import UIKit
 
+/// Photo grid settings for the photo picker
 public struct ACMediaLayout {
     public var phonePortraitCells: Int
     public var phoneLandscapeCells: Int

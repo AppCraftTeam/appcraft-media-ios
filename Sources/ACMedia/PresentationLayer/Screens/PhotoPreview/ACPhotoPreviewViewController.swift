@@ -8,6 +8,7 @@
 import PhotosUI
 import UIKit
 
+/// Full screen view of a single photo with the ability to zoom in on it
 open class ACPhotoPreviewViewController: UIViewController {
     
     var viewModel: ACPhotoPreviewViewModel

@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+/// Model for camera cell
 open class ACCameraCellModel {
     
     var configuration: ACMediaConfiguration

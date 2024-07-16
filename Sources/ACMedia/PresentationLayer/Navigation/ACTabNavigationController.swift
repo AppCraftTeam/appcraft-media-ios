@@ -7,19 +7,30 @@
 
 import UIKit
 
+/// Protocol for the image picker screen
 public protocol ACPhotoPickerViewControllerInterface: UIViewController {
+    /// Passing selected assets from the picker to the application
     var didPickAssets: ((ACPickerCallbackModel) -> Void)? { get set }
+    /// Processing to open system settings where it is possible to manually give permission to access the photo
     var didOpenSettings: (() -> Void)? { get set }
 }
 
+/// Protocol for the document picker screen
 public protocol ACDocumentPickerViewControllerInterface: UIViewController {
+    /// Passing selected files from the picker to the application
     var didPickDocuments: (([URL]) -> Void)? { get set }
 }
 
+/// UITabBarController with the gallery picker and file picker displayed in the tabs of the screen
 open class ACTabBarController: UITabBarController {
     
+    /// The configuration settings for the media picker
     open var configuration: ACMediaConfiguration
+    
+    /// Photo (video) picker view controller
     open var photoViewController: ACPhotoPickerViewControllerInterface
+    
+    /// File picker view controller
     open var documentsViewController: ACDocumentPickerViewControllerInterface
 
     @available(iOS 13.0, *)
@@ -28,7 +39,14 @@ open class ACTabBarController: UITabBarController {
         appearance.configureWithDefaultBackground()
         return appearance
     }
-        
+    
+    /**
+     Initializes a new instance of the media picker tab view controller with the specified configuration and view controllers.
+     - Parameters:
+     - configuration: The configuration settings for the media picker.
+     - photoViewController: The view controller that handles photo picking.
+     - documentsViewController: The view controller that handles document picking.
+     */
     public required init(
         configuration: ACMediaConfiguration,
         photoViewController: ACPhotoPickerViewControllerInterface,

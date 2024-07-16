@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Config for photo picker
 public struct ACMediaPhotoPickerConfig {
     var types: [ACPhotoPickerFilesType]
     

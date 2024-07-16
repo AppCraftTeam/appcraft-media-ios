@@ -1,12 +1,14 @@
 //
 //  ACMediaColors.swift
-//
+//  ACMedia-iOS
 //
 //  Created by Pavel Moslienko on 20.06.2024.
+//  Copyright © 2024 AppCraft. All rights reserved.
 //
 
 import UIKit
 
+/// Color settings for UI elements
 public struct ACMediaColors {
     public var tintColor: UIColor
     public var backgroundColor: UIColor

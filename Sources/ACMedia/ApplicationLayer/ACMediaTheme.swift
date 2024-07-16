@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// Standard colors for decorating the picker interface
 public enum ACMediaTheme {
     
     public static var backgroundColor: UIColor {

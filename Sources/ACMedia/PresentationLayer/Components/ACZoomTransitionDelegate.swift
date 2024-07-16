@@ -16,6 +16,7 @@ fileprivate enum ScreenTransitionState {
     case final
 }
 
+/// Animation of transition to full screen photo opening
 open class ACZoomTransitionDelegate: NSObject {
     
     var configuration: ACMediaConfiguration

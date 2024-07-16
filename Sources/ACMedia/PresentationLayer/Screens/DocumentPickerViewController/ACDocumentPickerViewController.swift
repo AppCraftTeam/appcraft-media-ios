@@ -9,6 +9,7 @@ import UIKit
 import MobileCoreServices
 import UniformTypeIdentifiers
 
+/// File picker based on the default controller
 open class ACDocumentPickerViewController: UIDocumentPickerViewController, ACDocumentPickerViewControllerInterface, UIDocumentPickerDelegate {
     
     open var didPickDocuments: (([URL]) -> Void)?
@@ -22,7 +23,7 @@ open class ACDocumentPickerViewController: UIDocumentPickerViewController, ACDoc
         self.dismiss(animated: true)
     }
     
-    /// Show picker for selecting documents
+    /// Create picker for selecting documents
     /// - Parameter types: File types
     static public func create(configuration: ACMediaConfiguration, didPickDocuments: (([URL]) -> Void)?) -> ACDocumentPickerViewController {
         let types = configuration.documentsConfig.fileFormats

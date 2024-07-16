@@ -9,6 +9,7 @@ import AVFoundation
 import DPUIKit
 import UIKit
 
+/// Cell with camera preview
 open class ACCameraCell: DPCollectionItemCell {
     
     // MARK: - Props
