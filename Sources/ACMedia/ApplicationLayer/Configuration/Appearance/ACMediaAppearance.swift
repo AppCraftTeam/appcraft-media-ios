@@ -10,20 +10,28 @@ import UIKit
 
 /// Configurations for setting picker interface styles
 public struct ACMediaAppearance {
-    public var colors: ACMediaColors
-    public var layout: ACMediaLayout
-    public var fonts: ACMediaFonts
-    public var allowsPhotoPreviewZoom: Bool
     
+    /// Color settings for UI elements
+    public var colors: ACMediaColors
+    
+    /// Photo grid settings for the photo picker
+    public var layout: ACMediaLayout
+    
+    /// Font settings for labels displayed in the interface
+    public var fonts: ACMediaFonts
+    
+    /// Initializes a new `ACMediaAppearance` instance with the appearance settings.
+    /// - Parameters:
+    ///   - colors: Color settings for UI elements
+    ///   - layout: Photo grid settings for the photo picker
+    ///   - fonts: Font settings for labels displayed in the interface
     public init(
         colors: ACMediaColors = ACMediaColors(),
         layout: ACMediaLayout = ACMediaLayout(),
-        fonts: ACMediaFonts = ACMediaFonts(),
-        allowsPhotoPreviewZoom: Bool = true
+        fonts: ACMediaFonts = ACMediaFonts()
     ) {
         self.colors = colors
         self.layout = layout
         self.fonts = fonts
-        self.allowsPhotoPreviewZoom = allowsPhotoPreviewZoom
     }
 }

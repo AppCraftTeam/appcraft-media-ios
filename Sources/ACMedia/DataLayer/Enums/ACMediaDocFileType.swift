@@ -14,6 +14,7 @@ public enum ACMediaDocFileType: CaseIterable {
     
     case png, jpeg, gif, bmp, text, pdf, zip, docx, xlsx, mp3, mp4, csv, json
     
+    /// For iOS < 14.0
     var kutType: CFString {
         switch self {
         case .png:

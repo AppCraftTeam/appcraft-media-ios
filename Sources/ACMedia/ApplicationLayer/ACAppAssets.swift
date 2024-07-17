@@ -41,18 +41,22 @@ public enum ACAppAssets {
         var image: UIImage? {
             switch self {
             case .downArrow:
+                /// For selecting album
                 return UIImage(named: "down-arrow")
             case .checkmarkEmpty:
+                /// For photo cell
                 if #available(iOS 13.0, *) {
                     return UIImage(systemName: "circle")
                 }
                 return UIImage(named: "circle")
             case .checkmarkFilled:
+                /// For photo cell
                 if #available(iOS 13.0, *) {
                     return UIImage(systemName: "checkmark.circle")
                 }
                 return UIImage(named: "check")
             case .camera:
+                // For camera cell
                 if #available(iOS 13.0, *) {
                     return UIImage(systemName: "circle.square")
                 }

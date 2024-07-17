@@ -98,7 +98,7 @@ open class ACCameraCell: DPCollectionItemCell {
     }
 }
 
-// MARK: - Types
+// MARK: - Adapter
 extension ACCameraCell {
     typealias Adapter = DPCollectionItemAdapter<ACCameraCell, ACCameraCellModel>
 }

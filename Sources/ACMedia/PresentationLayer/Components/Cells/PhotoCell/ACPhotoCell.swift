@@ -134,20 +134,20 @@ private extension ACPhotoCell {
     }
 }
 
-extension ACPhotoCell {
+public extension ACPhotoCell {
     
-    public func updateThumbImage(_ image: UIImage?) {
+    func updateThumbImage(_ image: UIImage?) {
         DispatchQueue.main.async {
             self.previewImageView.image = image
         }
     }
     
-    public func getPreviewImageView() -> UIImageView? {
+    func getPreviewImageView() -> UIImageView? {
         previewImageView
     }
 }
 
-// MARK: - Types
+// MARK: - Adapter
 extension ACPhotoCell {
     typealias Adapter = DPCollectionItemAdapter<ACPhotoCell, ACPhotoCellModel>
 }

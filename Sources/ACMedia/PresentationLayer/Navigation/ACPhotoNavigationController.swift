@@ -67,7 +67,7 @@ open class ACPhotoNavigationController: UINavigationController, ACPhotoPickerVie
         setupToolbar()
         setupNavigationBar()
         
-        // Track changes in the count of selected assets
+        /// Track changes in the count of selected assets
         self.selectedAssetsStack.didSelectedImagesChanged = { [weak self] in
             self?.updateToolbarText()
         }

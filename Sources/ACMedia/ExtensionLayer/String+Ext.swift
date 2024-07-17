@@ -9,6 +9,7 @@ import Foundation
 
 extension String {
     
+    // Locale interface titles
     static func locale(for key: String) -> String {
         NSLocalizedString(key, bundle: Bundle.main, comment: "")
     }

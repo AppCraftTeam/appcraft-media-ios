@@ -11,6 +11,7 @@ public protocol ACZoomTransitionViewController {
     func getZoomingImageView(for transition: ACZoomTransitionDelegate) -> UIImageView?
 }
 
+/// State of the screen transition
 fileprivate enum ScreenTransitionState {
     case initial
     case final
@@ -19,13 +20,24 @@ fileprivate enum ScreenTransitionState {
 /// Animation of transition to full screen photo opening
 open class ACZoomTransitionDelegate: NSObject {
     
+    /// Picker configuration.
     var configuration: ACMediaConfiguration
+    
+    /// The duration of the transition animation.
     var durationOfTransition: TimeInterval = 0.6
+    
+    /// The navigation operation type
     var navOperation: UINavigationController.Operation = .none
     
+    /// The scaling factor used during the zoom transition.
     private let scalingFactor: CGFloat = 15
+    
+    /// The shrink factor used during the zoom transition.
     private let shrinkFactor: CGFloat = 0.75
     
+    /// Initializes a new `ACZoomTransitionDelegate` instance with the specified configuration.
+    ///
+    /// - Parameter configuration: Picker configuration.
     public init(configuration: ACMediaConfiguration) {
         self.configuration = configuration
     }

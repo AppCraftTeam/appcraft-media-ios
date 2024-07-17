@@ -10,6 +10,7 @@ import Photos
 
 extension PHAsset {
 
+    /// Safely retrieving an asset
     static func getSafeElement(fetchResult: PHFetchResult<PHAsset>, index: Int) -> PHAsset? {
         guard index >= 0 && index < fetchResult.count else {
             return nil

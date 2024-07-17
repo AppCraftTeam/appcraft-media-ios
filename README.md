@@ -86,8 +86,7 @@ Settings for customizing the picker interface.
  configuration.appearance = ACMediaAppearance(
   colors: <ACMediaColors>, 
   layout: <ACMediaLayout>,
-  fonts: <ACMediaFonts>,
-  allowsPhotoPreviewZoom: <Bool>
+  fonts: <ACMediaFonts>
 )
  ```
 

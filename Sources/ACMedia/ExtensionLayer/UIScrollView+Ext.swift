@@ -9,6 +9,11 @@ import UIKit
 
 extension UIScrollView {
     
+    /// Calculates the rectangle to zoom
+    /// - Parameters:
+    ///   - scale: The scale factor to zoom to.
+    ///   - center: The center point to zoom around.
+    /// - Returns: A rectangle representing the area to zoom to.
     func zoomRectForScale(_ scale: CGFloat, center: CGPoint) -> CGRect {
         var zoomRect = CGRect.zero
         zoomRect.size.height = frame.size.height / scale
