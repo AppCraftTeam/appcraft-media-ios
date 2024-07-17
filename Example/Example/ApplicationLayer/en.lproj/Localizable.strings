@@ -1,0 +1,21 @@
+/*
+  Localizable.strings
+  ACMedia
+
+  Copyright © 2023 AppCraft. All rights reserved.
+*/
+
+"ACMedia.done" = "Done";
+"ACMedia.back" = "Back";
+"ACMedia.cancel" = "Cancel";
+"ACMedia.emptyAlbumLabel" = "Empty album";
+"ACMedia.permissionRequired" = "Need photo permession";
+"ACMedia.permissionRequiredDescription" = "Needed for picker correct work";
+"ACMedia.settings" = "Allow permission in Settings";
+"ACMedia.selectedCount" = "Selected %i";
+"ACMedia.selectedCountFrom" = "Selected %i/%i";
+"ACMedia.selectedMin" = "minimum %i";
+"ACMedia.selectedMax" = "maximum %i";
+"ACMedia.selected" = "Select";
+"ACMedia.gallery" = "Gallery";
+"ACMedia.file" = "File";
